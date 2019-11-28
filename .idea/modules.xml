@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/KotlinBase.iml" filepath="$PROJECT_DIR$/KotlinBase.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jicore/jicore.iml" filepath="$PROJECT_DIR$/jicore/jicore.iml" />
     </modules>
   </component>
 </project>
