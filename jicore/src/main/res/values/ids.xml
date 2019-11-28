@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="fr_request" type="id" />
+    <item name="fr_cancel" type="id" />
+    <item name="im" type="id" />
+    <item name="swipe_layout" type="id" />
+    <item name="tv_header" type="id" />
+    <item name="adView" type="id" />
+    <item name="btnState" type="id" />
+
+</resources>
