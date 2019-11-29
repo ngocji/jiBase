@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'signing'
 apply plugin: 'com.github.dcendents.android-maven'
 apply from: 'dependencies.gradle'
+apply plugin: 'kotlin-kapt'
 
 
 repositories {
@@ -69,6 +70,10 @@ dependencies {
     api androidx.annotations
 
     api androidx.multidex
+
+    api databinding.lifecycle
+    kapt databinding.lifecycleAnnotation
+    kapt databinding.databindingCompiler
 
     api libraries.glide
     api libraries.eventBus
