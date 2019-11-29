@@ -2,9 +2,8 @@ package comx.y.z.kotlinbase
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import comx.y.z.jicore.BaseAct
 
-class MainActivity : BaseAct() {
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
