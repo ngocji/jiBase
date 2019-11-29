@@ -7,6 +7,7 @@ import android.graphics.drawable.StateListDrawable
 import android.util.StateSet
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.jibase.BaseApp
+import com.jibase.R
 import com.jibase.utils.getBitmapResource
 import com.jibase.utils.getDrawableResource
 import com.jibase.utils.log
@@ -61,7 +62,7 @@ fun createSelectDrawable(defaultResource: Int, selectPath: String, normalPath: S
 fun createDrawable(defaultResource: Int, path: String): Drawable {
     if (path.isNotEmpty()) {
         try {
-            return Drawable.createFromPath(path)
+            return Drawable.createFromPath(path) ?: getDrawableResource(R.drawable.ic_error)
         } catch (e: Exception) {
             e.print()
         }
