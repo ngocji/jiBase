@@ -1,4 +1,4 @@
-package comx.y.z.jicore
+package com.jibase
 
 import org.junit.Test
 

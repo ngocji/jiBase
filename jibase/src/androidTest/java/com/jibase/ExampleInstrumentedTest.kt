@@ -1,4 +1,4 @@
-package comx.y.z.jicore
+package com.jibase
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("comx.y.z.jicore.test", appContext.packageName)
+        assertEquals("com.jibase.test", appContext.packageName)
     }
 }

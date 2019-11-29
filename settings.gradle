@@ -1,2 +1,2 @@
-include ':app', ':jicore'
+include ':app', ':jibase'
 rootProject.name='KotlinBase'
