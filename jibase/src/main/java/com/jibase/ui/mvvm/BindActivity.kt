@@ -4,24 +4,21 @@ import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
+import com.jibase.helper.viewmodel.getViewModel
 
 abstract class BindActivity<VM : BindViewModel>(
     @LayoutRes private val layoutResId: Int,
     private val clazzViewModel: Class<VM>
 ) : AppCompatActivity() {
 
-    lateinit var viewModel: VM
+    open val viewModel: VM by lazy { getViewModel(clazzViewModel) }
+
     lateinit var binding: ViewDataBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // create viewModel
-        viewModel = createViewModel(clazzViewModel)
 
         // init binding
         binding = initBinding(layoutResId, viewModel)
@@ -34,10 +31,6 @@ abstract class BindActivity<VM : BindViewModel>(
 
     open fun onViewListener() {
         // free implement
-    }
-
-    open fun createViewModel(clazzViewModel: Class<VM>): VM {
-        return ViewModelProvider(this).get(clazzViewModel)
     }
 
     override fun onDestroy() {

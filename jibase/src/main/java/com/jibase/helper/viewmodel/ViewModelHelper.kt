@@ -10,6 +10,6 @@ inline fun <reified VM : ViewModel> getViewModelFromActivity(activity: FragmentA
 }
 
 
-inline fun <reified VM : ViewModel> ViewModelStoreOwner.getViewModel(): VM {
-    return ViewModelProvider(this).get(VM::class.java)
+fun <VM : ViewModel> ViewModelStoreOwner.getViewModel(clazz: Class<VM>): VM {
+    return ViewModelProvider(this).get(clazz)
 }

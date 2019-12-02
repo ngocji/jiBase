@@ -8,20 +8,24 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
+import com.jibase.helper.viewmodel.getViewModel
 
 abstract class BindFragment<VM : BindViewModel>(
-        @LayoutRes private val layoutResId: Int,
-        private val clazzViewModel: Class<VM>) : Fragment() {
-    lateinit var viewModel: VM
+    @LayoutRes private val layoutResId: Int,
+    private val clazzViewModel: Class<VM>
+) : Fragment() {
+
+    open val viewModel: VM by lazy { getViewModel(clazzViewModel) }
+
     lateinit var binding: ViewDataBinding
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // create viewModel
-        viewModel = createViewModel(clazzViewModel)
-
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         // create data binding
         binding = initBinding(layoutResId, inflater, container, viewModel)
 
@@ -40,11 +44,6 @@ abstract class BindFragment<VM : BindViewModel>(
     open fun onViewListener() {
         // free implement
     }
-
-    open fun createViewModel(clazzViewModel: Class<VM>): VM {
-        return ViewModelProvider(this).get(clazzViewModel)
-    }
-
 
     override fun onDestroyView() {
         // Hacky : There's a memory leak issue with data binding if we don't set lifeCycleOwner to null
