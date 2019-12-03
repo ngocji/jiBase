@@ -7,10 +7,9 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
-import com.jibase.helper.viewmodel.getViewModel
+import com.jibase.extensions.getViewModel
 
 abstract class BindFragment<VM : BindViewModel>(
     @LayoutRes private val layoutResId: Int,

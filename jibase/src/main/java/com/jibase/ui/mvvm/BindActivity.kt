@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
-import com.jibase.helper.viewmodel.getViewModel
+import com.jibase.extensions.getViewModel
 
 abstract class BindActivity<VM : BindViewModel>(
     @LayoutRes private val layoutResId: Int,

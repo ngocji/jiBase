@@ -7,7 +7,7 @@ import io.reactivex.plugins.RxJavaPlugins
 /**
  * Created by ngoc on 6/7/2018.
  */
-abstract class BaseApp : MultiDexApplication() {
+open class BaseApp : MultiDexApplication() {
     companion object {
         lateinit var instance: BaseApp
     }
