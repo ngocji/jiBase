@@ -3,9 +3,10 @@ package com.jibase.entities.livedata
 import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 
-class ILiveData<T>(default: T? = null, isNotifyData: Boolean = false) : MutableLiveData<T>(default) {
+class ILiveData<T>(default: T? = null, isNotifyData: Boolean = false) :
+    MutableLiveData<T>(default) {
     init {
-        if (isNotifyData) {
+        if (default != null && isNotifyData) {
             notifyDataChanged()
         }
     }

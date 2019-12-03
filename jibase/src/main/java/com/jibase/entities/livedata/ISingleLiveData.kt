@@ -5,7 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
-class ISingleLiveData<T> : LiveData<T>() {
+class ISingleLiveData<T>(data: T?, isNotifyData: Boolean = false) : LiveData<T>(data) {
+    init {
+        if (data != null && isNotifyData) {
+            notifyDataChanged()
+        }
+    }
+
     private val pending = AtomicBoolean(false)
 
     /**
