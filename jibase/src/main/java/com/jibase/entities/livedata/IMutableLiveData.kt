@@ -3,13 +3,7 @@ package com.jibase.entities.livedata
 import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 
-class ILiveData<T>(default: T? = null, isNotifyData: Boolean = false) :
-    MutableLiveData<T>(default) {
-    init {
-        if (default != null && isNotifyData) {
-            notifyDataChanged()
-        }
-    }
+class IMutableLiveData<T>(data: T? = null) : MutableLiveData<T>(data) {
 
     /**
      *  check value in ilivedata
@@ -65,11 +59,7 @@ class ILiveData<T>(default: T? = null, isNotifyData: Boolean = false) :
      * NotifyDataChange value
      */
     fun notifyDataChanged() {
-        if (isRunningMainThread()) {
-            value = value
-        } else {
-            postValue(value)
-        }
+        post(value)
     }
 
     /**
