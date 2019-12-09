@@ -6,15 +6,17 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.util.SparseArray
 import android.view.View
+import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
-import androidx.annotation.IntRange
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.jibase.iflexible.adapter.FlexibleAdapter
 import com.jibase.iflexible.utils.LayoutUtils
+import com.jibase.utils.getDimenPixelOffsetResource
 import com.jibase.utils.getDrawableResource
+import kotlin.math.roundToInt
 
 open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecoration() {
     private var mDecorations: SparseArray<ItemDecoration> = SparseArray() // viewType -> itemDeco
@@ -138,8 +140,10 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
         if (parent.clipToPadding) {
             left = parent.paddingLeft
             right = parent.width - parent.paddingRight
-            canvas.clipRect(left, parent.paddingTop, right,
-                    parent.height - parent.paddingBottom)
+            canvas.clipRect(
+                left, parent.paddingTop, right,
+                parent.height - parent.paddingBottom
+            )
         } else {
             left = 0
             right = parent.width
@@ -167,8 +171,10 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
         if (parent.clipToPadding) {
             top = parent.paddingTop
             bottom = parent.height - parent.paddingBottom
-            canvas.clipRect(parent.paddingLeft, top,
-                    parent.width - parent.paddingRight, bottom)
+            canvas.clipRect(
+                parent.paddingLeft, top,
+                parent.width - parent.paddingRight, bottom
+            )
         } else {
             top = 0
             bottom = parent.height
@@ -180,7 +186,7 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
             val viewHolder = parent.getChildViewHolder(child)
             if (shouldDrawDivider(viewHolder)) {
                 parent.layoutManager!!.getDecoratedBoundsWithMargins(child, mBounds)
-                val right = mBounds.right + Math.round(child.translationX)
+                val right = mBounds.right + child.translationX.roundToInt()
                 val left = right - (mDivider?.intrinsicWidth ?: 0)
                 mDivider?.setBounds(left, top, right, bottom)
                 mDivider?.draw(canvas)
@@ -198,7 +204,9 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
      * @return `true` to draw the divider, `false` to skip the drawing
      */
     open fun shouldDrawDivider(viewHolder: RecyclerView.ViewHolder): Boolean {
-        return mViewTypes == null || true == mViewTypes?.isEmpty() || true == mViewTypes?.contains(viewHolder.itemViewType)
+        return mViewTypes == null || true == mViewTypes?.isEmpty() || true == mViewTypes?.contains(
+            viewHolder.itemViewType
+        )
     }
 
 
@@ -214,8 +222,8 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
      * @param sectionOffset the extra offset at the end of each section
      * @return this FlexibleItemDecoration instance so the call can be chained
      */
-    fun withSectionGapOffset(@IntRange(from = 0) sectionOffset: Int): FlexibleItemDecoration {
-        mSectionOffset = (context.resources.displayMetrics.density * sectionOffset).toInt()
+    fun withSectionGapOffset(@DimenRes sectionOffset: Int): FlexibleItemDecoration {
+        mSectionOffset = getDimenPixelOffsetResource(sectionOffset)
         return this
     }
 
@@ -321,7 +329,7 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
      * @return the offset previously set in dpi
      */
     fun getOffset(): Int {
-        return (mOffset / context.resources.displayMetrics.density).toInt()
+        return mOffset
     }
 
     /**
@@ -330,8 +338,8 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
      * @param offset the offset in dpi to apply
      * @return this FlexibleItemDecoration instance so the call can be chained
      */
-    fun withOffset(@IntRange(from = 0) offset: Int): FlexibleItemDecoration {
-        mOffset = (context.resources.displayMetrics.density * offset).toInt()
+    fun withOffset(@DimenRes offset: Int): FlexibleItemDecoration {
+        mOffset = getDimenPixelOffsetResource(offset)
         return this
     }
 
@@ -359,7 +367,7 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
      * @see .withOffset
      * @see .removeItemViewType
      */
-    fun addItemViewType(@LayoutRes viewType: Int, offset: Int): FlexibleItemDecoration {
+    fun addItemViewType(@LayoutRes viewType: Int, @DimenRes offset: Int): FlexibleItemDecoration {
         return addItemViewType(viewType, offset, offset, offset, offset)
     }
 
@@ -375,12 +383,15 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
      * @see .addItemViewType
      * @see .removeItemViewType
      */
-    fun addItemViewType(@LayoutRes viewType: Int, left: Int, top: Int, right: Int, bottom: Int): FlexibleItemDecoration {
-        mDecorations.put(viewType, ItemDecoration(
-                (context.resources.displayMetrics.density * left).toInt(),
-                (context.resources.displayMetrics.density * top).toInt(),
-                (context.resources.displayMetrics.density * right).toInt(),
-                (context.resources.displayMetrics.density * bottom).toInt()))
+    fun addItemViewType(@LayoutRes viewType: Int, @DimenRes left: Int, @DimenRes top: Int, @DimenRes right: Int, @DimenRes bottom: Int): FlexibleItemDecoration {
+        mDecorations.put(
+            viewType, ItemDecoration(
+                getDimenPixelOffsetResource(left),
+                getDimenPixelOffsetResource(top),
+                getDimenPixelOffsetResource(right),
+                getDimenPixelOffsetResource(bottom)
+            )
+        )
         return this
     }
 
@@ -399,7 +410,12 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
     /* OFFSET CALCULATION */
     /*====================*/
 
-    override fun getItemOffsets(outRect: Rect, view: View, recyclerView: RecyclerView, state: RecyclerView.State) {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        recyclerView: RecyclerView,
+        state: RecyclerView.State
+    ) {
         val position = recyclerView.getChildAdapterPosition(view)
         // Skip check so on item deleted, offset is kept (only if general offset was set!)
         // if (position == RecyclerView.NO_POSITION) return;
@@ -407,7 +423,7 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
         // Get custom Item Decoration or default
         val adapter = recyclerView.adapter ?: return
         val itemType = if (position != RecyclerView.NO_POSITION) adapter.getItemViewType(position)
-                ?: 0 else 0
+            ?: 0 else 0
         var deco = getItemDecoration(itemType)
 
         // No offset set, applies the general offset to this item decoration
@@ -426,7 +442,8 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
             spanIndex = lp.spanIndex
             spanSize = lp.spanSize
             (recyclerView.layoutManager as? GridLayoutManager)?.also {
-                spanCount = it.spanCount // Assume that there are spanCount items in this row/column.
+                spanCount =
+                    it.spanCount // Assume that there are spanCount items in this row/column.
                 orientation = it.orientation
             }
 
@@ -434,14 +451,16 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
             val lp = view.layoutParams as StaggeredGridLayoutManager.LayoutParams
             spanIndex = lp.spanIndex
             (recyclerView.layoutManager as? StaggeredGridLayoutManager)?.also {
-                spanCount = it.spanCount // Assume that there are spanCount items in this row/column.
+                spanCount =
+                    it.spanCount // Assume that there are spanCount items in this row/column.
                 spanSize = if (lp.isFullSpan) spanCount else 1
                 orientation = it.orientation
             }
         }
 
         val isFirstRowOrColumn = isFirstRowOrColumn(position, adapter, spanIndex, itemType)
-        val isLastRowOrColumn = isLastRowOrColumn(position, adapter, spanIndex, spanCount, spanSize, itemType)
+        val isLastRowOrColumn =
+            isLastRowOrColumn(position, adapter, spanIndex, spanCount, spanSize, itemType)
 
         // Reset offset values
         var left = 0
@@ -499,7 +518,12 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
         return mDecorations.get(itemType) ?: mDefaultDecoration
     }
 
-    private fun isFirstRowOrColumn(position: Int, adapter: RecyclerView.Adapter<*>, spanIndex: Int, itemType: Int): Boolean {
+    private fun isFirstRowOrColumn(
+        position: Int,
+        adapter: RecyclerView.Adapter<*>,
+        spanIndex: Int,
+        itemType: Int
+    ): Boolean {
         val prePos = if (position > 0) position - 1 else -1
         // Last position on the last row
         val preRowPos = if (position > spanIndex) position - (1 + spanIndex) else -1
@@ -508,17 +532,32 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
                 preRowPos == -1 || itemType != adapter.getItemViewType(preRowPos)
     }
 
-    private fun isLastRowOrColumn(position: Int, adapter: RecyclerView.Adapter<*>, spanIndex: Int, spanCount: Int, spanSize: Int, itemType: Int): Boolean {
+    private fun isLastRowOrColumn(
+        position: Int,
+        adapter: RecyclerView.Adapter<*>,
+        spanIndex: Int,
+        spanCount: Int,
+        spanSize: Int,
+        itemType: Int
+    ): Boolean {
         val itemCount = adapter.itemCount
         val nextPos = if (position < itemCount - 1) position + 1 else -1
         // First position on the next row
-        val nextRowPos = if (position < itemCount - (spanCount / spanSize - spanIndex)) position + (spanCount / spanSize - spanIndex) else -1
+        val nextRowPos =
+            if (position < itemCount - (spanCount / spanSize - spanIndex)) position + (spanCount / spanSize - spanIndex) else -1
         // isLastRowOrColumn if one of the following condition is true
-        return position == itemCount - 1 || nextPos == -1 || itemType != adapter.getItemViewType(nextPos) ||
+        return position == itemCount - 1 || nextPos == -1 || itemType != adapter.getItemViewType(
+            nextPos
+        ) ||
                 nextRowPos == -1 || itemType != adapter.getItemViewType(nextRowPos)
     }
 
-    private fun applySectionGap(outRect: Rect, adapter: RecyclerView.Adapter<*>, position: Int, orientation: Int) {
+    private fun applySectionGap(
+        outRect: Rect,
+        adapter: RecyclerView.Adapter<*>,
+        position: Int,
+        orientation: Int
+    ) {
         // Section Gap Offset
         if (mSectionOffset > 0 && adapter is FlexibleAdapter<*>) {
             val nextItem = adapter.getItem(position + 1)
@@ -545,7 +584,12 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
     }
 
 
-    private class ItemDecoration(val left: Int = -1, val top: Int = -1, val right: Int = -1, val bottom: Int = -1) {
+    private class ItemDecoration(
+        val left: Int = -1,
+        val top: Int = -1,
+        val right: Int = -1,
+        val bottom: Int = -1
+    ) {
 
         constructor(offset: Int) : this(offset, offset, offset, offset)
 

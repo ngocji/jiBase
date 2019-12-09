@@ -15,9 +15,11 @@ import com.jibase.R
 
 fun getColorResource(id: Int): Int = ContextCompat.getColor(BaseApp.instance, id)
 
-fun getDimenResource(id: Int): Float = BaseApp.instance.resources.getDimension(id)
+fun getDimenResource(id: Int): Float =
+    if (id <= 0) 0f else BaseApp.instance.resources.getDimension(id)
 
-fun getDimenPixelOffsetResource(id: Int): Int = BaseApp.instance.resources.getDimensionPixelOffset(id)
+fun getDimenPixelOffsetResource(id: Int): Int =
+    if (id <= 0) 0 else BaseApp.instance.resources.getDimensionPixelOffset(id)
 
 fun getIntegerResource(id: Int): Int = BaseApp.instance.resources.getInteger(id)
 
@@ -61,4 +63,5 @@ fun getResourceId(name: String, def: String): Int {
 
 fun String.toColor(): Int = Color.parseColor(this)
 fun drawableToString(id: Int) = "android.resource://" + BaseApp.instance.packageName + "/" + id
-fun drawableToString(name: String) = "android.resource//" + BaseApp.instance.packageName + "/drawable/" + name
+fun drawableToString(name: String) =
+    "android.resource//" + BaseApp.instance.packageName + "/drawable/" + name
