@@ -1,6 +1,7 @@
 package com.jibase.permission.dialog
 
 import android.os.Build
+import android.os.Bundle
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
@@ -12,7 +13,7 @@ import com.jibase.ui.dialog.NormalDialog
 class TipDialog(@LayoutRes private val layoutResId: Int,
                 private val message: Pair<String, String>,
                 private val callback: CallBack) : NormalDialog(layoutResId) {
-    override fun onViewReady() {
+    override fun onViewReady(savedInstanceState: Bundle?) {
         view?.findViewById<TextView>(R.id.tv_title)?.text = message.first
         view?.findViewById<TextView>(R.id.tv_mess)?.text = message.second
     }
