@@ -30,11 +30,11 @@ abstract class NormalBottomDialog(@LayoutRes private val layoutResId: Int, priva
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
 
-        onViewReady()
+        onViewReady(savedInstanceState)
         onViewListener()
     }
 
 
-    abstract fun onViewReady()
+    abstract fun onViewReady(savedInstanceState: Bundle?)
     abstract fun onViewListener()
 }

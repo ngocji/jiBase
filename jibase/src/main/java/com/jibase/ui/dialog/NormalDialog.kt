@@ -31,11 +31,11 @@ abstract class NormalDialog(@LayoutRes private val layoutRes: Int, private val s
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         }
 
-        onViewReady()
+        onViewReady(savedInstanceState)
         onViewListener()
     }
 
 
-    abstract fun onViewReady()
+    abstract fun onViewReady(savedInstanceState: Bundle?)
     abstract fun onViewListener()
 }

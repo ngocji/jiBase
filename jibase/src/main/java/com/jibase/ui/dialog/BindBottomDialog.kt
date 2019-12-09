@@ -24,7 +24,7 @@ open class BindBottomDialog<T>(
         return binding.root
     }
 
-    override fun onViewReady() {
+    override fun onViewReady(savedInstanceState: Bundle?) {
     }
 
     override fun onViewListener() {
