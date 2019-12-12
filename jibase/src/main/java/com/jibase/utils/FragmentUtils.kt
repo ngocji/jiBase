@@ -33,7 +33,14 @@ object FragmentUtils {
      * @param addToBackStack: true-> addToBackstack, false-> no add
      * @param fragment: fragment
      */
-    fun replace(activity: FragmentActivity, idContainer: Int, addToBackStack: Boolean, fragment: Fragment, customAnimIn: Int = -1, customAnimOut: Int = -1) {
+    fun replace(
+        activity: FragmentActivity,
+        idContainer: Int,
+        addToBackStack: Boolean,
+        fragment: Fragment,
+        customAnimIn: Int = -1,
+        customAnimOut: Int = -1
+    ) {
         val tagName = fragment::class.java.simpleName
         val trans = activity.supportFragmentManager.beginTransaction()
         // Add to back stack-->
@@ -56,7 +63,12 @@ object FragmentUtils {
     /**
      * Call initAnimation add list fragment when use show
      */
-    fun initAddFragment(activity: FragmentActivity, idContainer: Int, addToBackStack: Boolean, vararg fragments: Fragment) {
+    fun initAddFragment(
+        activity: FragmentActivity,
+        idContainer: Int,
+        addToBackStack: Boolean,
+        vararg fragments: Fragment
+    ) {
         val trans = activity.supportFragmentManager.beginTransaction()
         trans.setCustomAnimations(animIn, animOut)
         fragments.forEach { frag ->
@@ -159,7 +171,11 @@ object FragmentUtils {
      * @param skipTag:  tag of fragment you want keep
      * @param action: action when remove finsish
      */
-    fun removeAllFromBackStack(activity: FragmentActivity, skipTag: String = "", action: (() -> Unit)? = null) {
+    fun removeAllFromBackStack(
+        activity: FragmentActivity,
+        skipTag: String = "",
+        action: (() -> Unit)? = null
+    ) {
         val fragmentManager = activity.supportFragmentManager
         if (fragmentManager.isStateSaved) {
             action?.invoke()
@@ -180,5 +196,9 @@ object FragmentUtils {
             }
         }
         action?.invoke()
+    }
+
+    fun getCountOfBackStack(fragmentActivity: FragmentActivity): Int {
+        return fragmentActivity.supportFragmentManager.backStackEntryCount
     }
 }
