@@ -1,8 +1,8 @@
 package com.jibase.helper.retrofit
 
-import com.jibase.utils.log
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+import okhttp3.internal.platform.Platform
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -21,41 +21,63 @@ object RetrofitHelper {
      *  @param timeOut: time out
      *  @return :  serviceClass or null
      */
-    fun <T> create(baseUrl: String,
-                   serviceClass: Class<T>,
-                   gSonFactory: GsonConverterFactory = GsonConverterFactory.create(),
-                   timeOut: Long = DEFAULT_TIME_OUT): T {
+    fun <T> create(
+        baseUrl: String,
+        serviceClass: Class<T>,
+        gSonFactory: GsonConverterFactory = GsonConverterFactory.create(),
+        timeOut: Long = DEFAULT_TIME_OUT,
+        vararg interceptors: Interceptor
+    ): T {
         val retrofit = hasRetrofit[baseUrl]
         return if (retrofit != null) {
             retrofit.create(serviceClass)
         } else {
             Retrofit.Builder()
-                    .baseUrl(baseUrl)
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .addConverterFactory(gSonFactory)
-                    .client(createClient(timeOut))
-                    .build()
-                    .run {
-                        hasRetrofit[baseUrl] = this
-                        create(serviceClass)
-                    }
-        }
-    }
-
-    private fun createClient(timeOut: Long): OkHttpClient {
-        return OkHttpClient.Builder()
-                .addInterceptor(createHttpLogging())
-                .connectTimeout(timeOut, TimeUnit.SECONDS)
-                .readTimeout(timeOut, TimeUnit.SECONDS)
-                .retryOnConnectionFailure(true)
+                .baseUrl(baseUrl)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(gSonFactory)
+                .client(createClient(timeOut, interceptors))
                 .build()
+                .run {
+                    hasRetrofit[baseUrl] = this
+                    create(serviceClass)
+                }
+        }
     }
 
-    private fun createHttpLogging(): HttpLoggingInterceptor {
-        val logging = HttpLoggingInterceptor { message ->
-            log("RETROFIT: $message")
-        }
-        logging.level = HttpLoggingInterceptor.Level.BODY
-        return logging
+    private fun createClient(
+        timeOut: Long,
+        interceptors: Array<out Interceptor>
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptors(interceptors)
+            .connectTimeout(timeOut, TimeUnit.SECONDS)
+            .readTimeout(timeOut, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
+            .build()
     }
+
+    private fun OkHttpClient.Builder.addInterceptors(
+        interceptors: Array<out Interceptor>
+    ): OkHttpClient.Builder {
+        // add custom interceptors
+        interceptors.forEach {
+            addInterceptor(it)
+        }
+
+//        // add logging
+//        addInterceptor(createHttpLogging())
+
+        return this
+    }
+
+//    private fun createHttpLogging(): Interceptor {
+//        return LoggingInterceptor.Builder()
+//            .loggable(true)
+//            .setLevel(Level.BASIC)
+//            .log(Platform.INFO)
+//            .request("Request")
+//            .response("Response")
+//            .build()
+//    }
 }

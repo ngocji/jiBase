@@ -3,7 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'signing'
 apply plugin: 'com.github.dcendents.android-maven'
-apply from: 'dependencies.gradle'
 apply plugin: 'kotlin-kapt'
 
 
@@ -15,8 +14,6 @@ repositories {
 }
 
 buildscript {
-    apply from: 'dependencies.gradle'
-
     repositories {
         mavenCentral()
     }
@@ -56,35 +53,68 @@ android {
         enabled = true
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
-    api androidx.constraintlayout
+    //kotlin
+    def kotlin_version = "1.3.61"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    api libraries.kotlin
-    api libraries.kotlinReflect
-    api androidx.appcompat
-    api androidx.recyclerView
-    api androidx.cardView
-    api androidx.material
-    api androidx.annotations
+    //image
+    api "com.github.bumptech.glide:glide:4.9.0"
 
-    api androidx.multidex
+    // gson
+    api "com.google.code.gson:gson:2.8.6"
 
-    api databinding.lifecycle
-    kapt databinding.lifecycleAnnotation
-    kapt databinding.databindingCompiler
+    // event bus
+    api 'org.greenrobot:eventbus:3.2.0'
 
-    api libraries.glide
-    api libraries.eventBus
-    api rx.rxKotlin
-    api rx.rxAndroid
+    // android x core
+    api "androidx.appcompat:appcompat:1.1.0"
+    api "androidx.recyclerview:recyclerview:1.1.0"
+    api "androidx.cardview:cardview:1.0.0"
+    api "com.google.android.material:material:1.1.0"
+    api "androidx.annotation:annotation:1.1.0"
+    api "androidx.transition:transition:1.3.0"
+    api "androidx.slidingpanelayout:slidingpanelayout:1.0.0"
+    api "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    api "androidx.constraintlayout:constraintlayout:2.0.0-beta4"
+    api "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
+    api "androidx.multidex:multidex:2.0.1"
 
-    api gson.code
+    // data binding
+    api "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    kapt "androidx.lifecycle:lifecycle-compiler:2.2.0"
+    kapt "androidx.databinding:databinding-compiler:3.5.3"
 
-    api retrofit.core
-    api retrofit.convertergson
-    api retrofit.adapterrxjava
-    api retrofit.logging
+    // room
+    def room_version ="2.2.3"
+    api "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    api "androidx.room:room-rxjava2:$room_version"
+
+    // rx
+    api "io.reactivex.rxjava2:rxkotlin:2.2.0"
+    api "io.reactivex.rxjava2:rxandroid:2.1.0"
+
+    // retrofit
+    api "com.squareup.retrofit2:retrofit:2.6.1"
+    api "com.squareup.retrofit2:converter-gson:2.4.0"
+    api "com.squareup.retrofit2:adapter-rxjava2:2.5.0"
+//    implementation('com.github.ihsanbal:LoggingInterceptor:3.0.0') {
+//        exclude group: 'org.json', module: 'json'
+//    }
+
+    // Koin for Android
+    def koin_version = "2.0.1"
+    api "org.koin:koin-android:$koin_version"
+    api "org.koin:koin-androidx-scope:$koin_version"
+    api "org.koin:koin-androidx-viewmodel:$koin_version"
 }
 
