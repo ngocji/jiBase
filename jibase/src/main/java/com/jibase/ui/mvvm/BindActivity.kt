@@ -6,14 +6,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
-import com.jibase.extensions.getViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.reflect.KClass
 
 abstract class BindActivity<VM : BindViewModel>(
     @LayoutRes private val layoutResId: Int,
-    private val clazzViewModel: Class<VM>
+    clazzViewModel: KClass<VM>
 ) : AppCompatActivity() {
 
-    open val viewModel: VM by lazy { getViewModel(clazzViewModel) }
+    open val viewModel: VM by viewModel(clazzViewModel)
 
     lateinit var binding: ViewDataBinding
 

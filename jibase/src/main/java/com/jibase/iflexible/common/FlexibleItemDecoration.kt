@@ -10,6 +10,7 @@ import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.jibase.iflexible.adapter.FlexibleAdapter
@@ -383,7 +384,13 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
      * @see .addItemViewType
      * @see .removeItemViewType
      */
-    fun addItemViewType(@LayoutRes viewType: Int, @DimenRes left: Int, @DimenRes top: Int, @DimenRes right: Int, @DimenRes bottom: Int): FlexibleItemDecoration {
+    fun addItemViewType(
+        @LayoutRes viewType: Int,
+        @DimenRes left: Int,
+        @DimenRes top: Int,
+        @DimenRes right: Int,
+        @DimenRes bottom: Int
+    ): FlexibleItemDecoration {
         mDecorations.put(
             viewType, ItemDecoration(
                 getDimenPixelOffsetResource(left),
@@ -437,24 +444,25 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
         var spanCount = 1
         var orientation = RecyclerView.VERTICAL
 
-        if (recyclerView.layoutManager is GridLayoutManager) {
-            val lp = view.layoutParams as GridLayoutManager.LayoutParams
-            spanIndex = lp.spanIndex
-            spanSize = lp.spanSize
-            (recyclerView.layoutManager as? GridLayoutManager)?.also {
-                spanCount =
-                    it.spanCount // Assume that there are spanCount items in this row/column.
-                orientation = it.orientation
-            }
+        val layoutManager = recyclerView.layoutManager
 
-        } else if (recyclerView.layoutManager is StaggeredGridLayoutManager) {
-            val lp = view.layoutParams as StaggeredGridLayoutManager.LayoutParams
-            spanIndex = lp.spanIndex
-            (recyclerView.layoutManager as? StaggeredGridLayoutManager)?.also {
-                spanCount =
-                    it.spanCount // Assume that there are spanCount items in this row/column.
+        when (layoutManager) {
+            is GridLayoutManager -> {
+                val lp = view.layoutParams as GridLayoutManager.LayoutParams
+                spanIndex = lp.spanIndex
+                spanSize = lp.spanSize
+                spanCount = layoutManager.spanCount
+                orientation = layoutManager.orientation
+            }
+            is StaggeredGridLayoutManager -> {
+                val lp = view.layoutParams as StaggeredGridLayoutManager.LayoutParams
+                spanIndex = lp.spanIndex
+                spanCount = layoutManager.spanCount
                 spanSize = if (lp.isFullSpan) spanCount else 1
-                orientation = it.orientation
+                orientation = layoutManager.orientation
+            }
+            is LinearLayoutManager -> {
+                orientation = layoutManager.orientation
             }
         }
 

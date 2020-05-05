@@ -9,14 +9,15 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
-import com.jibase.extensions.getViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.reflect.KClass
 
 abstract class BindFragment<VM : BindViewModel>(
     @LayoutRes private val layoutResId: Int,
-    private val clazzViewModel: Class<VM>
+    clazzViewModel: KClass<VM>
 ) : Fragment() {
 
-    open val viewModel: VM by lazy { getViewModel(clazzViewModel) }
+    open val viewModel: VM by viewModel(clazzViewModel)
 
     lateinit var binding: ViewDataBinding
 

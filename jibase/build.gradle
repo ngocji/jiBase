@@ -72,9 +72,6 @@ dependencies {
     // gson
     api "com.google.code.gson:gson:2.8.6"
 
-    // event bus
-    api 'org.greenrobot:eventbus:3.2.0'
-
     // android x core
     api "androidx.appcompat:appcompat:1.1.0"
     api "androidx.recyclerview:recyclerview:1.1.0"

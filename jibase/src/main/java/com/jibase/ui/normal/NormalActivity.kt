@@ -8,10 +8,10 @@ abstract class NormalActivity(@LayoutRes private val layoutRes: Int = -1) : AppC
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (layoutRes > 0) setContentView(layoutRes)
-        onViewReady()
+        onViewReady(savedInstanceState)
         onViewListener()
     }
 
-    abstract fun onViewReady()
+    abstract fun onViewReady(savedInstanceState: Bundle?)
     abstract fun onViewListener()
 }

@@ -15,10 +15,10 @@ abstract class NormalFragment(@LayoutRes private val layoutResId: Int = -1) : Fr
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        onViewReady()
+        onViewReady(savedInstanceState)
         onViewListener()
     }
 
-    abstract fun onViewReady()
+    abstract fun onViewReady(savedInstanceState: Bundle?)
     abstract fun onViewListener()
 }
