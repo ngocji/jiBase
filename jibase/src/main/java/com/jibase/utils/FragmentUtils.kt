@@ -1,7 +1,6 @@
 package com.jibase.utils
 
 import android.view.ViewGroup
-import androidx.annotation.AnimRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -13,19 +12,6 @@ import com.jibase.extensions.gone
 
 
 object FragmentUtils {
-    private var animIn = -1
-    private var animOut = -1
-
-    /**
-     * Call initAnimation when custom animation
-     * @param animIn: animation when fragment show
-     * @param animOut: animation when fragment hide
-     */
-    fun initAnimation(@AnimRes animIn: Int, @AnimRes animOut: Int) {
-        this.animIn = animIn
-        this.animOut = animOut
-    }
-
     /**
      * replace framgment
      * @param activity: activity
@@ -41,7 +27,7 @@ object FragmentUtils {
         customAnimIn: Int = -1,
         customAnimOut: Int = -1
     ) {
-        val tagName = fragment::class.java.simpleName
+        val tagName = fragment::class.java.name
         val trans = activity.supportFragmentManager.beginTransaction()
         // Add to back stack-->
         if (addToBackStack) trans.addToBackStack(tagName)
@@ -49,8 +35,6 @@ object FragmentUtils {
         // set custom animation when transition
         if (customAnimIn != -1 && customAnimOut != -1) {
             trans.setCustomAnimations(customAnimIn, customAnimOut)
-        } else if (animIn != -1 && animOut != -1) {
-            trans.setCustomAnimations(animIn, animOut)
         }
 
         // set fragment
@@ -70,10 +54,9 @@ object FragmentUtils {
         vararg fragments: Fragment
     ) {
         val trans = activity.supportFragmentManager.beginTransaction()
-        trans.setCustomAnimations(animIn, animOut)
         fragments.forEach { frag ->
-            trans.add(idContainer, frag, frag::class.java.simpleName)
-            if (addToBackStack) trans.addToBackStack(frag::class.java.simpleName)
+            trans.add(idContainer, frag, frag::class.java.name)
+            if (addToBackStack) trans.addToBackStack(frag::class.java.name)
         }
         trans.commitAllowingStateLoss()
     }
@@ -84,9 +67,18 @@ object FragmentUtils {
      * @param idContainer: id layout when use show fragment
      * @param fragment: fragment want show
      */
-    fun show(activity: FragmentActivity, idContainer: Int, fragment: Fragment) {
+    fun show(
+        activity: FragmentActivity,
+        idContainer: Int,
+        fragment: Fragment,
+        customAnimIn: Int = -1,
+        customAnimOut: Int = -1
+    ) {
         hideAllView(activity, idContainer)
         activity.supportFragmentManager.beginTransaction().apply {
+            if (customAnimIn != -1 && customAnimOut != -1) {
+                setCustomAnimations(customAnimIn, customAnimOut)
+            }
             show(fragment)
             commitAllowingStateLoss()
         }
@@ -108,8 +100,7 @@ object FragmentUtils {
      *  @return fragment, null if no fragment in backstack
      */
     fun getFragmentByTag(activity: FragmentActivity, tag: String): Fragment? {
-        val manager = activity.supportFragmentManager
-        return manager.findFragmentByTag(tag)
+        return activity.supportFragmentManager.findFragmentByTag(tag)
     }
 
     /**
@@ -119,7 +110,7 @@ object FragmentUtils {
      * @return fragment or null
      */
     fun getFragmentByTag(activity: FragmentActivity, clazz: Class<Fragment>): Fragment? {
-        return getFragmentByTag(activity, clazz.simpleName)
+        return getFragmentByTag(activity, clazz.name)
     }
 
     /**
@@ -129,27 +120,12 @@ object FragmentUtils {
      */
     fun getPreviousFragment(activity: FragmentActivity): Fragment? {
         val manager = activity.supportFragmentManager
-        val count = manager.backStackEntryCount
-        return if (count > 0) {
-            getFragmentByTag(activity, manager.getBackStackEntryAt(count - 1).name ?: "")
+        val index = manager.backStackEntryCount - 2
+        return if (index >= 0) {
+            getFragmentByTag(activity, manager.getBackStackEntryAt(index).name ?: "")
         } else {
             null
         }
-    }
-
-    /**
-     * call function when handle back stack fragment
-     * @param activity: activity
-     */
-    fun handleBackFragment(activity: FragmentActivity): Fragment? {
-        val manager = activity.supportFragmentManager
-        if (manager.isStateSaved) return null
-
-        val countStackEntry = manager.backStackEntryCount
-        if (countStackEntry > 1) {
-            manager.popBackStackImmediate()
-        }
-        return getCurrentFragment(activity)
     }
 
     /**
