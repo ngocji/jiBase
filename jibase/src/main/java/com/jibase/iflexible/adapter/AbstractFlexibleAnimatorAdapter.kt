@@ -11,7 +11,7 @@ import android.view.animation.LinearInterpolator
 import androidx.annotation.IntRange
 import androidx.recyclerview.widget.RecyclerView
 import com.jibase.iflexible.viewholder.simple.FlexibleViewHolder
-import com.jibase.utils.logd
+import com.jibase.utils.Log
 import java.util.*
 
 abstract class AbstractFlexibleAnimatorAdapter(hasStateId: Boolean) : AbstractFlexibleAdapter() {
@@ -82,7 +82,7 @@ abstract class AbstractFlexibleAnimatorAdapter(hasStateId: Boolean) : AbstractFl
      * @return this AnimatorAdapter, so the call can be chained
      */
     open fun setAnimationInitialDelay(initialDelay: Long): AbstractFlexibleAnimatorAdapter {
-        logd("Set animationInitialDelay=$initialDelay",TAG)
+        Log.d("Set animationInitialDelay=$initialDelay",TAG)
         mInitialDelay = initialDelay
         return this
     }
@@ -97,7 +97,7 @@ abstract class AbstractFlexibleAnimatorAdapter(hasStateId: Boolean) : AbstractFl
      * @return this AnimatorAdapter, so the call can be chained
      */
     open fun setAnimationDelay(@IntRange(from = 0) delay: Long): AbstractFlexibleAnimatorAdapter {
-        logd("Set animationDelay=$delay", TAG)
+        Log.d("Set animationDelay=$delay", TAG)
         mStepDelay = delay
         return this
     }
@@ -113,7 +113,7 @@ abstract class AbstractFlexibleAnimatorAdapter(hasStateId: Boolean) : AbstractFl
      * @return this AnimatorAdapter, so the call can be chained
      */
     open fun setAnimationEntryStep(entryStep: Boolean): AbstractFlexibleAnimatorAdapter {
-        logd("Set animationEntryStep=$entryStep", TAG)
+        Log.d("Set animationEntryStep=$entryStep", TAG)
         this.entryStep = entryStep
         return this
     }
@@ -127,7 +127,7 @@ abstract class AbstractFlexibleAnimatorAdapter(hasStateId: Boolean) : AbstractFl
      * @return this AnimatorAdapter, so the call can be chained
      */
     open fun setAnimationDuration(@IntRange(from = 1) duration: Long): AbstractFlexibleAnimatorAdapter {
-        logd("Set animationDuration=$duration", TAG)
+        Log.d("Set animationDuration=$duration", TAG)
         mDuration = duration
         return this
     }
@@ -141,7 +141,7 @@ abstract class AbstractFlexibleAnimatorAdapter(hasStateId: Boolean) : AbstractFl
      * @return this AnimatorAdapter, so the call can be chained
      */
     open fun setAnimationInterpolator(interpolator: Interpolator): AbstractFlexibleAnimatorAdapter {
-        logd("Set animationInterpolator=$interpolator", TAG)
+        Log.d("Set animationInterpolator=$interpolator", TAG)
         this.interpolator = interpolator
         return this
     }
@@ -161,7 +161,7 @@ abstract class AbstractFlexibleAnimatorAdapter(hasStateId: Boolean) : AbstractFl
      * @see setAnimationOnReverseScrolling
      */
     open fun setAnimationOnForwardScrolling(enabled: Boolean): AbstractFlexibleAnimatorAdapter {
-        logd("Set animationOnForwardScrolling=$enabled", TAG)
+        Log.d("Set animationOnForwardScrolling=$enabled", TAG)
         if (enabled) this.onlyEntryAnimation = false
         isForwardEnabled = enabled
         return this
@@ -186,7 +186,7 @@ abstract class AbstractFlexibleAnimatorAdapter(hasStateId: Boolean) : AbstractFl
      * @see setAnimationOnForwardScrolling
      */
     open fun setAnimationOnReverseScrolling(enabled: Boolean): AbstractFlexibleAnimatorAdapter {
-        logd("Set animationOnReverseScrolling=$enabled", TAG)
+        Log.d("Set animationOnReverseScrolling=$enabled", TAG)
         isReverseEnabled = enabled
         return this
     }
@@ -211,7 +211,7 @@ abstract class AbstractFlexibleAnimatorAdapter(hasStateId: Boolean) : AbstractFl
      * @see setAnimationOnForwardScrolling
      */
     open fun setOnlyEntryAnimation(enabled: Boolean): AbstractFlexibleAnimatorAdapter {
-        logd("Set onlyEntryAnimation=$enabled", TAG)
+        Log.d("Set onlyEntryAnimation=$enabled", TAG)
         if (enabled) this.isForwardEnabled = true
         this.onlyEntryAnimation = enabled
         return this

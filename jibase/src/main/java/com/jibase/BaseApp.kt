@@ -2,24 +2,15 @@ package com.jibase
 
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
+import com.jibase.di.baseModule
 import io.reactivex.plugins.RxJavaPlugins
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 
-/**
- * Created by ngoc on 6/7/2018.
- */
 abstract class BaseApp : MultiDexApplication() {
-    companion object {
-        lateinit var instance: BaseApp
-    }
-
-    open var isEnableLog: Boolean = true
-
     override fun onCreate() {
         super.onCreate()
-        instance = this
         MultiDex.install(this)
 
         startKoin {
@@ -30,10 +21,19 @@ abstract class BaseApp : MultiDexApplication() {
         }
 
         /**
-         * config global error rxjava
+         * config global error rx java
          */
         RxJavaPlugins.setErrorHandler {}
     }
 
-    abstract fun initModules(): List<Module>
+    private fun initModules(): List<Module> {
+        val modules = mutableListOf<Module>()
+        modules.add(baseModule)
+        initAppModule(modules)
+        return modules
+    }
+
+    open fun initAppModule(modules: MutableList<Module>) {
+        // free add more module
+    }
 }

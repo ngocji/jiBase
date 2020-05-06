@@ -1,15 +1,15 @@
-package com.jibase.entities.livedata
+package com.jibase.livedata
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
-open class ILiveData<T>(data: T? = null, isNotifyData: Boolean = false) : LiveData<T>(data) {
-    private val pendingFirstInitialize = AtomicBoolean(isNotifyData)
+open class ILiveData<T>(data: T? = null, isNotifyDataWhenInitialize: Boolean = false) : LiveData<T>(data) {
+    private val pendingFirstInitialize = AtomicBoolean(isNotifyDataWhenInitialize)
 
     init {
-        if (data != null && isNotifyData) {
+        if (data != null && isNotifyDataWhenInitialize) {
             notifyDataChanged()
         }
     }

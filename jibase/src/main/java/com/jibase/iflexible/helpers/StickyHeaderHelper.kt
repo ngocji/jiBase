@@ -15,7 +15,7 @@ import com.jibase.iflexible.adapter.FlexibleAdapter
 import com.jibase.iflexible.items.interfaceItems.IFlexible
 import com.jibase.iflexible.listener.OnStickyHeaderChangeListener
 import com.jibase.iflexible.viewholder.simple.FlexibleViewHolder
-import com.jibase.utils.log
+import com.jibase.utils.Log
 
 class StickyHeaderHelper<T : IFlexible<*>>(
         private val mAdapter: FlexibleAdapter<T>,
@@ -52,7 +52,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
     fun detachFromRecyclerView() {
         mRecyclerView.removeOnScrollListener(this)
         clearHeaderWithAnimation()
-        log("StickyHolderLayout detached")
+        Log.d("StickyHolderLayout detached")
     }
 
     fun getStickyPosition(): Int {
@@ -131,9 +131,9 @@ class StickyHeaderHelper<T : IFlexible<*>>(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT)
             oldParentLayout.addView(mStickyHolderLayout)
-            log("Default StickyHolderLayout initialized")
+            Log.d("Default StickyHolderLayout initialized")
         } else {
-            log("User defined StickyHolderLayout initialized")
+            Log.d("User defined StickyHolderLayout initialized")
         }
         displayWithAnimation = true
 
@@ -173,7 +173,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
                     mAdapter.onBindViewHolder(it, headerPosition)
                 }
             } else {
-                log("updateHeader Wrong itemViewType for StickyViewHolder")
+                Log.d("updateHeader Wrong itemViewType for StickyViewHolder")
             }
             ensureHeaderParent()
         }
@@ -249,7 +249,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
     }
 
     private fun swapHeader(newHeader: FlexibleViewHolder, oldHeaderPosition: Int) {
-        log("swapHeader newHeaderPosition=%s $mHeaderPosition")
+        Log.d("swapHeader newHeaderPosition=%s $mHeaderPosition")
         mStickyHeaderViewHolder?.also {
             resetHeader(it)
             // #568, #575 - Header ViewHolder out of the top screen must be recycled manually
@@ -319,7 +319,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
 
     private fun clearHeader() {
         mStickyHeaderViewHolder?.also {
-            log("clearHeader")
+            Log.d("clearHeader")
             resetHeader(it)
             mStickyHolderLayout?.apply {
                 alpha = 0f
@@ -339,7 +339,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
         try {
             parent.addView(child)
         } catch (e: IllegalStateException) {
-            log("The specified child already has a parent! (but parent was removed!)")
+            Log.d("The specified child already has a parent! (but parent was removed!)")
         }
 
     }

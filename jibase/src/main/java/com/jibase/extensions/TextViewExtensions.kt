@@ -10,7 +10,7 @@ fun TextView.makeScroll() {
     ellipsize = TextUtils.TruncateAt.MARQUEE
     isSelected = true
     marqueeRepeatLimit = Int.MAX_VALUE
-    setSingleLine(true)
+    isSingleLine = true
 }
 
 @Suppress("DEPRECATION")

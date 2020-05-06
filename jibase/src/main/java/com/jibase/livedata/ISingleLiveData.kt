@@ -1,11 +1,10 @@
-package com.jibase.entities.livedata
+package com.jibase.livedata
 
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
-class ISingleLiveData<T>(data: T? = null, isNotifyData: Boolean = false) :
-    ILiveData<T>(data, isNotifyData) {
+class ISingleLiveData<T>(data: T? = null, isNotifyData: Boolean = false) : ILiveData<T>(data, isNotifyData) {
 
     private val pending = AtomicBoolean(isNotifyData)
 

@@ -104,8 +104,7 @@ class IAutoTextView : TextView {
     }
 
     override fun setTextSize(unit: Int, size: Float) {
-        mMaxTextSize = TypedValue.applyDimension(unit, size,
-                com.jibase.utils.getDisplay())
+        mMaxTextSize = TypedValue.applyDimension(unit, size, context.resources.displayMetrics)
         mTextCachedSizes.clear()
         adjustTextSize()
     }

@@ -12,87 +12,61 @@ import kotlin.reflect.KClass
  * Create by Ngocji on 11/12/2018
  **/
 
-object GsonHelper {
+class GsonHelper {
     var mGson: Gson? = null
 
-    fun setOrCreateGson(gson: Gson? = null): Gson {
-        return if (gson != null) {
-            mGson = gson
-            gson
-        } else {
-            mGson ?: createGsonBuilder().create().apply {
-                mGson = this
-            }
-        }
+    init {
+        mGson = createNewGson<Any>()
     }
 
-    fun createGsonBuilder(): GsonBuilder {
-        return GsonBuilder().serializeSpecialFloatingPointValues()
+    fun setCustomGson(gson: Gson) {
+        mGson = gson
     }
 
-    fun <T> fromJsonList(data: String, type: Type, adapter: TypeAdapterFactory? = null): T {
-        val gson = createGsonBuilder()
-        adapter?.also { gson.setPrettyPrinting().registerTypeAdapterFactory(it) }
-        return gson.create().fromJson(data, type)
+    fun <T> fromJsonList(data: String, type: Type): T {
+        return mGson?.fromJson(data, type) ?: throw Exception("Gson can't convert")
     }
 
     fun <T> toJson(data: T): String {
-        return setOrCreateGson().toJson(data)
-    }
-
-    fun <T> toJsonList(data: T, adapter: TypeAdapterFactory): String {
-        val gson = createGsonBuilder().setPrettyPrinting().registerTypeAdapterFactory(adapter).create()
-        return gson.toJson(data)
+        return mGson?.toJson(data) ?: ""
     }
 
 
-    /**           inline method            **/
-
-    /**
-     * Copy entity
-     */
+    // copy entity
     inline fun <reified T> copy(data: T): T {
         val encode = toJson(data)
         return fromJson(encode)
     }
 
-    /**
-     * parser string to list
-     */
-    inline fun <reified T> fromJsonList(data: T, adapter: TypeAdapterFactory): T {
-        return fromJsonList(toJsonList(data, adapter), getTypeToken<T>(), adapter)
-    }
-
-    inline fun <reified T, reified K : Any> fromJsonList(data: T, arr: Array<KClass<K>>): T {
-        val adapter = createAdapterFactory(*arr)
-        return fromJsonList(toJsonList(data, adapter), getTypeToken<T>(), adapter) as T
-    }
-
-    inline fun <reified T> fromJsonList(data: T): T {
-        return fromJsonList(toJson(data), getTypeToken<T>())
+    // parse string to list
+    inline fun <reified T> fromJsonList(data: String): List<T> {
+        val type = getTypeToken<T>()
+        return mGson?.fromJson(data, type) ?: throw Exception("Gson can't convert")
     }
 
 
-    /**
-     * parser string to object
-     */
+    // parse string to data
     inline fun <reified T> fromJson(data: String): T {
-        return setOrCreateGson().fromJson(data, T::class.java)
+        return mGson?.fromJson(data, T::class.java) ?: throw Exception("Gson can't convert")
     }
 
-    /**
-     *  get type token
-     */
-    inline fun <reified T> getTypeToken() = object : TypeToken<T>() {}.type
+    // get type token from list
+    inline fun <reified T> getTypeToken(): Type = object : TypeToken<T>() {}.type
 
-    /**
-     * get adapterFactory with interface class
-     */
+    // create adapter factory
     inline fun <reified T : Any> createAdapterFactory(vararg cls: KClass<out T>): TypeAdapterFactory {
         val adapter = RuntimeTypeAdapterFactory.of(T::class.java)
         cls.forEach {
             adapter.registerSubtype(it.java)
         }
         return adapter
+    }
+
+
+    // create new gson
+    inline fun <reified T : Any> createNewGson(vararg cls: KClass<out T>): Gson {
+        val builder = GsonBuilder().serializeSpecialFloatingPointValues()
+        builder.registerTypeAdapterFactory(createAdapterFactory(*cls))
+        return builder.create()
     }
 }

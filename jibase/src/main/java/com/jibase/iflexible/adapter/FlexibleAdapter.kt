@@ -23,7 +23,7 @@ import com.jibase.iflexible.items.interfaceItems.*
 import com.jibase.iflexible.listener.*
 import com.jibase.iflexible.viewholder.simple.FlexibleExpandableViewHolder
 import com.jibase.iflexible.viewholder.simple.FlexibleViewHolder
-import com.jibase.utils.logd
+import com.jibase.utils.Log
 import java.util.*
 import kotlin.math.ceil
 import kotlin.math.max
@@ -157,14 +157,14 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     fun addListener(listener: Any): FlexibleAdapter<T> {
         when (listener) {
             is OnItemClickListener -> {
-                logd("- OnItemClickClickListener", TAG)
+                Log.d("- OnItemClickClickListener", TAG)
                 mItemClickListener = listener
                 for (holder in getAllBoundViewHolders()) {
                     holder.contentView.setOnClickListener(holder)
                 }
             }
             is OnItemLongClickListener -> {
-                logd("- OnItemLongClickListener", TAG)
+                Log.d("- OnItemLongClickListener", TAG)
                 mItemLongClickListener = listener
                 // Restore the event
                 for (holder in getAllBoundViewHolders()) {
@@ -173,31 +173,31 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             }
 
             is OnItemMoveListener -> {
-                logd("- OnItemMoveListener", TAG)
+                Log.d("- OnItemMoveListener", TAG)
                 mItemMoveListener = listener
             }
 
             is OnItemSwipeListener -> {
-                logd("- OnItemSwipeListener", TAG)
+                Log.d("- OnItemSwipeListener", TAG)
                 mItemSwipeListener = listener
             }
             is OnDeleteCompleteListener -> {
-                logd("- OnDeleteCompleteListener", TAG)
+                Log.d("- OnDeleteCompleteListener", TAG)
                 mDeleteCompleteListener = listener
             }
 
             is OnStickyHeaderChangeListener -> {
-                logd("- OnStickyHeaderChangeListener", TAG)
+                Log.d("- OnStickyHeaderChangeListener", TAG)
                 mStickyHeaderChangeListener = listener
             }
             is OnUpdateListener -> {
-                logd("- OnUpdateListener", TAG)
+                Log.d("- OnUpdateListener", TAG)
                 mUpdateListener = listener
                 listener.onUpdateEmptyView(getMainItemCount())
             }
 
             is OnFilterListener -> {
-                logd("- OnFilterListener", TAG)
+                Log.d("- OnFilterListener", TAG)
                 mFilterListener = listener
             }
         }
@@ -225,14 +225,14 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     fun removeListener(listener: Any): FlexibleAdapter<T> {
         when (listener) {
             is OnItemClickListener -> {
-                logd("- Remove OnItemClickListener", TAG)
+                Log.d("- Remove OnItemClickListener", TAG)
                 mItemClickListener = null
                 for (holder in getAllBoundViewHolders()) {
                     holder.contentView.setOnClickListener(null)
                 }
             }
             is OnItemLongClickListener -> {
-                logd("- Remove OnItemLongClickListener", TAG)
+                Log.d("- Remove OnItemLongClickListener", TAG)
                 mItemLongClickListener = null
                 // Restore the event
                 for (holder in getAllBoundViewHolders()) {
@@ -241,30 +241,30 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             }
 
             is OnItemMoveListener -> {
-                logd("- Remove OnItemMoveListener", TAG)
+                Log.d("- Remove OnItemMoveListener", TAG)
                 mItemMoveListener = null
             }
 
             is OnItemSwipeListener -> {
-                logd("- Remove OnItemSwipeListener", TAG)
+                Log.d("- Remove OnItemSwipeListener", TAG)
                 mItemSwipeListener = null
             }
             is OnDeleteCompleteListener -> {
-                logd("- Remove OnDeleteCompleteListener", TAG)
+                Log.d("- Remove OnDeleteCompleteListener", TAG)
                 mDeleteCompleteListener = null
             }
 
             is OnStickyHeaderChangeListener -> {
-                logd("- Remove OnStickyHeaderChangeListener", TAG)
+                Log.d("- Remove OnStickyHeaderChangeListener", TAG)
                 mStickyHeaderChangeListener = null
             }
             is OnUpdateListener -> {
-                logd("- Remove OnUpdateListener", TAG)
+                Log.d("- Remove OnUpdateListener", TAG)
                 mUpdateListener = null
             }
 
             is OnFilterListener -> {
-                logd("- Remove OnFilterListener", TAG)
+                Log.d("- Remove OnFilterListener", TAG)
                 mFilterListener = null
             }
         }
@@ -279,7 +279,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     @CallSuper
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         super.onAttachedToRecyclerView(recyclerView)
-        logd("Attached Adapter to RecyclerView", TAG)
+        Log.d("Attached Adapter to RecyclerView", TAG)
         if (headersShown && areHeadersSticky()) {
             mStickyHeaderHelper?.attachToRecyclerView(mRecyclerView)
         }
@@ -297,7 +297,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             mStickyHeaderHelper = null
         }
         super.onDetachedFromRecyclerView(recyclerView)
-        logd("Detached Adapter from RecyclerView", TAG)
+        Log.d("Detached Adapter from RecyclerView", TAG)
     }
 
 
@@ -471,7 +471,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             prepareItemsForUpdate(newItems)
             listData = newItems
             // Execute instant reset on init
-            logd("updateDataSet with notifyDataSetChanged!")
+            Log.d("updateDataSet with notifyDataSetChanged!")
             notifyDataSetChanged()
             onPostUpdate()
         }
@@ -678,7 +678,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
                     // fix represents the situation when item is before the target position (used in moveItem)
                     val fix = if (itemPosition != -1 && itemPosition < headerPosition) 0 else 1
                     val result = headerPosition + sortedList.indexOf(item) + fix
-                    logd("Calculated finalPosition=$result sectionPosition=$headerPosition relativePosition=${sortedList.indexOf(item)} fix=$fix", TAG)
+                    Log.d("Calculated finalPosition=$result sectionPosition=$headerPosition relativePosition=${sortedList.indexOf(item)} fix=$fix", TAG)
                     return result
                 }
             }
@@ -687,7 +687,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         val sortedList = ArrayList<T>(listData)
         if (!sortedList.contains(item)) sortedList.add(item)
         Collections.sort(sortedList, comparator)
-        logd("Calculated position ${max(0, sortedList.indexOf(item))} for item=$item", TAG)
+        Log.d("Calculated position ${max(0, sortedList.indexOf(item))} for item=$item", TAG)
         return max(0, sortedList.indexOf(item))
     }
 
@@ -752,7 +752,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see addScrollableHeaderWithDelay
      */
     fun addScrollableHeader(headerItem: T): Boolean {
-        logd("Add scrollable header $headerItem", TAG)
+        Log.d("Add scrollable header $headerItem", TAG)
         return if (!mScrollableHeaders.contains(headerItem)) {
             headerItem.setSelectable(false)
             headerItem.setDraggable(false)
@@ -763,7 +763,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             setScrollAnimate(false)
             true
         } else {
-            logd("Scrollable header $headerItem already added", TAG)
+            Log.d("Scrollable header $headerItem already added", TAG)
             false
         }
     }
@@ -793,7 +793,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      */
     fun addScrollableFooter(footerItem: T): Boolean {
         return if (!mScrollableFooters.contains(footerItem)) {
-            logd("Add scrollable footer $footerItem", TAG)
+            Log.d("Add scrollable footer $footerItem", TAG)
             footerItem.setSelectable(false)
             footerItem.setDraggable(false)
             val progressFix = if (isEndlessProgressItemOf(footerItem)) mScrollableFooters.size else 0
@@ -806,7 +806,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             performInsert(itemCount - progressFix, listOf(footerItem), true)
             true
         } else {
-            logd("Scrollable footer $footerItem already added", TAG)
+            Log.d("Scrollable footer $footerItem already added", TAG)
             false
         }
     }
@@ -820,7 +820,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      */
     fun removeScrollableHeader(headerItem: T) {
         if (mScrollableHeaders.remove(headerItem)) {
-            logd("Remove scrollable header $headerItem", TAG)
+            Log.d("Remove scrollable header $headerItem", TAG)
             performRemove(headerItem, true)
         }
     }
@@ -834,7 +834,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      */
     fun removeScrollableFooter(footerItem: T) {
         if (mScrollableFooters.remove(footerItem)) {
-            logd("Remove scrollable footer $footerItem", TAG)
+            Log.d("Remove scrollable footer $footerItem", TAG)
             performRemove(footerItem, true)
         }
     }
@@ -847,7 +847,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      */
     fun removeAllScrollableHeaders() {
         if (mScrollableHeaders.isNotEmpty()) {
-            logd("Remove all scrollable headers", TAG)
+            Log.d("Remove all scrollable headers", TAG)
             listData.removeAll(mScrollableHeaders)
             notifyItemRangeRemoved(0, mScrollableHeaders.size)
             mScrollableHeaders.clear()
@@ -862,7 +862,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      */
     fun removeAllScrollableFooters() {
         if (mScrollableFooters.isNotEmpty()) {
-            logd("Remove all scrollable footers", TAG)
+            Log.d("Remove all scrollable footers", TAG)
             listData.removeAll(mScrollableFooters)
             notifyItemRangeRemoved(itemCount - mScrollableFooters.size, mScrollableFooters.size)
             mScrollableFooters.clear()
@@ -880,7 +880,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      */
     fun addScrollableHeaderWithDelay(headerItem: T, @IntRange(from = 0) delay: Long,
                                      scrollToPosition: Boolean) {
-        logd("Enqueued adding scrollable header ($delay ms) $headerItem", TAG)
+        Log.d("Enqueued adding scrollable header ($delay ms) $headerItem", TAG)
         mHandler.postDelayed({
             if (addScrollableHeader(headerItem) && scrollToPosition) {
                 smoothScrollToPosition(getGlobalPositionOf(headerItem))
@@ -899,7 +899,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      */
     fun addScrollableFooterWithDelay(footerItem: T, @IntRange(from = 0) delay: Long,
                                      scrollToPosition: Boolean) {
-        logd("Enqueued adding scrollable footer ($delay ms) $footerItem", TAG)
+        Log.d("Enqueued adding scrollable footer ($delay ms) $footerItem", TAG)
         mHandler.postDelayed({
             if (addScrollableFooter(footerItem) && scrollToPosition) {
                 smoothScrollToPosition(getGlobalPositionOf(footerItem))
@@ -916,7 +916,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see removeAllScrollableHeaders
      */
     fun removeScrollableHeaderWithDelay(headerItem: T, @IntRange(from = 0) delay: Long) {
-        logd("Enqueued removing scrollable header ($delay ms) $headerItem", TAG)
+        Log.d("Enqueued removing scrollable header ($delay ms) $headerItem", TAG)
         mHandler.postDelayed({ removeScrollableHeader(headerItem) }, delay)
     }
 
@@ -929,7 +929,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see removeAllScrollableFooters
      */
     fun removeScrollableFooterWithDelay(footerItem: T, @IntRange(from = 0) delay: Long) {
-        logd("Enqueued removing scrollable footer ($delay ms) $footerItem", TAG)
+        Log.d("Enqueued removing scrollable footer ($delay ms) $footerItem", TAG)
         mHandler.postDelayed({ removeScrollableFooter(footerItem) }, delay)
     }
 
@@ -960,7 +960,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @return this Adapter, so the call can be chained
      */
     fun setUnlinkAllItemsOnRemoveHeaders(unlinkOnRemoveHeader: Boolean): FlexibleAdapter<T> {
-        logd("Set unlinkOnRemoveHeader= $unlinkOnRemoveHeader", TAG)
+        Log.d("Set unlinkOnRemoveHeader= $unlinkOnRemoveHeader", TAG)
         this.unlinkOnRemoveHeader = unlinkOnRemoveHeader
         return this
     }
@@ -1183,7 +1183,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see setStickyHeaderElevation
      */
     fun setStickyHeaders(sticky: Boolean, stickyContainer: ViewGroup?): FlexibleAdapter<T> {
-        logd("Set stickyHeaders=$sticky (in Post!)${if (stickyContainer != null) " with user defined Sticky Container" else ""}", TAG)
+        Log.d("Set stickyHeaders=$sticky (in Post!)${if (stickyContainer != null) " with user defined Sticky Container" else ""}", TAG)
 
         // With user defined container
         mStickyContainer = stickyContainer
@@ -1196,12 +1196,12 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
                     mStickyHeaderHelper = StickyHeaderHelper(this@FlexibleAdapter,
                             mStickyHeaderChangeListener, mStickyContainer)
                     mStickyHeaderHelper?.attachToRecyclerView(mRecyclerView)
-                    logd("Sticky headers enabled", TAG)
+                    Log.d("Sticky headers enabled", TAG)
                 }
             } else if (areHeadersSticky()) {
                 mStickyHeaderHelper?.detachFromRecyclerView()
                 mStickyHeaderHelper = null
-                logd("Sticky headers disabled", TAG)
+                Log.d("Sticky headers disabled", TAG)
             }
         }
         return this
@@ -1286,16 +1286,16 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      */
     fun showAllHeaders(init: Boolean = false): FlexibleAdapter<T> {
         if (init) {
-            logd("showAllHeaders at startup", TAG)
+            Log.d("showAllHeaders at startup", TAG)
             // No notifyItemInserted!
             showAllHeadersWithReset(true)
         } else {
-            logd("showAllHeaders with insert notification (in Post!)", TAG)
+            Log.d("showAllHeaders with insert notification (in Post!)", TAG)
             // In post, let's notifyItemInserted!
             mHandler.post(Runnable {
                 // #144 - Check if headers are already shown, discard the call to not duplicate headers
                 if (headersShown) {
-                    logd("Double call detected! Headers already shown OR the method showAllHeaders() was already called!", TAG)
+                    Log.d("Double call detected! Headers already shown OR the method showAllHeaders() was already called!", TAG)
                     return@Runnable
                 }
                 showAllHeadersWithReset(false)
@@ -1347,7 +1347,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         // Check header existence
         if (header == null || getPendingRemovedItem(item) != null) return false
         if (header.isHidden()) {
-            logd("Showing header position=$position header=$header", TAG)
+            Log.d("Showing header position=$position header=$header", TAG)
             header.setHidden(false)
             // Insert header, but skip notifyItemInserted when init=true!
             // We are adding headers to the provided list at startup (no need to notify)
@@ -1400,7 +1400,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
 
     private fun hideHeader(position: Int, header: IHeader<*>?) {
         if (position >= 0) {
-            logd("Hiding header position=$position header=$header", TAG)
+            Log.d("Hiding header position=$position header=$header", TAG)
             header?.setHidden(true)
             // Remove and notify removals
             listData.removeAt(position)
@@ -1429,7 +1429,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
                 unlinkHeaderFrom(item, Payload.UNLINK)
             }
             if (item.getHeader() == null && header != null) {
-                logd("Link header $header to $item", TAG)
+                Log.d("Link header $header to $item", TAG)
                 //TODO: try-catch for when sectionable item has a different header class signature, if so, they just can't accept that header!
                 item.setHeader(header)
                 // Notify items
@@ -1459,7 +1459,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         if (hasHeader(item)) {
             val sectionable = item as ISectionable<*, *>
             val header = sectionable.getHeader()
-            logd("Unlink header $header from $sectionable")
+            Log.d("Unlink header $header from $sectionable")
             sectionable.setHeader(null)
             // Notify items
             if (payload != null) {
@@ -1487,7 +1487,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
         if (item == null) {
-            logd("Item for ViewType not found! position=$position, items=$itemCount", TAG)
+            Log.d("Item for ViewType not found! position=$position, items=$itemCount", TAG)
             return 0
         }
         // Map the view type if not done yet
@@ -1565,14 +1565,14 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     @CallSuper
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
         val position = holder.adapterPosition
-        logd("onViewAttached Holder=${holder.javaClass.simpleName} position=$position", TAG)
+        Log.d("onViewAttached Holder=${holder.javaClass.simpleName} position=$position", TAG)
         getItem(position)?.onViewAttached(this, holder, position)
     }
 
     @CallSuper
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
         val position = holder.adapterPosition
-        logd("onViewDetached Holder=${holder.javaClass.simpleName} position=$position", TAG)
+        Log.d("onViewDetached Holder=${holder.javaClass.simpleName} position=$position", TAG)
         getItem(position)?.onViewDetached(this, holder, position)
     }
 
@@ -1693,7 +1693,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @return this Adapter, so the call can be chained
      */
     fun setEndlessPageSize(@IntRange(from = 0) endlessPageSize: Int): FlexibleAdapter<T> {
-        logd("Set endlessPageSize=$endlessPageSize", TAG)
+        Log.d("Set endlessPageSize=$endlessPageSize", TAG)
         mEndlessPageSize = endlessPageSize
         return this
     }
@@ -1726,7 +1726,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see getEndlessTargetCount
      */
     fun setEndlessTargetCount(@IntRange(from = 0) endlessTargetCount: Int): FlexibleAdapter<T> {
-        logd("Set endlessTargetCount=$endlessTargetCount")
+        Log.d("Set endlessTargetCount=$endlessTargetCount")
         mEndlessTargetCount = endlessTargetCount
         return this
     }
@@ -1741,7 +1741,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @return this Adapter, so the call can be chained
      */
     fun setLoadingMoreAtStartUp(enable: Boolean): FlexibleAdapter<T> {
-        logd("Set loadingAtStartup=$enable", TAG)
+        Log.d("Set loadingAtStartup=$enable", TAG)
         if (enable) {
             mHandler.post { onLoadMore(0) }
         }
@@ -1767,7 +1767,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         progressItem?.also {
             setEndlessScrollThreshold(mEndlessScrollThreshold)
             mProgressItem = it
-            logd("Enabled EndlessScrolling Item=$progressItem  enable=$endlessScrollEnabled", TAG)
+            Log.d("Enabled EndlessScrolling Item=$progressItem  enable=$endlessScrollEnabled", TAG)
         }
         return this
     }
@@ -1786,7 +1786,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      */
     fun setEndlessScrollListener(endlessScrollListener: EndlessScrollListener,
                                  progressItem: T): FlexibleAdapter<T> {
-        logd("Set endlessScrollListener=$endlessScrollListener", TAG)
+        Log.d("Set endlessScrollListener=$endlessScrollListener", TAG)
         mEndlessScrollListener = endlessScrollListener
         return setEndlessProgressItem(progressItem)
     }
@@ -1809,7 +1809,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             }
         }
         mEndlessScrollThreshold = thresholdItemsResult
-        logd("Set endlessScrollThreshold=$mEndlessScrollThreshold", TAG)
+        Log.d("Set endlessScrollThreshold=$mEndlessScrollThreshold", TAG)
         return this
     }
 
@@ -1833,7 +1833,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         if (!mTopEndless && (position == getGlobalPositionOf(mProgressItem) || position < threshold) || mTopEndless && position > 0 && position > threshold) {
             return
         }
-        logd("onLoadMore:   topEndless=$mTopEndless\nloading=$endlessLoading\nposition=$position\nitemCount=$itemCount\nthreshold=$mEndlessScrollThreshold\ncurrentThreshold=$threshold", TAG)
+        Log.d("onLoadMore:   topEndless=$mTopEndless\nloading=$endlessLoading\nposition=$position\nitemCount=$itemCount\nthreshold=$mEndlessScrollThreshold\ncurrentThreshold=$threshold", TAG)
         // Load more if not loading and inside the threshold
         endlessLoading = true
         // Insertion is in post, as suggested by Android because: java.lang.IllegalStateException:
@@ -1841,7 +1841,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         mHandler.post {
             // Show progressItem if not already shown
             showProgressItem()
-            logd("onLoadMore     invoked!")
+            Log.d("onLoadMore     invoked!")
             mEndlessScrollListener?.onLoadMore(getMainItemCount(), getEndlessCurrentPage())
         }
     }
@@ -1872,20 +1872,20 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         if (mEndlessPageSize > 0 && newItemsSize < mEndlessPageSize || // Is feature enabled and Not enough items?
                 mEndlessTargetCount in 1..totalItemCount) { // Is feature enabled and Max limit has been reached?
             // Disable the EndlessScroll feature
-            logd("onLoadMore     disable endless", TAG)
+            Log.d("onLoadMore     disable endless", TAG)
             setEndlessProgressItem(null)
         }
         // Remove the progressItem if needed.
         // Don't remove progressItem if delay is negative (-1) to keep it visible.
         if (delay > 0 && (newItemsSize == 0 || !isEndlessScrollEnabled())) {
-            logd("onLoadMore     enqueued removing progressItem ($delay ms)", TAG)
+            Log.d("onLoadMore     enqueued removing progressItem ($delay ms)", TAG)
             mHandler.sendEmptyMessageDelayed(MSG_LOAD_MORE_COMPLETE, delay)
         } else if (delay >= 0) {
             hideProgressItem()
         }
         // Add any new items
         if (newItemsSize > 0) {
-            logd("onLoadMore     performing adding $newItemsSize new items on page=${getEndlessCurrentPage()}", TAG)
+            Log.d("onLoadMore     performing adding $newItemsSize new items on page=${getEndlessCurrentPage()}", TAG)
             addItems(progressPosition, newItems)
         }
         // Eventually notify noMoreLoad
@@ -1898,7 +1898,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * Called at each loading more.
      */
     private fun showProgressItem() {
-        logd("onLoadMore     show progressItem", TAG)
+        Log.d("onLoadMore     show progressItem", TAG)
 
         // Clear previous delayed message
         mHandler.removeMessages(MSG_LOAD_MORE_COMPLETE)
@@ -1917,7 +1917,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     private fun hideProgressItem() {
         val positionToNotify = getGlobalPositionOf(mProgressItem)
         if (positionToNotify >= 0) {
-            logd("onLoadMore     remove progressItem", TAG)
+            Log.d("onLoadMore     remove progressItem", TAG)
             mProgressItem?.also {
                 if (mTopEndless) {
                     removeScrollableHeader(it)
@@ -1933,7 +1933,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * Called when no more items are loaded.
      */
     private fun noMoreLoad(newItemsSize: Int) {
-        logd("noMoreLoad!", TAG)
+        Log.d("noMoreLoad!", TAG)
         val positionToNotify = getGlobalPositionOf(mProgressItem)
         if (positionToNotify >= 0) notifyItemChanged(positionToNotify, Payload.NO_MORE_LOAD)
         mEndlessScrollListener?.noMoreLoad(newItemsSize)
@@ -1961,7 +1961,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see setMinCollapsibleLevel
      */
     fun setAutoCollapseOnExpand(collapseOnExpand: Boolean): FlexibleAdapter<T> {
-        logd("Set autoCollapseOnExpand=$collapseOnExpand", TAG)
+        Log.d("Set autoCollapseOnExpand=$collapseOnExpand", TAG)
         this.collapseOnExpand = collapseOnExpand
         return this
     }
@@ -1987,7 +1987,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see setMinCollapsibleLevel
      */
     fun setRecursiveCollapse(collapseSubLevels: Boolean): FlexibleAdapter<T> {
-        logd("Set setAutoCollapseSubLevels=$collapseSubLevels", TAG)
+        Log.d("Set setAutoCollapseSubLevels=$collapseSubLevels", TAG)
         this.collapseSubLevels = collapseSubLevels
         return this
     }
@@ -2010,7 +2010,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @return this Adapter, so the call can be chained
      */
     fun setAutoScrollOnExpand(scrollOnExpand: Boolean): FlexibleAdapter<T> {
-        logd("Set setAutoScrollOnExpand=$scrollOnExpand", TAG)
+        Log.d("Set setAutoScrollOnExpand=$scrollOnExpand", TAG)
         this.scrollOnExpand = scrollOnExpand
         return this
     }
@@ -2064,7 +2064,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see setRecursiveCollapse
      */
     fun setMinCollapsibleLevel(minCollapsibleLevel: Int): FlexibleAdapter<T> {
-        logd("Set minCollapsibleLevel=$minCollapsibleLevel", TAG)
+        Log.d("Set minCollapsibleLevel=$minCollapsibleLevel", TAG)
         this.mMinCollapsibleLevel = minCollapsibleLevel
         return this
     }
@@ -2262,11 +2262,11 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         val expandable = item as IExpandable<*, *>
         if (!hasSubItems(expandable)) {
             expandable.setExpanded(false) // Clear the expanded flag
-            logd("No subItems to Expand on position $newPosition expanded ${expandable.isExpanded()}", TAG)
+            Log.d("No subItems to Expand on position $newPosition expanded ${expandable.isExpanded()}", TAG)
             return 0
         }
         if (!init && !expandAll) {
-            logd("Request to Expand on position=$newPosition expanded=${expandable.isExpanded()} anyParentSelected=$parentSelected", TAG)
+            Log.d("Request to Expand on position=$newPosition expanded=${expandable.isExpanded()} anyParentSelected=$parentSelected", TAG)
         }
         var subItemsCount = 0
         if (init || !expandable.isExpanded() && (!parentSelected || expandable.getExpansionLevel() <= mSelectedLevel)) {
@@ -2308,7 +2308,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             if (!expandSHF(mScrollableHeaders, expandable))
                 expandSHF(mScrollableFooters, expandable)
 
-            logd("$subItemsCount $newPosition subItems on position=${if (init) "Initially expanded" else "Expanded"}", TAG)
+            Log.d("$subItemsCount $newPosition subItems on position=${if (init) "Initially expanded" else "Expanded"}", TAG)
         }
         return subItemsCount
     }
@@ -2370,7 +2370,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         val subItems = getExpandableList(expandable, true)
         var subItemsCount = subItems.size
 
-        logd("Request to Collapse on position=$position expanded=${expandable.isExpanded()} hasSubItemsSelected=${hasSubItemsSelected(position, subItems)}", TAG)
+        Log.d("Request to Collapse on position=$position expanded=${expandable.isExpanded()} hasSubItemsSelected=${hasSubItemsSelected(position, subItems)}", TAG)
 
         if (expandable.isExpanded() && subItemsCount > 0 && (!hasSubItemsSelected(position, subItems) || getPendingRemovedItem(item) != null)) {
 
@@ -2398,7 +2398,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             if (!collapseSHF(mScrollableHeaders, expandable))
                 collapseSHF(mScrollableFooters, expandable)
 
-            logd("Collapsed $subItemsCount subItems on position $position", TAG)
+            Log.d("Collapsed $subItemsCount subItems on position $position", TAG)
         }
         return subItemsCount
     }
@@ -2466,11 +2466,11 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     fun updateItem(@IntRange(from = 0) position: Int, item: T, payload: Any? = null) {
         val itemCount = itemCount
         if (position < 0 || position >= itemCount) {
-            logd("Cannot updateItem on position out of OutOfBounds!")
+            Log.d("Cannot updateItem on position out of OutOfBounds!")
             return
         }
         listData[position] = item
-        logd("updateItem notifyItemChanged on position $position")
+        Log.d("updateItem notifyItemChanged on position $position")
         notifyItemChanged(position, payload)
     }
 
@@ -2530,7 +2530,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see addItemWithDelay
      */
     fun addItem(@IntRange(from = 0) position: Int, item: T): Boolean {
-        logd("addItem delegates addition to addItems!", TAG)
+        Log.d("addItem delegates addition to addItems!", TAG)
         return addItems(position, listOf(item))
     }
 
@@ -2553,12 +2553,12 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     fun addItems(@IntRange(from = 0) position: Int, items: List<T>): Boolean {
         var newPosition = position
         if (items.isEmpty()) {
-            logd("addItems No items to add!", TAG)
+            Log.d("addItems No items to add!", TAG)
             return false
         }
         val initialCount = getMainItemCount() // Count only main items!
         if (newPosition < 0) {
-            logd("addItems Position is negative! adding items to the end", TAG)
+            Log.d("addItems Position is negative! adding items to the end", TAG)
             newPosition = initialCount + mScrollableHeaders.size
         }
         // Insert the items properly
@@ -2583,7 +2583,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         }
         // Notify range addition
         if (notify) {
-            logd("addItems on position=$newPosition itemCount=${items.size}", TAG)
+            Log.d("addItems on position=$newPosition itemCount=${items.size}", TAG)
             notifyItemRangeInserted(newPosition, items.size)
         }
     }
@@ -2694,7 +2694,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             val expandable = parent as IExpandable<*, *>?
             return addSubItems(parentPosition, subPosition, expandable!!, items, expandParent, payload)
         }
-        logd("addSubItems Provided parentPosition doesn't belong to an Expandable item!", TAG)
+        Log.d("addSubItems Provided parentPosition doesn't belong to an Expandable item!", TAG)
         return false
     }
 
@@ -2817,7 +2817,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see addItemToSection
      */
     fun addItemToSection(sectionable: ISectionable<*, *>, header: IHeader<*>?, @IntRange(from = 0) index: Int): Int {
-        logd("addItemToSection relativePosition=$index")
+        Log.d("addItemToSection relativePosition=$index")
         val headerPosition = getGlobalPositionOf(header as T)
         if (index >= 0) {
             sectionable.setHeader(header)
@@ -2843,7 +2843,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see removeItemsOfType
      */
     fun clear() {
-        logd("clearAll views")
+        Log.d("clearAll views")
         removeAllScrollableHeaders()
         removeAllScrollableFooters()
         removeRange(0, itemCount, null)
@@ -2861,7 +2861,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see removeItemsOfType
      */
     fun clearAllBut(vararg viewTypes: Int) {
-        logd("clearAll retaining views $viewTypes")
+        Log.d("clearAll retaining views $viewTypes")
         val positionsToRemove = ArrayList<Int>()
         val startPosition = Math.max(0, mScrollableHeaders.size)
         val endPosition = itemCount - mScrollableFooters.size
@@ -2913,7 +2913,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     fun removeSection(header: IHeader<*>) {
         val sectionItems = getSectionItemPositions(header).toMutableList()
         val headerPos = getGlobalPositionOf(header as T)
-        logd("removeSection $header with all subItems at position=$headerPos", TAG)
+        Log.d("removeSection $header with all subItems at position=$headerPos", TAG)
         sectionItems.add(headerPos)
         this.removeItems(sectionItems)
     }
@@ -2953,7 +2953,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     fun removeItem(@IntRange(from = 0) position: Int, payload: Any) {
         // Request to collapse after the notification of remove range
         collapse(position)
-        logd("removeItem delegates removal to removeRange", TAG)
+        Log.d("removeItem delegates removal to removeRange", TAG)
         removeRange(position, 1, payload)
     }
 
@@ -2990,13 +2990,13 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @see removeItems
      */
     fun removeItems(selectedPositions: List<Int>, payload: Any?) {
-        logd("removeItems selectedPositions=$selectedPositions payload=$payload", TAG)
+        Log.d("removeItems selectedPositions=$selectedPositions payload=$payload", TAG)
         var sortedPositions = selectedPositions
         if (sortedPositions.isEmpty()) return
         if (sortedPositions.size > 1) {
             // Reverse-sort the list, start from last position for efficiency
             sortedPositions = selectedPositions.sortedByDescending { it }
-            logd("removeItems after reverse sort selectedPositions=$sortedPositions", TAG)
+            Log.d("removeItems after reverse sort selectedPositions=$sortedPositions", TAG)
         }
         // Split the list in ranges
         var positionStart = 0
@@ -3103,12 +3103,12 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
                     @IntRange(from = 0) itemCount: Int,
                     payload: Any? = null) {
         val initialCount = getItemCount()
-        logd("removeRange positionStart=$positionStart itemCount=$itemCount", TAG)
+        Log.d("removeRange positionStart=$positionStart itemCount=$itemCount", TAG)
         if (positionStart < 0 || positionStart + itemCount > initialCount) {
-            logd("Cannot removeRange with positionStart OutOfBounds!", TAG)
+            Log.d("Cannot removeRange with positionStart OutOfBounds!", TAG)
             return
         } else if (itemCount == 0 || initialCount == 0) {
-            logd("removeRange Nothing to delete!", TAG)
+            Log.d("removeRange Nothing to delete!", TAG)
             return
         }
 
@@ -3219,7 +3219,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @return this Adapter, so the call can be chained
      */
     fun setPermanentDelete(permanentDelete: Boolean): FlexibleAdapter<T> {
-        logd("Set permanentDelete=$permanentDelete", TAG)
+        Log.d("Set permanentDelete=$permanentDelete", TAG)
         this.permanentDelete = permanentDelete
         return this
     }
@@ -3247,7 +3247,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @return this Adapter, so the call can be chained
      */
     fun setRestoreSelectionOnUndo(restoreSelection: Boolean): FlexibleAdapter<T> {
-        logd("Set restoreSelectionOnUndo=$restoreSelection", TAG)
+        Log.d("Set restoreSelectionOnUndo=$restoreSelection", TAG)
         this.restoreSelection = restoreSelection
         return this
     }
@@ -3271,12 +3271,12 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
 
             if (restoreInfo.relativePosition >= 0) {
                 // Restore child
-                logd("Restore SubItem $restoreInfo", TAG)
+                Log.d("Restore SubItem $restoreInfo", TAG)
                 addSubItem(restoreInfo.getRestorePosition(true), restoreInfo.relativePosition,
                         restoreInfo.item, false, Payload.UNDO)
             } else {
                 // Restore parent or simple item
-                logd("Restore Item $restoreInfo", TAG)
+                Log.d("Restore Item $restoreInfo", TAG)
                 addItem(restoreInfo.getRestorePosition(false), restoreInfo.item)
             }
             // Item is again visible
@@ -3302,7 +3302,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
                     addSelection(getGlobalPositionOf(restoreInfo.item))
                 }
             }
-            logd("Selected positions after restore ${getSelectedPositions()}", TAG)
+            Log.d("Selected positions after restore ${getSelectedPositions()}", TAG)
         }
         // Call listener to update EmptyView
         multiRange = false
@@ -3319,7 +3319,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      *
      */
     fun confirmDeletion() {
-        logd("confirmDeletion!", TAG)
+        Log.d("confirmDeletion!", TAG)
         mOriginalList.removeAll(getDeletedItems())
         emptyBin()
     }
@@ -3333,7 +3333,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      */
     @Synchronized
     fun emptyBin() {
-        logd("emptyBin!", TAG)
+        Log.d("emptyBin!", TAG)
         mRestoreList.clear()
         mUndoPositions.clear()
     }
@@ -3485,7 +3485,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @return this Adapter, so the call can be chained
      */
     fun setNotifyChangeOfUnfilteredItems(notifyChange: Boolean): FlexibleAdapter<T> {
-        logd("Set notifyChangeOfUnfilteredItems=$notifyChange", TAG)
+        Log.d("Set notifyChangeOfUnfilteredItems=$notifyChange", TAG)
         this.notifyChangeOfUnfilteredItems = notifyChange
         return this
     }
@@ -3506,7 +3506,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @return this Adapter, so the call can be chained
      */
     fun setNotifyMoveOfFilteredItems(notifyMove: Boolean): FlexibleAdapter<T> {
-        logd("Set notifyMoveOfFilteredItems=$notifyMove", TAG)
+        Log.d("Set notifyMoveOfFilteredItems=$notifyMove", TAG)
         this.notifyMoveOfFilteredItems = notifyMove
         return this
     }
@@ -3545,7 +3545,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
 
     @Synchronized
     private fun filterItemsAsync(unfilteredItems: List<T>) {
-        logd("filterItems with filterEntity=$mFilterEntity", TAG)
+        Log.d("filterItems with filterEntity=$mFilterEntity", TAG)
         val filteredResultItems = mutableListOf<T>()
         val keyFilter = mFilterEntity.toString()
         filtering = true //Enable flag
@@ -3744,7 +3744,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @return this Adapter, so the call can be chained
      */
     fun setAnimateToLimit(limit: Int): FlexibleAdapter<T> {
-        logd("Set animateToLimit=$limit", TAG)
+        Log.d("Set animateToLimit=$limit", TAG)
         mAnimateToLimit = limit
         return this
     }
@@ -3810,7 +3810,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
 
     @Synchronized
     private fun animateDiff(newItems: List<T>) {
-        logd("Animate changes with DiffUtils! oldSize=" + itemCount + " newSize=" + newItems.size, TAG)
+        Log.d("Animate changes with DiffUtils! oldSize=" + itemCount + " newSize=" + newItems.size, TAG)
         // create default instance if not set diffUtilCallBack
         if (diffUtilCallback == null) {
             diffUtilCallback = FlexibleDiffCallback(listData, newItems)
@@ -3837,13 +3837,13 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     private fun animateTo(newItems: List<T>, payloadChange: Payload) {
         mNotifications = mutableListOf()
         if (newItems.size <= mAnimateToLimit) {
-            logd("Animate changes! oldSize=$itemCount newSize=${newItems.size} limit=$mAnimateToLimit", TAG)
+            Log.d("Animate changes! oldSize=$itemCount newSize=${newItems.size} limit=$mAnimateToLimit", TAG)
             mTempItems = listData.map { it }.toMutableList()
             applyAndAnimateRemovals(mTempItems as MutableList<T>, newItems)
             applyAndAnimateAdditions(mTempItems as MutableList<T>, newItems)
             if (notifyMoveOfFilteredItems) applyAndAnimateMovedItems(mTempItems as MutableList<T>, newItems)
         } else {
-            logd("NotifyDataSetChanged! oldSize=$itemCount newSize=${newItems.size} limit=$mAnimateToLimit", TAG)
+            Log.d("NotifyDataSetChanged! oldSize=$itemCount newSize=${newItems.size} limit=$mAnimateToLimit", TAG)
             mTempItems = newItems.map { it }.toList()
             mNotifications?.add(Notification(operation = NONE))
         }
@@ -3888,7 +3888,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             if (mFilterAsyncTask != null && true == mFilterAsyncTask?.isCancelled) return
             val item = from[i]
             if (false == mHashItems?.contains(item)) {
-                logd("calculateRemovals remove position=$i item=$item", TAG)
+                Log.d("calculateRemovals remove position=$i item=$item", TAG)
                 from.removeAt(i)
                 mNotifications?.add(Notification(-1, i, REMOVE))
                 out++
@@ -3905,8 +3905,8 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             }
         }
         mHashItems = null
-        logd("calculateModifications total mod=$mod", TAG)
-        logd("calculateRemovals total out=$out", TAG)
+        Log.d("calculateModifications total mod=$mod", TAG)
+        Log.d("calculateRemovals total out=$out", TAG)
     }
 
 
@@ -3922,7 +3922,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             if (mFilterAsyncTask != null && true == mFilterAsyncTask?.isCancelled) return
             val item = newItems[position]
             if (false == mHashItems?.contains(item)) {
-                logd("calculateAdditions add position=$position item=$item", TAG)
+                Log.d("calculateAdditions add position=$position item=$item", TAG)
                 if (notifyMoveOfFilteredItems) {
                     // We add always at the end to animate moved items at the missing position
                     from.add(item)
@@ -3940,7 +3940,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             }
         }
         mHashItems = null
-        logd("calculateAdditions total new=$count", TAG)
+        Log.d("calculateAdditions total new=$count", TAG)
     }
 
     /**
@@ -3956,7 +3956,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             val item = newItems[toPosition]
             val fromPosition = from.indexOf(item)
             if (fromPosition >= 0 && fromPosition != toPosition) {
-                logd("calculateMovedItems fromPosition=$fromPosition toPosition=$toPosition", TAG)
+                Log.d("calculateMovedItems fromPosition=$fromPosition toPosition=$toPosition", TAG)
                 val movedItem = from.removeAt(fromPosition)
                 if (toPosition < from.size)
                     from.add(toPosition, movedItem)
@@ -3966,20 +3966,20 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
                 move++
             }
         }
-        logd("calculateMovedItems total move=$move", TAG)
+        Log.d("calculateMovedItems total move=$move", TAG)
     }
 
 
     @Synchronized
     private fun executeNotifications(payloadChange: Payload) {
         if (diffResult != null) {
-            logd("Dispatching notifications use Diff", TAG)
+            Log.d("Dispatching notifications use Diff", TAG)
             listData = diffUtilCallback?.newList?.toMutableList()
                     ?: mutableListOf()// Update mItems in the UI Thread
             diffResult?.dispatchUpdatesTo(this)
             diffResult = null
         } else {
-            logd("Performing $mNotifications.size notifications", TAG)
+            Log.d("Performing $mNotifications.size notifications", TAG)
             listData = mTempItems.toMutableList()     // Update mItems in the UI Thread
             setScrollAnimate(false) // Disable scroll animation
             mNotifications?.forEach {
@@ -3989,7 +3989,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
                     REMOVE -> notifyItemRemoved(it.toPosition)
                     MOVE -> notifyItemMoved(it.fromPosition, it.toPosition)
                     else -> {
-                        logd("notifyDataSetChanged!", TAG)
+                        Log.d("notifyDataSetChanged!", TAG)
                         notifyDataSetChanged()
                     }
                 }
@@ -4000,7 +4000,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             setScrollAnimate(true)
         }
         endTimeFiltered = System.currentTimeMillis() - startTimeFilter
-        logd("Animate changes DONE in $endTimeFiltered ms", TAG)
+        Log.d("Animate changes DONE in $endTimeFiltered ms", TAG)
     }
 
     /**
@@ -4023,7 +4023,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
 
             if (mItemTouchHelperCallback == null) {
                 mItemTouchHelperCallback = ItemTouchHelperCallback(this)
-                logd("Initialized default ItemTouchHelperCallback", TAG)
+                Log.d("Initialized default ItemTouchHelperCallback", TAG)
             }
             mItemTouchHelperCallback?.also {
                 mItemTouchHelper = ItemTouchHelper(it)
@@ -4069,7 +4069,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         mItemTouchHelperCallback = callback
         mItemTouchHelper = null
         initializeItemTouchHelper()
-        logd("Initialized custom ItemTouchHelperCallback", TAG)
+        Log.d("Initialized custom ItemTouchHelperCallback", TAG)
         return this
     }
 
@@ -4103,7 +4103,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      */
     fun setLongPressDragEnabled(longPressDragEnabled: Boolean): FlexibleAdapter<T> {
         initializeItemTouchHelper()
-        logd("Set longPressDragEnabled=$longPressDragEnabled", TAG)
+        Log.d("Set longPressDragEnabled=$longPressDragEnabled", TAG)
         mItemTouchHelperCallback?.longPressDragEnabled = longPressDragEnabled
         return this
     }
@@ -4134,7 +4134,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      */
     fun setHandleDragEnabled(handleDragEnabled: Boolean): FlexibleAdapter<T> {
         initializeItemTouchHelper()
-        logd("Set handleDragEnabled=$handleDragEnabled", TAG)
+        Log.d("Set handleDragEnabled=$handleDragEnabled", TAG)
         this.mItemTouchHelperCallback?.handleDragEnabled = handleDragEnabled
         return this
     }
@@ -4165,7 +4165,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @return this Adapter, so the call can be chained
      */
     fun setSwipeEnabled(swipeEnabled: Boolean): FlexibleAdapter<T> {
-        logd("Set swipeEnabled=$swipeEnabled", TAG)
+        Log.d("Set swipeEnabled=$swipeEnabled", TAG)
         initializeItemTouchHelper()
         mItemTouchHelperCallback?.swipeEnabled = swipeEnabled
         return this
@@ -4183,7 +4183,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
      * @param payload      allows to update the content of the item just moved
      */
     fun moveItem(fromPosition: Int, toPosition: Int, payload: Any? = Payload.MOVE) {
-        logd("moveItem fromPosition=$fromPosition toPosition=$toPosition", TAG)
+        Log.d("moveItem fromPosition=$fromPosition toPosition=$toPosition", TAG)
         // Preserve selection
         if (isSelected(fromPosition)) {
             removeSelection(fromPosition)
@@ -4220,7 +4220,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
                 toPosition < 0 || toPosition >= itemCount) {
             return
         }
-        logd("swapItems from=$fromPosition [selected? ${isSelected(fromPosition)}] to=$toPosition [selected? ${isSelected(toPosition)}]", TAG)
+        Log.d("swapItems from=$fromPosition [selected? ${isSelected(fromPosition)}] to=$toPosition [selected? ${isSelected(toPosition)}]", TAG)
 
         // Collapse expandable before swapping (otherwise items are mixed badly)
         if (fromPosition < toPosition && isExpandableItem(getItem(fromPosition)) && isExpanded(toPosition)) {
@@ -4230,13 +4230,13 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         // Perform item swap (for all LayoutManagers)
         if (fromPosition < toPosition) {
             for (i in fromPosition until toPosition) {
-                logd("swapItems from=$i to=${i + 1}", TAG)
+                Log.d("swapItems from=$i to=${i + 1}", TAG)
                 Collections.swap(list, i, i + 1)
                 swapSelection(i, i + 1)
             }
         } else {
             for (i in fromPosition downTo toPosition + 1) {
-                logd("swapItems from=$i to=${i - 1}", TAG)
+                Log.d("swapItems from=$i to=${i - 1}", TAG)
                 Collections.swap(list, i, i - 1)
                 swapSelection(i, i - 1)
             }
@@ -4336,7 +4336,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     private fun mapViewTypeFrom(item: T) {
         if (!mTypeInstances.containsKey(item.getItemViewType())) {
             mTypeInstances[item.getItemViewType()] = item
-            logd("Mapped viewType ${item.getItemViewType()} from ${item::class.java.simpleName}", TAG)
+            Log.d("Mapped viewType ${item.getItemViewType()} from ${item::class.java.simpleName}", TAG)
         }
     }
 
@@ -4371,7 +4371,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
         val siblings = getExpandableList(expandable, false)
         val childPosition = siblings.indexOf(item)
         mRestoreList.add(RestoreInfo(expandable as T, item, childPosition))
-        logd("Recycled SubItem ${mRestoreList[mRestoreList.size - 1]} with Parent position=${getGlobalPositionOf(expandable)}", TAG)
+        Log.d("Recycled SubItem ${mRestoreList[mRestoreList.size - 1]} with Parent position=${getGlobalPositionOf(expandable)}", TAG)
     }
 
 
@@ -4390,7 +4390,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             val expandable = getExpandableOf(refItem)
             if (expandable != null) refItem = expandable as T?
             mRestoreList.add(RestoreInfo(refItem as T, item, -1))
-            logd("Recycled Item ${mRestoreList[mRestoreList.size - 1]} on position=$position", TAG)
+            Log.d("Recycled Item ${mRestoreList[mRestoreList.size - 1]} on position=$position", TAG)
         }
     }
 
@@ -4467,7 +4467,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
                     scrollBy = scrollBy % spanCount + spanCount
                 }
                 val scrollTo = firstVisibleItem + scrollBy
-                logd("autoScroll scrollMin=$scrollMin scrollMax=$scrollMax scrollBy=$scrollBy scrollTo=$scrollTo", TAG)
+                Log.d("autoScroll scrollMin=$scrollMin scrollMax=$scrollMax scrollBy=$scrollBy scrollTo=$scrollTo", TAG)
                 performScroll(scrollTo)
             } else if (position < firstVisibleItem) {
                 performScroll(position)
@@ -4493,7 +4493,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
                 adjusted = true
             }
         }
-        if (adjusted) logd("AdjustedSelected(${diff + itemCount})=${getSelectedPositions()}", TAG)
+        if (adjusted) Log.d("AdjustedSelected(${diff + itemCount})=${getSelectedPositions()}", TAG)
     }
 
     /**
@@ -4582,7 +4582,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
     private inner class HandlerCallback : Handler.Callback {
         @CallSuper
         override fun handleMessage(message: Message): Boolean {
-            logd("OnHandle message--> ${message.what}", TAG)
+            Log.d("OnHandle message--> ${message.what}", TAG)
             when (message.what) {
                 MSG_UPDATE, MSG_FILTER -> {
                     //filterItems
@@ -4610,35 +4610,35 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
 
         override fun onPreExecute() {
             if (endlessLoading) {
-                logd("Cannot filter while endlessLoading", TAG)
+                Log.d("Cannot filter while endlessLoading", TAG)
                 this.cancel(true)
             }
             // Note: In case of some deleted items, we commit the deletion in the original list
             // and in the current list before starting or resetting the filter.
             if (isRestoreInTime()) {
-                logd("Removing all deleted items before filtering/updating", TAG)
+                Log.d("Removing all deleted items before filtering/updating", TAG)
                 listDoing.removeAll(getDeletedItems())
                 mDeleteCompleteListener?.onDeleteConfirmed(DISMISS_EVENT_MANUAL) //  = 3
             }
         }
 
         override fun onCancelled() {
-            logd("FilterAsyncTask cancelled!", TAG)
+            Log.d("FilterAsyncTask cancelled!", TAG)
         }
 
         override fun doInBackground(vararg params: Void): Void? {
             startTimeFilter = System.currentTimeMillis()
             when (what) {
                 MSG_UPDATE -> {
-                    logd("doInBackground - started MSG_UPDATE", TAG)
+                    Log.d("doInBackground - started MSG_UPDATE", TAG)
                     prepareItemsForUpdate(listDoing)
                     toggleAnimate(listDoing, Payload.CHANGE)
-                    logd("doInBackground - ended MSG_UPDATE", TAG)
+                    Log.d("doInBackground - ended MSG_UPDATE", TAG)
                 }
                 MSG_FILTER -> {
-                    logd("doInBackground - started MSG_FILTER", TAG)
+                    Log.d("doInBackground - started MSG_FILTER", TAG)
                     filterItemsAsync(listDoing)
-                    logd("doInBackground - ended MSG_FILTER", TAG)
+                    Log.d("doInBackground - ended MSG_FILTER", TAG)
                 }
             }
             return null
@@ -4772,7 +4772,7 @@ class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = m
             // #499 - Bulk operation properly updates the same sticky header once, while each
             // independent operation (multiple events) updates the sticky header multiple times.
             if (stickyPosition >= 0 && stickyPosition == positionStart) {
-                logd("updateStickyHeader position=$stickyPosition")
+                Log.d("updateStickyHeader position=$stickyPosition")
                 // #320 - To include adapter changes just notified we need a new layout pass:
                 // We must give time to LayoutManager otherwise the findFirstVisibleItemPosition()
                 // will return wrong position!

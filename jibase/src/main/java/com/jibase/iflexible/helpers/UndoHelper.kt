@@ -8,10 +8,10 @@ import androidx.annotation.StringRes
 import com.jibase.iflexible.adapter.FlexibleAdapter
 import com.jibase.iflexible.listener.OnDeleteCompleteListener
 import com.jibase.iflexible.listener.OnUndoActionListener
-import com.jibase.utils.getStringResource
-import com.jibase.utils.logd
 import com.jibase.view.ISnackBar
 import com.google.android.material.snackbar.Snackbar
+import com.jibase.utils.Log
+import com.jibase.utils.ResourceUtils.getString
 
 class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionListener) : Snackbar.Callback(), OnDeleteCompleteListener {
     annotation class Action {
@@ -61,7 +61,7 @@ class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionList
      * @return this object, so it can be chained
      */
     fun withPayload(payload: Any?): UndoHelper {
-        if (payload != null) logd("With payload", TAG)
+        if (payload != null) Log.d("With payload", TAG)
         this.mPayload = payload
         return this
     }
@@ -85,7 +85,7 @@ class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionList
      * @return this object, so it can be chained
      */
     fun withActionTextColor(@ColorInt color: Int): UndoHelper {
-        logd("With customActionTextColor", TAG)
+        Log.d("With customActionTextColor", TAG)
         this.mActionTextColor = color
         return this
     }
@@ -97,7 +97,7 @@ class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionList
      * @return this object, so it can be chained
      */
     fun withBackgroundColor(@ColorInt color: Int): UndoHelper {
-        logd("With customBackgroundColor", TAG)
+        Log.d("With customBackgroundColor", TAG)
         this.mBackgroundColor = color
         return this
     }
@@ -110,7 +110,7 @@ class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionList
      */
 
     fun withTextColor(@ColorInt color: Int): UndoHelper {
-        logd("With customTextColor", TAG)
+        Log.d("With customTextColor", TAG)
         this.mMessageTextColor = color
         return this
     }
@@ -125,7 +125,7 @@ class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionList
      * @return this object, so it can be chained
      */
     fun withConsecutive(consecutive: Boolean): UndoHelper {
-        logd("With consecutive=$consecutive", TAG)
+        Log.d("With consecutive=$consecutive", TAG)
         this.consecutive = consecutive
         return this
     }
@@ -149,7 +149,7 @@ class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionList
 
     fun start(positions: List<Int>, targetView: View, message: String, actionText: String, @IntRange(from = -1) duration: Int = -1): Snackbar? {
         this.mPositions = positions
-        logd("With ${if (mAction == Action.REMOVE) " ACTION REMOVE" else "ACTION UPDATE"}")
+        Log.d("With ${if (mAction == Action.REMOVE) " ACTION REMOVE" else "ACTION UPDATE"}")
         mSnackbar = ISnackBar().of(targetView)
                 .setTextColor(mMessageTextColor)
                 .setActionColor(mActionTextColor)
@@ -172,7 +172,7 @@ class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionList
      * Second function with StringRes
      */
     fun start(positions: List<Int>, targetView: View, @StringRes messageRes: Int, @StringRes actionTextRes: Int, @IntRange(from = -1) duration: Int = -1): Snackbar? {
-        return start(positions, targetView, getStringResource(messageRes), getStringResource(actionTextRes), duration)
+        return start(positions, targetView, getString(messageRes), getString(actionTextRes), duration)
     }
 
 

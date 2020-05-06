@@ -13,14 +13,6 @@ fun loadSimple(v: ImageView, value: Any, placeHolder: Int = -1, errorHolder: Int
     v.load(value, placeHolder, errorHolder)
 }
 
-@BindingAdapter("loadAsBitmap", "placeHolder", "errorHolder", requireAll = false)
-fun loadAsBitmap(v: ImageView, value: Any, placeHolder: Int = -1, errorHolder: Int = -1) {
-    v.load(value, null, placeHolder, errorHolder)
-}
-
-
-
-
 //---- Text Binding ----//
 @BindingAdapter("makeScroll")
 fun makeScroll(v: TextView, boolean: Boolean) {

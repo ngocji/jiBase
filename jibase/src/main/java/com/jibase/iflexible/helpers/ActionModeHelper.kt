@@ -10,7 +10,7 @@ import com.jibase.iflexible.adapter.AbstractFlexibleAdapter.Companion.IDLE
 import com.jibase.iflexible.adapter.AbstractFlexibleAdapter.Companion.MULTI
 import com.jibase.iflexible.adapter.AbstractFlexibleAdapter.Companion.SINGLE
 import com.jibase.iflexible.adapter.FlexibleAdapter
-import com.jibase.utils.logd
+import com.jibase.utils.Log
 
 class ActionModeHelper(val adapter: FlexibleAdapter<*>, @MenuRes val cabMenu: Int, val callback: ActionMode.Callback? = null) : ActionMode.Callback {
 
@@ -164,7 +164,7 @@ class ActionModeHelper(val adapter: FlexibleAdapter<*>, @MenuRes val cabMenu: In
         mode?.apply {
             menuInflater.inflate(cabMenu, menu)
         }
-        logd("ActionMode is active!", TAG)
+        Log.d("ActionMode is active!", TAG)
         adapter.setMode(MULTI)
         disableSwipeDragCapabilities()
         return callback == null || callback.onCreateActionMode(mode, menu)
@@ -186,7 +186,7 @@ class ActionModeHelper(val adapter: FlexibleAdapter<*>, @MenuRes val cabMenu: In
     }
 
     override fun onDestroyActionMode(mode: ActionMode?) {
-        logd("ActionMode is about to be destroyed!", TAG)
+        Log.d("ActionMode is about to be destroyed!", TAG)
         // Change mode and deselect everything
         adapter.setMode(defaultMode)
         adapter.clearSelection()

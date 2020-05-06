@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <style name="AppTheme" />
+
     <style name="style_full_screen">
         <item name="android:windowFullscreen">true</item>
     </style>

@@ -2,8 +2,6 @@
 
 package com.jibase.helper.session
 
-import java.lang.NullPointerException
-
 object SessionHelper {
     private val listData = mutableMapOf<String, Any>()
 
@@ -11,16 +9,12 @@ object SessionHelper {
         listData[key] = data
     }
 
-    fun <T> get(key: String): T? {
+    fun <T : Any> get(key: String): T? {
         return listData[key] as? T
     }
 
-    fun <T> getNotNull(key: String, default: T): T {
-        return if (listData.containsKey(key)) {
-            listData[key] as T
-        } else {
-            default
-        }
+    fun <T : Any> getNotNull(key: String, default: T): T {
+        return listData.getOrPut(key, { default }) as T
     }
 
     /**
@@ -29,7 +23,7 @@ object SessionHelper {
      *  @throw NullPointerException
      */
     @Throws(NullPointerException::class)
-    fun <T> getNotNull(key: String): T {
+    fun <T : Any> getNotNull(key: String): T {
         return get<T>(key) ?: throw NullPointerException("This data is null")
     }
 
@@ -50,7 +44,7 @@ object SessionHelper {
      * Check if key exists in session
      * @param key
      */
-    fun containKey(key:String):Boolean{
+    fun containKey(key: String): Boolean {
         return listData.containsKey(key)
     }
 }

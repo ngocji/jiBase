@@ -10,7 +10,7 @@ import androidx.core.view.ViewPropertyAnimatorListener
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.jibase.iflexible.viewholder.AnimatedViewHolder
-import com.jibase.utils.logd
+import com.jibase.utils.Log
 import java.util.*
 
 open class FleFlexibleItemAnimator() : SimpleItemAnimator() {
@@ -82,7 +82,7 @@ open class FleFlexibleItemAnimator() : SimpleItemAnimator() {
         // Reverse sorting removal animations
         mPendingRemovals.sortByDescending { it.itemId }
         val remover = Runnable {
-            logd("Run remove---> ${mPendingRemovals.size}", TAG)
+            Log.d("Run remove---> ${mPendingRemovals.size}", TAG)
             mPendingRemovals.forEachIndexed { index, holder ->
                 doAnimateRemove(holder, index)
             }
@@ -98,7 +98,7 @@ open class FleFlexibleItemAnimator() : SimpleItemAnimator() {
             mMovesList.add(moves)
             mPendingMoves.clear()
             val mover = Runnable {
-                logd("Run move---> ${mMovesList.size}", TAG)
+                Log.d("Run move---> ${mMovesList.size}", TAG)
                 moves.forEach { moveInfo ->
                     animateMoveImpl(moveInfo.holder, moveInfo.fromX, moveInfo.fromY,
                             moveInfo.toX, moveInfo.toY)
@@ -123,7 +123,7 @@ open class FleFlexibleItemAnimator() : SimpleItemAnimator() {
             mChangesList.add(changes)
             mPendingChanges.clear()
             val changer = Runnable {
-                logd("Run change---> ${changes.size}", TAG)
+                Log.d("Run change---> ${changes.size}", TAG)
                 changes.forEach {
                     animateChangeImpl(it)
                 }
@@ -152,7 +152,7 @@ open class FleFlexibleItemAnimator() : SimpleItemAnimator() {
             mAdditionsList.add(additions)
             mPendingAdditions.clear()
             val adder = Runnable {
-                logd("Run add---> ${mAddAnimations.size}", TAG)
+                Log.d("Run add---> ${mAddAnimations.size}", TAG)
                 additions.forEachIndexed { index, holder ->
                     doAnimateAdd(holder, index)
                 }
@@ -218,7 +218,7 @@ open class FleFlexibleItemAnimator() : SimpleItemAnimator() {
     }
 
     private fun doAnimateRemove(holder: RecyclerView.ViewHolder, index: Int) {
-        logd("AnimateRemove on itemId=${holder.itemId}  layoutPosition=${holder.layoutPosition}", TAG)
+        Log.d("AnimateRemove on itemId=${holder.itemId}  layoutPosition=${holder.layoutPosition}", TAG)
         var consumed = false
         if (holder is AnimatedViewHolder) {
             consumed = (holder as AnimatedViewHolder).animateRemoveImpl(DefaultRemoveVpaListener(holder), removeDuration, index)
@@ -230,7 +230,7 @@ open class FleFlexibleItemAnimator() : SimpleItemAnimator() {
     }
 
     override fun animateRemove(holder: RecyclerView.ViewHolder): Boolean {
-        logd("Animate remove ---> $holder")
+        Log.d("Animate remove ---> $holder")
         endAnimation(holder)
         return preAnimateRemove(holder) && mPendingRemovals.add(holder)
     }
@@ -280,7 +280,7 @@ open class FleFlexibleItemAnimator() : SimpleItemAnimator() {
     }
 
     private fun doAnimateAdd(holder: RecyclerView.ViewHolder, index: Int) {
-        logd("AnimateAdd on itemId=${holder.itemId} position=${holder.layoutPosition}", TAG)
+        Log.d("AnimateAdd on itemId=${holder.itemId} position=${holder.layoutPosition}", TAG)
         var consumed = false
         if (holder is AnimatedViewHolder) {
             consumed = (holder as AnimatedViewHolder).animateAddImpl(DefaultAddVpaListener(holder), addDuration, index)

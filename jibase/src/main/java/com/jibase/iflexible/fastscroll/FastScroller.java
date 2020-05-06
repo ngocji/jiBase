@@ -31,7 +31,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jibase.R;
-import com.jibase.utils.LogUtilsKt;
+import com.jibase.utils.Log;
 
 import java.lang.annotation.Retention;
 import java.lang.reflect.Method;
@@ -281,7 +281,7 @@ public class FastScroller extends FrameLayout {
                 handle.setImageDrawable(stateListDrawable);
             } catch (Exception e) {
                 // This should never happen in theory (Java Reflection Exception)
-                LogUtilsKt.log("Exception while setting Bubble and Handle Color"+e.toString(),"");
+                Log.INSTANCE.d("Exception while setting Bubble and Handle Color"+e.toString(),"");
             }
         }
     }
@@ -697,7 +697,7 @@ public class FastScroller extends FrameLayout {
          */
         @SuppressWarnings("ConstantConditions")
         public void setFastScroller(@Nullable FastScroller fastScroller) {
-            LogUtilsKt.log("Setting FastScroller...", "");
+            Log.INSTANCE.d("Setting FastScroller...", "");
 
             if (mRecyclerView == null) {
                 throw new IllegalStateException("RecyclerView cannot be null. Setup FastScroller after the Adapter has been added to the RecyclerView.");
@@ -709,11 +709,11 @@ public class FastScroller extends FrameLayout {
                         R.layout.library_fast_scroller_layout,
                         R.id.fast_scroller_bubble,
                         R.id.fast_scroller_handle);
-                LogUtilsKt.log(TAG, "FastScroller initialized");
+                Log.INSTANCE.d(TAG, "FastScroller initialized");
             } else if (mFastScroller != null) {
                 mFastScroller.setEnabled(false);
                 mFastScroller = null;
-                LogUtilsKt.log(TAG, "FastScroller removed");
+                Log.INSTANCE.d(TAG, "FastScroller removed");
             }
         }
     }

@@ -12,7 +12,7 @@ import com.jibase.iflexible.adapter.FlexibleAdapter
 import com.jibase.iflexible.adapter.AbstractFlexibleAdapter.Companion.MULTI
 import com.jibase.iflexible.utils.LayoutUtils
 import com.jibase.iflexible.viewholder.AbstractContentViewHolder
-import com.jibase.utils.logd
+import com.jibase.utils.Log
 
 abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>, isStickyHeader: Boolean = false) : AbstractContentViewHolder(preItemView, adapter, isStickyHeader), ItemTouchHelperCallback.ViewHolderCallback, View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
     // These 2 fields avoid double tactile feedback triggered by Android during the touch event
@@ -35,7 +35,7 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
         // If LongPressDrag is enabled, then LongClick must be skipped and the listener will
         // be called in onActionStateChanged in Drag mode.
         if (adapter.mItemLongClickListener != null && !adapter.isLongPressDragEnabled()) {
-            logd("onClick on position $position mode=  ${LayoutUtils.getModeName(adapter.mode)}")
+            Log.d("onClick on position $position mode=  ${LayoutUtils.getModeName(adapter.mode)}")
             adapter.mItemLongClickListener?.onItemLongClick(position)
             toggleActivation()
             return true
@@ -50,7 +50,7 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
         // Experimented that, if LongClick is not consumed, onClick is fired. We skip the
         // call to the listener in this case, which is allowed only in ACTION_STATE_IDLE.
         if (mActionState == ItemTouchHelper.ACTION_STATE_IDLE) {
-            logd("onClick on position $position mode=${LayoutUtils.getModeName(adapter.mode)}")
+            Log.d("onClick on position $position mode=${LayoutUtils.getModeName(adapter.mode)}")
             // Get the permission to activate the View from user
             if (true == adapter.mItemClickListener?.onItemClick(v, position)) {
                 // Now toggle the activation
@@ -62,10 +62,10 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
         val position = getFlexibleAdapterPosition()
         if (!adapter.isItemEnabled(position) || !isDraggable()) {
-            logd("Can't start drag: Item is not enabled or draggable!")
+            Log.d("Can't start drag: Item is not enabled or draggable!")
             return false
         }
-        logd("onTouch with DragHandleView on position=$position mode=${LayoutUtils.getModeName(adapter.mode)}")
+        Log.d("onTouch with DragHandleView on position=$position mode=${LayoutUtils.getModeName(adapter.mode)}")
         if (MotionEvent.ACTION_DOWN == event?.actionMasked && adapter.isHandleDragEnabled()) {
             //Start Drag!
             adapter.getItemTouchHelper()?.startDrag(this)
@@ -95,10 +95,10 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
         view.setOnTouchListener { v, event ->
             val position = getFlexibleAdapterPosition()
             if (!adapter.isItemEnabled(position) || !isDraggable()) {
-                logd("Can't start drag: Item is not enabled or draggable!")
+                Log.d("Can't start drag: Item is not enabled or draggable!")
                 return@setOnTouchListener false
             }
-            logd("onClick on position $position mode= ${LayoutUtils.getModeName(adapter.mode)}")
+            Log.d("onClick on position $position mode= ${LayoutUtils.getModeName(adapter.mode)}")
             if (event.actionMasked == MotionEvent.ACTION_DOWN && adapter.isHandleDragEnabled()) {
                 //Start Drag!
                 adapter.getItemTouchHelper()?.startDrag(this)
@@ -234,7 +234,7 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
     override fun onActionStateChanged(position: Int, actionState: Int) {
         mActionState = actionState
         isAlreadySelected = adapter.isSelected(position)
-        logd("onClick on position $position mode=  ${LayoutUtils.getModeName(adapter.mode)} \n${if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) "Swipe(1)" else "Drag(2)"}")
+        Log.d("onClick on position $position mode=  ${LayoutUtils.getModeName(adapter.mode)} \n${if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) "Swipe(1)" else "Drag(2)"}")
 
         when (actionState) {
             ItemTouchHelper.ACTION_STATE_DRAG -> {
@@ -246,7 +246,7 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
                         // Next check, allows to initiate the ActionMode and to add selection if configured
                         if ((shouldAddSelectionInActionMode() || adapter.mode != MULTI) &&
                                 adapter.mItemLongClickListener != null && adapter.isSelectable(position)) {
-                            logd("onClick on position  $position mode= ${LayoutUtils.getModeName(adapter.mode)}")
+                            Log.d("onClick on position  $position mode= ${LayoutUtils.getModeName(adapter.mode)}")
                             adapter.mItemLongClickListener?.onItemLongClick(position)
                             isAlreadySelected = true // Keep selection on release!
                         }
@@ -289,12 +289,12 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
      */
     @CallSuper
     override fun onItemReleased(position: Int) {
-        logd("onClick on position %s mode=%s: $position ${LayoutUtils.getModeName(adapter.mode)} \n${if (mActionState == ItemTouchHelper.ACTION_STATE_SWIPE) "Swipe(1)" else "Drag(2)"}")
+        Log.d("onClick on position %s mode=%s: $position ${LayoutUtils.getModeName(adapter.mode)} \n${if (mActionState == ItemTouchHelper.ACTION_STATE_SWIPE) "Swipe(1)" else "Drag(2)"}")
         // Be sure to keep selection if MULTI and shouldAddSelectionInActionMode is active
         if (!isAlreadySelected) {
             when {
                 (shouldAddSelectionInActionMode() && adapter.mode == MULTI) -> {
-                    logd("onClick on position  $position mode= ${LayoutUtils.getModeName(adapter.mode)}")
+                    Log.d("onClick on position  $position mode= ${LayoutUtils.getModeName(adapter.mode)}")
                     adapter.mItemLongClickListener?.onItemLongClick(position)
                     if (adapter.isSelected(position)) {
                         toggleActivation()

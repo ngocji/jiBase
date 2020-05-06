@@ -8,7 +8,7 @@ import com.jibase.iflexible.common.IFlexibleLayoutManager
 import com.jibase.iflexible.fastscroll.FastScroller
 import com.jibase.iflexible.entities.Payload
 import com.jibase.iflexible.viewholder.simple.FlexibleViewHolder
-import com.jibase.utils.logd
+import com.jibase.utils.Log
 import java.util.*
 
 abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), FastScroller.BubbleTextCreator, FastScroller.OnScrollStateChangeListener, FastScroller.AdapterInterface {
@@ -205,7 +205,7 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
             addSelection(position, true)
         }
 //        notifyItemChanged(position)
-        logd("toggleSelection $position on position $position, current $selectedPositions ," +
+        Log.d("toggleSelection $position on position $position, current $selectedPositions ," +
                 if (contains) "removed" else "added", TAG)
     }
 
@@ -269,7 +269,7 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
      */
     open fun selectAll(vararg viewTypes: Int) {
         selectAll = true
-        logd("selectAll ViewTypes to include $viewTypes", TAG)
+        Log.d("selectAll ViewTypes to include $viewTypes", TAG)
         var positionStart = 0
         var itemCount = 0
         val payload = Payload.SELECTED
@@ -286,7 +286,7 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
                 }
             }
         }
-        logd("selectAll notifyItemRangeChanged from positionStart=${positionStart} itemCount=${getItemCount()} ---> ", TAG)
+        Log.d("selectAll notifyItemRangeChanged from positionStart=${positionStart} itemCount=${getItemCount()} ---> ", TAG)
         notifySelectionChanged(positionStart, getItemCount(), payload)
     }
 
@@ -303,7 +303,7 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
         // #373 - ConcurrentModificationException with Undo after multiple rapid swipe removals
         val payload = Payload.UN_SELECTED
         synchronized(selectedPositions) {
-            logd("clearSelection $selectedPositions", TAG)
+            Log.d("clearSelection $selectedPositions", TAG)
             val iterator = selectedPositions.iterator()
             var positionStart = 0
             var itemCount = 0
@@ -321,7 +321,7 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
                     itemCount = 1
                 }
             }
-            logd("clearSelection positionStart=$positionStart -> itemCount=$itemCount", TAG)
+            Log.d("clearSelection positionStart=$positionStart -> itemCount=$itemCount", TAG)
             // Notify remaining items in range
             notifySelectionChanged(positionStart, itemCount, payload)
         }
@@ -364,7 +364,7 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         if (holder is FlexibleViewHolder) {
             val recycled = boundViewHolders.remove(holder)
-            logd("onViewRecycled viewSize=${boundViewHolders.size} ---> $holder recycled=$recycled", TAG)
+            Log.d("onViewRecycled viewSize=${boundViewHolders.size} ---> $holder recycled=$recycled", TAG)
         }
     }
 
@@ -428,7 +428,7 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
      */
     open fun onSaveInstanceState(outState: Bundle) {
         outState.putIntegerArrayList(javaClass.simpleName, ArrayList(selectedPositions))
-        if (getSelectedItemCount() > 0) logd("Saving selection $selectedPositions")
+        if (getSelectedItemCount() > 0) Log.d("Saving selection $selectedPositions")
     }
 
     /**
@@ -441,7 +441,7 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
         val selectedItems = savedInstanceState.getIntegerArrayList(javaClass.simpleName)
         if (selectedItems != null) {
             selectedPositions.addAll(selectedItems)
-            if (getSelectedItemCount() > 0) logd("Restore selection $selectedPositions", TAG)
+            if (getSelectedItemCount() > 0) Log.d("Restore selection $selectedPositions", TAG)
         }
     }
 

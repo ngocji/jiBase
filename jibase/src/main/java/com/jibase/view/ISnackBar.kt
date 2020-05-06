@@ -4,13 +4,13 @@ import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
 import com.jibase.R
-import com.jibase.utils.getColorResource
-import com.jibase.utils.getStringResource
 import com.google.android.material.snackbar.Snackbar
+import com.jibase.utils.ResourceUtils.getColor
+import com.jibase.utils.ResourceUtils.getString
 import java.lang.IllegalArgumentException
 
 class ISnackBar {
-    private val noneColor = getColorResource(R.color.trans)
+    private val noneColor = getColor(R.color.trans)
 
     private var rootView: View? = null
     private var message: String = ""
@@ -35,7 +35,7 @@ class ISnackBar {
     }
 
     fun withMessage(@StringRes messageResId: Int): ISnackBar {
-        this.message = getStringResource(messageResId)
+        this.message = getString(messageResId)
         return this
     }
 
@@ -45,7 +45,7 @@ class ISnackBar {
     }
 
     fun withActionName(@StringRes actionNameResId: Int): ISnackBar {
-        this.actionName = getStringResource(actionNameResId)
+        this.actionName = getString(actionNameResId)
         return this
     }
 
