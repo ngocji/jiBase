@@ -1,4 +1,4 @@
-package com.jibase.helper.keyboard
+package com.jibase.helper
 
 import android.content.Context
 import android.graphics.Rect
@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
-import com.jibase.BaseApp
 
 class KeyboardHelper(private val context: Context){
     fun showKeyboard(target: View) {

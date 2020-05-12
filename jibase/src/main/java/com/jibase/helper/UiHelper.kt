@@ -1,19 +1,7 @@
-package com.jibase.helper.ui
+package com.jibase.helper
 
 import android.os.Handler
 import android.os.Looper
-
-fun runMain(vararg task: () -> Unit): Runnable {
-    return UIHelper.post(*task)
-}
-
-fun runDelay(task: () -> Unit, time: Int): Runnable {
-    return UIHelper.delay(task, time)
-}
-
-fun removeAllCallbackAndMessage(){
-    UIHelper.removeAllCallbackAndMessage()
-}
 
 object UIHelper {
     private val handleUI = Handler(Looper.getMainLooper())

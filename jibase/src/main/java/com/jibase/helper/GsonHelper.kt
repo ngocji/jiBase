@@ -1,4 +1,4 @@
-package com.jibase.helper.gson
+package com.jibase.helper
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

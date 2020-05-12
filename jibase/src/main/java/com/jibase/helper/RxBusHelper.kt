@@ -1,4 +1,4 @@
-package com.jibase.helper.event
+package com.jibase.helper
 
 import android.content.Context
 import com.jibase.utils.Log

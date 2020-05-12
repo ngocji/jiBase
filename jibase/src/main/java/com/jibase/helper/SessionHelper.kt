@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.jibase.helper.session
+package com.jibase.helper
 
 object SessionHelper {
     private val listData = mutableMapOf<String, Any>()

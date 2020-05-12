@@ -3,7 +3,7 @@ package comx.y.z.kotlinbase
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.jibase.helper.event.registerEvent
+import com.jibase.helper.registerEvent
 import com.jibase.utils.Log
 
 class MainActivity : AppCompatActivity() {

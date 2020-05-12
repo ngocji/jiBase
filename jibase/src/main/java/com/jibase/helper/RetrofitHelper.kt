@@ -1,4 +1,4 @@
-package com.jibase.helper.retrofit
+package com.jibase.helper
 
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -35,7 +35,12 @@ object RetrofitHelper {
                 .baseUrl(baseUrl)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(gSonFactory)
-                .client(createClient(timeOut, interceptors))
+                .client(
+                    createClient(
+                        timeOut,
+                        interceptors
+                    )
+                )
                 .build()
                 .run {
                     hasRetrofit[baseUrl] = this

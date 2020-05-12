@@ -1,4 +1,4 @@
-package com.jibase.helper.pref
+package com.jibase.helper
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -7,7 +7,8 @@ import org.koin.core.inject
 
 object SharePreferencesHelper : KoinComponent {
     private val context: Context by inject()
-    val pref: SharedPreferences by lazy { context.getSharedPreferences(context.packageName, Context.MODE_PRIVATE) }
+    val pref: SharedPreferences by lazy { context.getSharedPreferences(
+        context.packageName, Context.MODE_PRIVATE) }
 
     inline fun <reified T> getPref(key: String, defaultValue: T): T {
         val value = pref.getString(key, defaultValue.toString()) ?: return defaultValue
