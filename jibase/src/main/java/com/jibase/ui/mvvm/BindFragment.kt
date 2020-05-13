@@ -12,10 +12,7 @@ import com.jibase.extensions.initBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.reflect.KClass
 
-abstract class BindFragment<VM : BindViewModel>(
-    @LayoutRes private val layoutResId: Int,
-    clazzViewModel: KClass<VM>
-) : Fragment() {
+abstract class BindFragment<VM : BindViewModel>(@LayoutRes private val layoutRes: Int, clazzViewModel: KClass<VM>) : Fragment() {
 
     open val viewModel: VM by viewModel(clazzViewModel)
 
@@ -27,7 +24,7 @@ abstract class BindFragment<VM : BindViewModel>(
         savedInstanceState: Bundle?
     ): View? {
         // create data binding
-        binding = initBinding(layoutResId, inflater, container, viewModel)
+        binding = initBinding(layoutRes, inflater, container, viewModel)
 
         // return the view
         return binding.root

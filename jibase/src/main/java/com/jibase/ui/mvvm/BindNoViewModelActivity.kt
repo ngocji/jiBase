@@ -7,15 +7,14 @@ import androidx.databinding.ViewDataBinding
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
 
-abstract class BindNoViewModelActivity(
-        @LayoutRes private val layoutResId: Int) : AppCompatActivity() {
-
+abstract class BindNoViewModelActivity(@LayoutRes private val layoutRes: Int) : AppCompatActivity() {
     lateinit var binding: ViewDataBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // init binding
-         binding = initBinding(layoutResId, null)
+         binding = initBinding(layoutRes, null)
 
         onViewReady(savedInstanceState)
         onViewListener()

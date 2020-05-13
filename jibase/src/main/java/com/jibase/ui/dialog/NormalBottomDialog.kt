@@ -13,14 +13,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.jibase.R
 import com.jibase.extensions.inflate
 
-abstract class NormalBottomDialog(@LayoutRes private val layoutResId: Int, private val themeResId: Int = R.style.style_dialog_100) : BottomSheetDialogFragment() {
+abstract class NormalBottomDialog(@LayoutRes private val layoutRes: Int, private val themeResId: Int = R.style.style_dialog_100) : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_TITLE, themeResId)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return container?.inflate(layoutResId)
+        return container?.inflate(layoutRes)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

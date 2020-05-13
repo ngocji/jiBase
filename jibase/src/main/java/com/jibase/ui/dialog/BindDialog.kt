@@ -11,16 +11,16 @@ import com.jibase.extensions.initBinding
 import com.jibase.listener.OnDialogListener
 
 open class BindDialog<T>(
-        @LayoutRes private val layoutResId: Int,
+        @LayoutRes private val layoutRes: Int,
         private val data: T? = null,
         private val listener: OnDialogListener? = null,
         themeResId: Int = R.style.style_dialog_90
-) : NormalDialog(layoutResId, themeResId) {
+) : NormalDialog(layoutRes, themeResId) {
 
     lateinit var binding: ViewDataBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = initBinding(container, layoutResId, data, listener)
+        binding = initBinding(container, layoutRes, data, listener)
         return binding.root
     }
 

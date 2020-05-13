@@ -9,10 +9,7 @@ import com.jibase.extensions.initBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.reflect.KClass
 
-abstract class BindActivity<VM : BindViewModel>(
-    @LayoutRes private val layoutResId: Int,
-    clazzViewModel: KClass<VM>
-) : AppCompatActivity() {
+abstract class BindActivity<VM : BindViewModel>(@LayoutRes private val layoutRes: Int, clazzViewModel: KClass<VM>) : AppCompatActivity() {
 
     open val viewModel: VM by viewModel(clazzViewModel)
 
@@ -22,7 +19,7 @@ abstract class BindActivity<VM : BindViewModel>(
         super.onCreate(savedInstanceState)
 
         // init binding
-        binding = initBinding(layoutResId, viewModel)
+        binding = initBinding(layoutRes, viewModel)
 
         onViewReady(savedInstanceState)
         onViewListener()

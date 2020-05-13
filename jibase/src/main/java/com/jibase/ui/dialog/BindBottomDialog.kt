@@ -12,15 +12,15 @@ import com.jibase.listener.OnDialogListener
 
 
 open class BindBottomDialog<T>(
-        @LayoutRes private val layoutResId: Int,
+        @LayoutRes private val layoutRes: Int,
         private val data: T? = null,
         private val listener: OnDialogListener? = null,
         themeResId: Int = R.style.style_dialog_100
-) : NormalBottomDialog(layoutResId, themeResId) {
+) : NormalBottomDialog(layoutRes, themeResId) {
     lateinit var binding: ViewDataBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = initBinding(container, layoutResId, data, listener)
+        binding = initBinding(container, layoutRes, data, listener)
         return binding.root
     }
 

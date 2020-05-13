@@ -10,13 +10,12 @@ import androidx.fragment.app.Fragment
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
 
-abstract class BindNoViewModelFragment(
-        @LayoutRes private val layoutResId: Int) : Fragment() {
+abstract class BindNoViewModelFragment(@LayoutRes private val layoutRes: Int) : Fragment() {
     lateinit var binding: ViewDataBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // create data binding
-        binding = initBinding(layoutResId, inflater, container, null)
+        binding = initBinding(layoutRes, inflater, container, null)
 
         // return the view
         return binding.root
