@@ -1,3 +1,5 @@
+@file:JvmName("ViewModelExtensions")
+
 package com.jibase.extensions
 
 import androidx.lifecycle.LifecycleOwner

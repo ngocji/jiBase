@@ -1,3 +1,5 @@
+@file:JvmName("SimpleBinding")
+
 package com.jibase.binding
 
 import android.view.View
@@ -25,7 +27,6 @@ fun makeScroll(v: TextView, boolean: Boolean) {
 fun makeFade(v: TextView, heightFade: Int) {
     v.makeFadeTextView(heightFade)
 }
-
 
 
 //---- View Binding ----//

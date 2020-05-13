@@ -1,3 +1,5 @@
+@file:JvmName("ViewExtensions")
+
 package com.jibase.extensions
 
 import android.graphics.Bitmap

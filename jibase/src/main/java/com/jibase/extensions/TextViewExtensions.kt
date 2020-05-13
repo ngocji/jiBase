@@ -1,3 +1,5 @@
+@file:JvmName("TextViewExtensions")
+
 package com.jibase.extensions
 
 import android.os.Build

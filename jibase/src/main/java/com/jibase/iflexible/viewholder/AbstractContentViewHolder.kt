@@ -8,12 +8,7 @@ import com.jibase.extensions.changeElevation
 import com.jibase.extensions.getCurrentElevation
 import com.jibase.iflexible.adapter.FlexibleAdapter
 
-abstract class AbstractContentViewHolder(view: View, val adapter: FlexibleAdapter<*>, private val isStickyHeader: Boolean) : RecyclerView.ViewHolder(
-        if (isStickyHeader) {
-            FrameLayout(view.context)
-        } else {
-            view
-        }) {
+abstract class AbstractContentViewHolder(view: View, val adapter: FlexibleAdapter<*>, private val isStickyHeader: Boolean) : RecyclerView.ViewHolder(if (isStickyHeader) FrameLayout(view.context) else view) {
     var contentView: View
     var backupPosition = RecyclerView.NO_POSITION
 

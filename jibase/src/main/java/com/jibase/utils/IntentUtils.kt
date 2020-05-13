@@ -18,6 +18,7 @@ object IntentUtils : KoinComponent {
      *  @param context: context
      *  @param pkg: package name
      */
+    @JvmStatic
     fun goToStore(context: Context, pkg: String) {
         val uri = Uri.parse("market://details?id=$pkg")
         val goToMarket = Intent(Intent.ACTION_VIEW, uri).apply {
@@ -41,6 +42,7 @@ object IntentUtils : KoinComponent {
      * @param pkg: package name
      * @param text: string description
      */
+    @JvmStatic
     fun shareApp(context: Context, pkg: String, text: String = "") {
         val sendIntent = Intent().apply {
             action = Intent.ACTION_SEND
@@ -67,6 +69,7 @@ object IntentUtils : KoinComponent {
      * @param pkg: package name
      * @param error: message when package name not exists
      */
+    @JvmStatic
     fun goToApps(context: Context, pkg: String, error: String) {
         try {
             val launcherIntent = context.packageManager.getLaunchIntentForPackage(pkg)?.apply {
@@ -86,6 +89,7 @@ object IntentUtils : KoinComponent {
      * @param url
      * @param packageName
      */
+    @JvmStatic
     fun goToUrl(context: Context, url: String, packageName: String = "") {
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK and Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
@@ -104,6 +108,7 @@ object IntentUtils : KoinComponent {
      * @param mess
      * @param subject: Subject title
      */
+    @JvmStatic
     fun shareText(context: Context, mess: String, subject: String = "", packageName: String = "") {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
@@ -124,13 +129,8 @@ object IntentUtils : KoinComponent {
      * @param bitmap: Bitmap src require not null
      * @param error: Message when no intent share
      */
-    fun shareImage(
-        context: Context,
-        bitmap: Bitmap,
-        title: String = "",
-        error: String = "",
-        packageName: String = ""
-    ) {
+    @JvmStatic
+    fun shareImage(context: Context, bitmap: Bitmap, title: String = "", error: String = "", packageName: String = "") {
         try {
             val pathUri = Uri.parse(
                 MediaStore.Images.Media.insertImage(
@@ -152,6 +152,7 @@ object IntentUtils : KoinComponent {
      * @param path: path of image like explore
      * @param error: Message when no intent share
      */
+    @JvmStatic
     fun shareImage(context: Context, path: String, error: String = "", packageName: String = "") {
         try {
             val bitmap = BitmapFactory.decodeFile(path)
@@ -167,6 +168,7 @@ object IntentUtils : KoinComponent {
      * @param uri: URI of image require not null
      * @param error: Message when no intent share
      */
+    @JvmStatic
     fun shareImage(context: Context, uri: Uri, error: String = "", packageName: String = "") {
         try {
             val i = Intent(Intent.ACTION_SEND)
@@ -188,13 +190,9 @@ object IntentUtils : KoinComponent {
      * @param mailTo: mail to sent
      * @param error: string when no apps open
      */
+    @JvmStatic
     fun sentMail(
-        context: Context,
-        subject: String,
-        message: String,
-        mailTo: String,
-        error: String = ""
-    ) {
+        context: Context, subject: String, message: String, mailTo: String, error: String = "") {
         try {
             context.startActivity(Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:$mailTo")

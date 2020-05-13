@@ -32,6 +32,7 @@ class GsonHelper {
     }
 
 
+    // region inline for kotlin
     // copy entity
     inline fun <reified T> copy(data: T): T {
         val encode = toJson(data)
@@ -69,4 +70,6 @@ class GsonHelper {
         builder.registerTypeAdapterFactory(createAdapterFactory(*cls))
         return builder.create()
     }
+
+    // end region
 }

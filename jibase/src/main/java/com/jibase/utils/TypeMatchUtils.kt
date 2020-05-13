@@ -1,8 +1,9 @@
+@file:JvmName("TypeMatchUtils")
+
 package com.jibase.utils
 
 import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
-
 
 /**
  * Find type match of class

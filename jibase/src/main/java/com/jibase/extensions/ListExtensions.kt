@@ -1,3 +1,5 @@
+@file:JvmName("ListExtensions")
+
 package com.jibase.extensions
 
 /**

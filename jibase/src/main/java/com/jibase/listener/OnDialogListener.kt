@@ -1,6 +1,6 @@
 package com.jibase.listener
 
-interface OnDialogListener {
+abstract class OnDialogListener {
     fun onCancel() {}
     fun onConfirm() {}
 }

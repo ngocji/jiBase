@@ -10,10 +10,12 @@ import com.jibase.extensions.inflate
 import com.jibase.extensions.load
 
 object ToastUtils {
+    @JvmStatic
     fun showText(context: Context, message: String) {
         Toast.makeText(context.applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
+    @JvmStatic
     fun showImage(context: Context, icon: Int, message: String = "", gravity: Int = Gravity.CENTER) {
         val view = context.inflate(R.layout.layout_toast_image)
         view.findViewById<ImageView>(R.id.im_icon).load(icon)

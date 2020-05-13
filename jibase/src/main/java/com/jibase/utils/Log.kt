@@ -8,12 +8,14 @@ object Log : KoinComponent {
     private var isEnable = BuildConfig.DEBUG
     private const val STACK_TRACE_LEVELS_UP = 6
 
+    @JvmStatic
     fun e(string: String, prefix: String = "MY_LOG") {
         if (isEnable) {
             Log.e(prefix, createMessage(string))
         }
     }
 
+    @JvmStatic
     fun d(string: String, prefix: String = "MY_LOG") {
         if (isEnable) {
             Log.d(prefix, createMessage(string))

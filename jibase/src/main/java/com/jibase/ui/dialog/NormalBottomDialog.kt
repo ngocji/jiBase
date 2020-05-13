@@ -8,15 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.annotation.LayoutRes
+import androidx.annotation.StyleRes
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.jibase.R
 import com.jibase.extensions.inflate
 
-abstract class NormalBottomDialog(@LayoutRes private val layoutRes: Int, private val themeResId: Int = R.style.style_dialog_100) : BottomSheetDialogFragment() {
+abstract class NormalBottomDialog(@LayoutRes private val layoutRes: Int, @StyleRes private val styleRes: Int = R.style.style_dialog_100) : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NO_TITLE, themeResId)
+        setStyle(DialogFragment.STYLE_NO_TITLE, styleRes)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

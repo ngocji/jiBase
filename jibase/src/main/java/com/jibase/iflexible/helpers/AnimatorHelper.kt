@@ -19,6 +19,7 @@ object AnimatorHelper {
      * @param view      itemView to animate
      * @param alphaFrom starting alpha value
      */
+    @JvmStatic
     fun alphaAnimator(animators: MutableList<Animator>, view: View, @FloatRange(from = 0.0, to = 1.0) alphaFrom: Float) {
         view.alpha = 0f
         animators.add(ObjectAnimator.ofFloat(view, "alpha", alphaFrom, 1f))
@@ -31,6 +32,7 @@ object AnimatorHelper {
      * @param view      itemView to animate
      * @param percent   any % multiplier (between 0 and 1) of the LayoutManager Width
      */
+    @JvmStatic
     fun slideInFromLeftAnimator(animators: MutableList<Animator>, view: View,
                                 recyclerView: RecyclerView, @FloatRange(from = 0.0, to = 1.0) percent: Float) {
         alphaAnimator(animators, view, 0f)
@@ -46,6 +48,7 @@ object AnimatorHelper {
      * @param view      ItemView to animate
      * @param percent   Any % multiplier (between 0 and 1) of the LayoutManager Width
      */
+    @JvmStatic
     fun slideInFromRightAnimator(
             animators: MutableList<Animator>, view: View,
             recyclerView: RecyclerView, @FloatRange(from = 0.0, to = 1.0) percent: Float) {
@@ -60,6 +63,7 @@ object AnimatorHelper {
      * @param animators user defined list of animators
      * @param view      itemView to animate
      */
+    @JvmStatic
     fun slideInFromTopAnimator(
             animators: MutableList<Animator>, view: View,
             recyclerView: RecyclerView) {
@@ -74,6 +78,7 @@ object AnimatorHelper {
      * @param animators user defined list of animators
      * @param view      itemView to animate
      */
+    @JvmStatic
     fun slideInFromBottomAnimator(
             animators: MutableList<Animator>, view: View,
             recyclerView: RecyclerView) {
@@ -89,6 +94,7 @@ object AnimatorHelper {
      * @param view      itemView to animate
      * @param scaleFrom initial scale value
      */
+    @JvmStatic
     fun scaleAnimator(
             animators: MutableList<Animator>, view: View, @FloatRange(from = 0.0, to = 1.0) scaleFrom: Float) {
         alphaAnimator(animators, view, 0f)
@@ -103,6 +109,7 @@ object AnimatorHelper {
      * @param animators user defined list of animators
      * @param view      itemView to animate
      */
+    @JvmStatic
     fun flipAnimator(animators: MutableList<Animator>, view: View) {
         alphaAnimator(animators, view, 0f)
         animators.add(ObjectAnimator.ofFloat(view, "scaleY", 0f, 1f))
@@ -115,6 +122,7 @@ object AnimatorHelper {
      * @param animators user defined list of animators
      * @param duration  duration in milliseconds
      */
+    @JvmStatic
     fun setDuration(animators: List<Animator>, @IntRange(from = 0) duration: Long) {
         if (animators.isNotEmpty()) {
             val animator = animators[animators.size - 1]

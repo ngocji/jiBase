@@ -13,7 +13,7 @@ import com.jibase.iflexible.viewholder.AnimatedViewHolder
 import com.jibase.utils.Log
 import java.util.*
 
-open class FleFlexibleItemAnimator() : SimpleItemAnimator() {
+open class FlexibleItemAnimator() : SimpleItemAnimator() {
     private val TAG = javaClass.simpleName
     private val mPendingRemovals = mutableListOf<RecyclerView.ViewHolder>()
     private val mPendingAdditions = mutableListOf<RecyclerView.ViewHolder>()

@@ -1,3 +1,5 @@
+@file:JvmName("BindingExtensions")
+
 package com.jibase.extensions
 
 import android.view.LayoutInflater
@@ -7,8 +9,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import com.jibase.BR
 import com.jibase.listener.OnDialogListener
 

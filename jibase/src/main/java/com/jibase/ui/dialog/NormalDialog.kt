@@ -8,12 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import androidx.annotation.LayoutRes
+import androidx.annotation.StyleRes
 import androidx.fragment.app.DialogFragment
 import com.jibase.R
 import com.jibase.extensions.inflate
 
 
-abstract class NormalDialog(@LayoutRes private val layoutRes: Int, private val style: Int = R.style.style_dialog_90) : DialogFragment() {
+abstract class NormalDialog(@LayoutRes private val layoutRes: Int, @StyleRes private val style: Int = R.style.style_dialog_90) : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,3 +1,5 @@
+@file:JvmName("InflateExtensions")
+
 package com.jibase.extensions
 
 import android.content.Context

@@ -11,7 +11,7 @@ import com.jibase.extensions.inflate
 
 abstract class NormalFragment(@LayoutRes private val layoutRes: Int = ID_NULL) : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return if (layoutRes!=ID_NULL) container?.inflate(layoutRes) else null
+        return if (layoutRes != ID_NULL) container?.inflate(layoutRes) else null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

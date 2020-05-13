@@ -5,17 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
+import androidx.annotation.StyleRes
 import androidx.databinding.ViewDataBinding
 import com.jibase.R
 import com.jibase.extensions.initBinding
 import com.jibase.listener.OnDialogListener
 
-open class BindDialog<T>(
-        @LayoutRes private val layoutRes: Int,
-        private val data: T? = null,
-        private val listener: OnDialogListener? = null,
-        themeResId: Int = R.style.style_dialog_90
-) : NormalDialog(layoutRes, themeResId) {
+open class BindDialog<T>(@LayoutRes private val layoutRes: Int, private val data: T? = null, private val listener: OnDialogListener? = null, @StyleRes styleRes: Int = R.style.style_dialog_90) : NormalDialog(layoutRes, styleRes) {
 
     lateinit var binding: ViewDataBinding
 

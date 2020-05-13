@@ -7,8 +7,11 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
+import com.jibase.listener.OnKeyboardListener
+import org.koin.core.KoinComponent
 
-class KeyboardHelper(private val context: Context){
+class KeyboardHelper(private val context: Context) : KoinComponent {
+
     fun showKeyboard(target: View) {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.showSoftInput(target, InputMethodManager.HIDE_IMPLICIT_ONLY)
@@ -42,10 +45,4 @@ class KeyboardHelper(private val context: Context){
             }
         })
     }
-}
-
-interface OnKeyboardListener {
-    fun onKeyboardVisible() {}
-    fun onKeyboardHide() {}
-    fun onKeyboardChangeHeight(height: Int) {}
 }

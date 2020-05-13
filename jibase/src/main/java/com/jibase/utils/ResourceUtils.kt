@@ -1,13 +1,11 @@
 package com.jibase.utils
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.annotation.*
 import androidx.core.content.ContextCompat
@@ -19,14 +17,19 @@ import org.koin.core.inject
 object ResourceUtils : KoinComponent {
     private val context: Context by inject()
 
-    fun getColor(@ColorRes id: Int): Int = ContextCompat.getColor(context, id)
+    @JvmStatic
+    fun getColor(@ColorRes id: Int) = ContextCompat.getColor(context, id)
 
-    fun getDimen(@DimenRes id: Int): Float = context.resources.getDimension(id)
+    @JvmStatic
+    fun getDimen(@DimenRes id: Int) = context.resources.getDimension(id)
 
-    fun getDimenPixel(@DimenRes id: Int): Int = context.resources.getDimensionPixelOffset(id)
+    @JvmStatic
+    fun getDimenPixel(@DimenRes id: Int) = context.resources.getDimensionPixelOffset(id)
 
-    fun getInteger(@IntegerRes id: Int): Int = context.resources.getInteger(id)
+    @JvmStatic
+    fun getInteger(@IntegerRes id: Int) = context.resources.getInteger(id)
 
+    @JvmStatic
     fun getFont(@FontRes id: Int): Typeface? {
         return try {
             ResourcesCompat.getFont(context, id)
@@ -35,38 +38,43 @@ object ResourceUtils : KoinComponent {
         }
     }
 
+    @JvmStatic
     fun getDrawable(@DrawableRes id: Int): Drawable {
         val d = ContextCompat.getDrawable(context, id)
         return d ?: context.resources.getDrawable(R.drawable.ic_error, null)
     }
 
+    @JvmStatic
     fun getBitmap(@DrawableRes id: Int): Bitmap {
         val d = getDrawable(id)
         return (d as BitmapDrawable).bitmap
     }
 
-    fun getString(@StringRes id: Int): String {
-        return context.getString(id)
-    }
+    @JvmStatic
+    fun getString(@StringRes id: Int) = context.getString(id)
 
-    fun getAnimation(@AnimRes id: Int): Animation =
-            AnimationUtils.loadAnimation(context, id)
 
-    fun getStringArray(@ArrayRes id: Int): Array<String> {
-        return context.resources.getStringArray(id)
-    }
+    @JvmStatic
+    fun getAnimation(@AnimRes id: Int) = AnimationUtils.loadAnimation(context, id)
 
-    fun getTypeArray(id: Int): TypedArray {
-        return context.resources.obtainTypedArray(id)
-    }
+    @JvmStatic
+    fun getStringArray(@ArrayRes id: Int) = context.resources.getStringArray(id)
 
-    fun getResourceId(name: String, def: String): Int {
-        return context.resources.getIdentifier(name, def, context.packageName)
-    }
 
-    fun String.toColor(): Int = Color.parseColor(this)
+    @JvmStatic
+    fun getTypeArray(id: Int) = context.resources.obtainTypedArray(id)
+
+
+    @JvmStatic
+    fun getResourceId(name: String, def: String) = context.resources.getIdentifier(name, def, context.packageName)
+
+    @JvmStatic
+    fun String.toColor() = Color.parseColor(this)
+
+    @JvmStatic
     fun drawableToString(id: Int) = "android.resource://" + context.packageName + "/" + id
-    fun drawableToString(name: String) =
-            "android.resource//" + context.packageName + "/drawable/" + name
+
+    @JvmStatic
+    fun drawableToString(name: String) = "android.resource//" + context.packageName + "/drawable/" + name
 
 }

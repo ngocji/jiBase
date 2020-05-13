@@ -2,7 +2,7 @@ package com.jibase.listener
 
 import androidx.viewpager.widget.ViewPager
 
-interface SimplePageChangeListener : ViewPager.OnPageChangeListener {
+abstract class SimplePageChangeListener : ViewPager.OnPageChangeListener {
     override fun onPageScrollStateChanged(state: Int) {
     }
 

@@ -23,6 +23,7 @@ object HighlightUtils {
      * @param originalText
      * @param color custom color of highlight. default is [colorAccent]
      */
+    @JvmStatic
     fun highlightText(view: TextView,
                       constraint: String,
                       hasBold: Boolean = true,
@@ -47,6 +48,7 @@ object HighlightUtils {
      * @param originalText
      * @param color custom color of highlight. default is [colorAccent]
      */
+    @JvmStatic
     fun highlightWords(view: TextView,
                        constraint: String,
                        hasBold: Boolean = true,

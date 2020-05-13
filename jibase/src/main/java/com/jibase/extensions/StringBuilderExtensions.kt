@@ -1,3 +1,5 @@
+@file:JvmName("StringBuilderExtensions")
+
 package com.jibase.extensions
 
 fun StringBuilder.newString(string: String) {

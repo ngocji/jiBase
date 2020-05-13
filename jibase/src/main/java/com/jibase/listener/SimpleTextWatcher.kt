@@ -3,7 +3,7 @@ package com.jibase.listener
 import android.text.Editable
 import android.text.TextWatcher
 
-interface SimpleTextWatcher : TextWatcher {
+abstract class SimpleTextWatcher : TextWatcher {
     override fun afterTextChanged(s: Editable?) {
     }
 

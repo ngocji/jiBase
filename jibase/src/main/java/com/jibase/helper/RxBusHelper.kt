@@ -6,7 +6,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
-// inline helper
+// region inline helper
 inline fun <reified T> Context.registerEvent(noinline action: (data: T) -> Unit) {
     val id = this.hashCode()
     val eventClass = T::class.java
@@ -20,6 +20,7 @@ fun Context.unregisterEvent() {
 fun <T : Any> sendEvent(data: T) {
     RxBusHelper.send(data)
 }
+// end region
 
 object RxBusHelper {
     private val compositeDisposable: HashMap<Int, Disposable> by lazy { hashMapOf<Int, Disposable>() }
@@ -45,6 +46,17 @@ object RxBusHelper {
         compositeDisposable[id]?.dispose()
     }
 
+    @JvmStatic
+    fun <T> register(context: Context, eventType: Class<T>, action: (data: T) -> Unit) {
+        register(context.hashCode(), eventType, action)
+    }
+
+    @JvmStatic
+    fun unregister(context: Context) {
+        unregister(context.hashCode())
+    }
+
+    @JvmStatic
     fun <T : Any> send(data: T) {
         Log.d("RxEvent: \nsend event: $data")
         busSubject.onNext(data)

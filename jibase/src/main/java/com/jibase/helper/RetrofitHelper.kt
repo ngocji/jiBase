@@ -20,6 +20,7 @@ object RetrofitHelper {
      *  @param timeOut: time out
      *  @return :  serviceClass or null
      */
+    @JvmStatic
     fun <T> create(
         baseUrl: String,
         serviceClass: Class<T>,

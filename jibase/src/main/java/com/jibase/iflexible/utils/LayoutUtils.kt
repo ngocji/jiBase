@@ -10,6 +10,7 @@ object LayoutUtils {
     /**
      * @ return the string representation of the provided
      */
+    @JvmStatic
     fun getModeName(mode: Int): String {
         return when (mode) {
             SINGLE -> "SINGLE"
@@ -26,6 +27,7 @@ object LayoutUtils {
      * @param recyclerView the RecyclerView with LayoutManager instance in use
      * @return one of [OrientationHelper.HORIZONTAL], [OrientationHelper.VERTICAL]
      */
+    @JvmStatic
     fun getOrientation(recyclerView: RecyclerView): Int {
         return FlexibleLayoutManager(recyclerView).getOrientation()
     }
@@ -38,6 +40,7 @@ object LayoutUtils {
      * @param recyclerView the RecyclerView with LayoutManager instance in use
      * @return the span count
      */
+    @JvmStatic
     fun getSpanCount(recyclerView: RecyclerView): Int {
         return FlexibleLayoutManager(recyclerView).getSpanCount()
     }
@@ -51,6 +54,7 @@ object LayoutUtils {
      * if there aren't any visible items.
      * @see .findFirstVisibleItemPosition
      */
+    @JvmStatic
     fun findFirstCompletelyVisibleItemPosition(recyclerView: RecyclerView): Int {
         return FlexibleLayoutManager(recyclerView).findFirstCompletelyVisibleItemPosition()
     }
@@ -64,6 +68,7 @@ object LayoutUtils {
      * if there aren't any visible items.
      * @see .findFirstCompletelyVisibleItemPosition
      */
+    @JvmStatic
     fun findFirstVisibleItemPosition(recyclerView: RecyclerView): Int {
         return FlexibleLayoutManager(recyclerView).findFirstVisibleItemPosition()
     }
@@ -77,6 +82,7 @@ object LayoutUtils {
      * if there aren't any visible items.
      * @see .findLastVisibleItemPosition
      */
+    @JvmStatic
     fun findLastCompletelyVisibleItemPosition(recyclerView: RecyclerView): Int {
         return FlexibleLayoutManager(recyclerView).findLastCompletelyVisibleItemPosition()
     }
@@ -90,6 +96,7 @@ object LayoutUtils {
      * if there aren't any visible items.
      * @see .findLastCompletelyVisibleItemPosition
      */
+    @JvmStatic
     fun findLastVisibleItemPosition(recyclerView: RecyclerView): Int {
         return FlexibleLayoutManager(recyclerView).findLastVisibleItemPosition()
     }

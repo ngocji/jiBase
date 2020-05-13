@@ -1,15 +1,16 @@
-package com.jibase.helper
+package com.jibase.utils
 
 import android.os.Handler
 import android.os.Looper
 
-object UIHelper {
+object UI {
     private val handleUI = Handler(Looper.getMainLooper())
 
     /**
      *  post task running in UI thread
      *  @param  task: list of task use want
      */
+    @JvmStatic
     fun post(vararg task: () -> Unit): Runnable {
         val runnable = Runnable { task.forEach { it() } }
         handleUI.post(runnable)
@@ -21,6 +22,7 @@ object UIHelper {
      * @param task: task use want delay
      * @param time: time delay
      */
+    @JvmStatic
     fun delay(task: () -> Unit, time: Int): Runnable {
         val runnable = Runnable { task() }
         handleUI.postDelayed(runnable, time.toLong())
@@ -32,10 +34,12 @@ object UIHelper {
      * @param runnable: runnable
      *
      */
+    @JvmStatic
     fun remove(runnable: Runnable?) {
         handleUI.removeCallbacksAndMessages(runnable)
     }
 
+    @JvmStatic
     fun removeAllCallbackAndMessage(){
         handleUI.removeCallbacksAndMessages(null)
     }
