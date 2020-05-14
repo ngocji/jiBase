@@ -1,7 +1,7 @@
 package com.jibase.listener
 
-abstract class OnKeyboardListener {
-    fun onKeyboardVisible() {}
-    fun onKeyboardHide() {}
-    fun onKeyboardChangeHeight(height: Int) {}
+open class OnKeyboardListener {
+    open fun onKeyboardVisible() {}
+    open fun onKeyboardHide() {}
+    open fun onKeyboardChangeHeight(height: Int) {}
 }

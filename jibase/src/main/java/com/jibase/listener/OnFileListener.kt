@@ -1,6 +1,6 @@
 package com.jibase.listener
 
-abstract class OnFileListener {
-    fun success(path: String){}
-    fun error(e: String){}
+open class OnFileListener {
+    open fun success(path: String) {}
+    open fun error(e: String) {}
 }
