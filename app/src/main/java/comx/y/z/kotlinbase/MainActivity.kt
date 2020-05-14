@@ -1,20 +1,18 @@
 package comx.y.z.kotlinbase
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.jibase.helper.registerEvent
-import com.jibase.utils.Log
+import com.jibase.utils.FragmentUtils
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        registerEvent<String> {
-            Log.e("OnEvent receiver: $it")
-        }
 
-
-        startActivity(Intent(this, Main2::class.java))
+        FragmentUtils.replace(
+                this,
+                R.id.replace,
+                true,
+                Fragment1())
     }
 }

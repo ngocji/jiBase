@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.jibase.listener.OnKeyboardListener
 import org.koin.core.KoinComponent
 
@@ -17,12 +19,17 @@ class KeyboardHelper(private val context: Context) : KoinComponent {
         imm.showSoftInput(target, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 
-    fun hideKeyboard(target: View?) {
-        try {
-            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            imm.hideSoftInputFromWindow(
-                    target?.windowToken, 0)
-        } catch (ex: Exception) {
+    fun <T> hideKeyboardInternal(target: T) {
+        when (target) {
+            is View -> {
+                hideKeyboardInternal(target)
+            }
+            is Fragment -> {
+                target.activity?.currentFocus?.also { focusView -> hideKeyboardInternal(focusView) }
+            }
+            is FragmentActivity -> {
+                target.currentFocus?.also { focusView -> hideKeyboardInternal(focusView) }
+            }
         }
     }
 
@@ -44,5 +51,14 @@ class KeyboardHelper(private val context: Context) : KoinComponent {
                 target.viewTreeObserver.addOnGlobalLayoutListener(this)
             }
         })
+    }
+
+    private fun hideKeyboardInternal(focusView: View) {
+        try {
+            val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(
+                    focusView.windowToken, 0)
+        } catch (ex: Exception) {
+        }
     }
 }

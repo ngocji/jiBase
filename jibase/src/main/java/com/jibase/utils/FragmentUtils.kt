@@ -1,151 +1,156 @@
 package com.jibase.utils
 
 import android.content.res.Resources.ID_NULL
-import android.view.ViewGroup
+import androidx.annotation.AnimRes
 import androidx.annotation.IdRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import com.jibase.extensions.gone
 import com.jibase.helper.KeyboardHelper
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-/**
- * Create by Ngocji on 10/21/2018
- **/
-
-
 object FragmentUtils : KoinComponent {
     private val keyboardHelper by inject<KeyboardHelper>()
 
-    /**
-     * replace framgment
-     * @param activity: activity
-     * @param idContainer: id in layout want use replace fragment
-     * @param addToBackStack: true-> addToBackstack, false-> no add
-     * @param fragment: fragment
-     */
+    // region main feature
     @JvmStatic
-    fun replace(activity: FragmentActivity, @IdRes idContainer: Int, addToBackStack: Boolean, fragment: Fragment, customAnimIn: Int = ID_NULL, customAnimOut: Int = ID_NULL) {
-        val tagName = fragment::class.java.name
-        val trans = activity.supportFragmentManager.beginTransaction()
-        // Add to back stack-->
-        if (addToBackStack) trans.addToBackStack(tagName)
+    @Throws(IllegalArgumentException::class)
+    fun <T> replace(target: T,
+                    @IdRes idContainer: Int,
+                    addToBackStack: Boolean,
+                    fragment: Fragment,
+                    @AnimRes enter: Int = ID_NULL,
+                    @AnimRes exit: Int = ID_NULL,
+                    @AnimRes popEnter: Int = ID_NULL,
+                    @AnimRes popExit: Int = ID_NULL) {
+        val fragmentManager = getFragmentManager(target)
+        val tagName = getTag(fragment::class.java)
+        // hide keyboard
+        keyboardHelper.hideKeyboardInternal(target)
+        fragmentManager.beginTransaction().run {
+            // add to back stack if need
+            if (addToBackStack) addToBackStack(tagName)
 
-        // set custom animation when transition
-        if (customAnimIn != ID_NULL && customAnimOut != ID_NULL) {
-            trans.setCustomAnimations(customAnimIn, customAnimOut)
-        }
-
-        // set fragment
-        trans.replace(idContainer, fragment, tagName)
-
-        // commit replace
-        trans.commitAllowingStateLoss()
-    }
-
-    /**
-     * Call initAnimation add list fragment when use show
-     */
-    @JvmStatic
-    fun initAddFragment(activity: FragmentActivity, @IdRes idContainer: Int, addToBackStack: Boolean, vararg fragments: Fragment) {
-        val trans = activity.supportFragmentManager.beginTransaction()
-        fragments.forEach { frag ->
-            trans.add(idContainer, frag, frag::class.java.name)
-            if (addToBackStack) trans.addToBackStack(frag::class.java.name)
-        }
-        trans.commitAllowingStateLoss()
-    }
-
-    /**
-     * Show fragment
-     * @param activity: activity
-     * @param idContainer: id layout when use show fragment
-     * @param fragment: fragment want show
-     */
-    @JvmStatic
-    fun show(activity: FragmentActivity, @IdRes idContainer: Int, fragment: Fragment, customAnimIn: Int = ID_NULL, customAnimOut: Int = ID_NULL) {
-        hideAllView(activity, idContainer)
-        activity.supportFragmentManager.beginTransaction().apply {
-            if (customAnimIn != ID_NULL && customAnimOut != ID_NULL) {
-                setCustomAnimations(customAnimIn, customAnimOut)
-            }
-            show(fragment)
+            setCustomAnimations(enter, exit, popEnter, popExit)
+            replace(idContainer, fragment, tagName)
             commitAllowingStateLoss()
         }
     }
 
-    /**
-     * get current showing fragment
-     * @param activity: activity
-     * @return fragment showing, null if  not fragment showing
-     */
     @JvmStatic
-    fun getCurrentFragment(activity: FragmentActivity): Fragment? {
-        return activity.supportFragmentManager.fragments.lastOrNull()
+    @Throws(IllegalArgumentException::class)
+    fun <T> show(target: T,
+                 @IdRes idContainer: Int,
+                 addToBackStack: Boolean,
+                 fragment: Fragment,
+                 @AnimRes enter: Int = ID_NULL,
+                 @AnimRes exit: Int = ID_NULL,
+                 @AnimRes popEnter: Int = ID_NULL,
+                 @AnimRes popExit: Int = ID_NULL) {
+        val fragmentManager = getFragmentManager(target)
+        val tagName = getTag(fragment::class.java)
+        // hide keyboard
+        keyboardHelper.hideKeyboardInternal(target)
+        fragmentManager.beginTransaction().run {
+            // add to back stack if need
+            if (addToBackStack) addToBackStack(tagName)
+
+            setCustomAnimations(enter, exit, popEnter, popExit)
+            add(idContainer, fragment, tagName)
+            commitAllowingStateLoss()
+        }
     }
 
-    /**
-     *  find fragment by tag in backstack
-     *  @param activity: activity
-     *  @param tag: tag fragment in backstack
-     *  @return fragment, null if no fragment in backstack
-     */
     @JvmStatic
-    fun getFragmentByTag(activity: FragmentActivity, tag: String): Fragment? {
-        return activity.supportFragmentManager.findFragmentByTag(tag)
+    @Throws(IllegalArgumentException::class)
+    fun <T> remove(target: T, fragment: Fragment? = getCurrentFragment(target), hasAnimation: Boolean = true) {
+        if (fragment == null) return
+        val count = getCountOfBackStack(target)
+        if (count <= 0) return
+
+        val fragmentManager = getFragmentManager(target)
+        val tag = getTag(fragment::class.java)
+        keyboardHelper.hideKeyboardInternal(target)
+
+        for (i in (count - 1) downTo 0) {
+            fragmentManager.getBackStackEntryAt(i).also {
+                if (it.name == tag) {
+                    if (hasAnimation) {
+                        fragmentManager.popBackStack()
+                        fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+                    } else {
+                        fragmentManager.beginTransaction().remove(fragment).commitAllowingStateLoss()
+                        fragmentManager.popBackStack()
+                    }
+                    return
+                }
+            }
+        }
     }
 
-    /**
-     * find fragment by tag
-     * @param activity: activity
-     * @param clazz: class of fragmnet
-     * @return fragment or null
-     */
     @JvmStatic
-    fun getFragmentByTag(activity: FragmentActivity, clazz: Class<Fragment>): Fragment? {
-        return getFragmentByTag(activity, clazz.name)
+    @Throws(IllegalArgumentException::class)
+    fun <T, F : Fragment> goto(target: T, fragmentCls: Class<F>, errorFragmentInBackStack: (() -> Unit)? = null, refreshUI: Boolean = false, hasAnimation: Boolean = true) {
+        val count = getCountOfBackStack(target)
+        if (count <= 0) return
+        val fragmentManager = getFragmentManager(target)
+        val tag = getTag(fragmentCls)
+        keyboardHelper.hideKeyboardInternal(target)
+
+        for (i in (count - 1) downTo 0) {
+            fragmentManager.getBackStackEntryAt(i).also {
+                if (it.name == tag) {
+                    if (refreshUI) {
+                        // todo check refresh ui
+                    }
+                    return
+                } else {
+                    remove(target, hasAnimation = hasAnimation)
+                }
+            }
+        }
+
+        errorFragmentInBackStack?.invoke()
     }
 
-    /**
-     * Get previous fragment in backstack
-     * @param activity
-     * @return fragment or null
-     */
+    // endregion
+
+    // region get fragment
     @JvmStatic
-    fun getPreviousFragment(activity: FragmentActivity): Fragment? {
-        val manager = activity.supportFragmentManager
-        val index = manager.backStackEntryCount - 2
+    fun <T> getCurrentFragment(target: T): Fragment? {
+        return getFragmentManager(target).fragments.lastOrNull()
+    }
+
+
+    @JvmStatic
+    fun <T> getFragmentByTag(target: T, tag: String): Fragment? {
+        return getFragmentManager(target).findFragmentByTag(tag)
+    }
+
+    @JvmStatic
+    fun <T, F : Fragment> getFragmentByTag(target: T, cls: Class<F>): Fragment? {
+        return getFragmentByTag(target, getTag(cls))
+    }
+
+
+    @JvmStatic
+    fun <T> getPreviousFragment(target: T): Fragment? {
+        val manager = getFragmentManager(target)
+        val index = getCountOfBackStack(target) - 2
         return if (index >= 0) {
-            getFragmentByTag(activity, manager.getBackStackEntryAt(index).name ?: "")
+            getFragmentByTag(target, manager.getBackStackEntryAt(index).name ?: "")
         } else {
             null
         }
     }
 
-    /**
-     * hide all fragment in  activity
-     * @param activity: activity
-     * @param idContainer: id in layout when hide all fragment
-     */
-    private fun hideAllView(activity: FragmentActivity, @IdRes idContainer: Int) {
-        val viewGroup = activity.findViewById<ViewGroup>(idContainer)
-        for (i in 0 until viewGroup.childCount) {
-            viewGroup.getChildAt(i).gone()
-        }
-    }
+    // endregion
 
-
-    /**
-     * Remove all fragment from backStack
-     * @param activity
-     * @param skipTag:  tag of fragment you want keep
-     * @param action: action when remove finsish
-     */
+    // region backStack
     @JvmStatic
-    fun removeAllFromBackStack(activity: FragmentActivity, skipTag: String = "", action: (() -> Unit)? = null) {
-        val fragmentManager = activity.supportFragmentManager
+    fun <T> removeAllFromBackStack(target: T, skipTag: String = "", action: (() -> Unit)? = null) {
+        val fragmentManager = getFragmentManager(target)
         if (fragmentManager.isStateSaved) {
             action?.invoke()
             return
@@ -167,8 +172,31 @@ object FragmentUtils : KoinComponent {
         action?.invoke()
     }
 
+
     @JvmStatic
-    fun getCountOfBackStack(fragmentActivity: FragmentActivity): Int {
-        return fragmentActivity.supportFragmentManager.backStackEntryCount
+    fun <T> popBackStack(target: T) {
+        getFragmentManager(target).popBackStack()
     }
+
+    // endregion
+
+    // region helper method
+    @JvmStatic
+    fun <T> getCountOfBackStack(target: T): Int {
+        return getFragmentManager(target).backStackEntryCount
+    }
+
+    @JvmStatic
+    fun <T : Fragment> getTag(fragment: Class<T>): String {
+        return fragment::class.java.name
+    }
+
+    private fun <T> getFragmentManager(target: T): FragmentManager {
+        return when (target) {
+            is Fragment -> target.childFragmentManager
+            is FragmentActivity -> target.supportFragmentManager
+            else -> throw IllegalArgumentException("Target is a fragment or a activity")
+        }
+    }
+    // endregion
 }
