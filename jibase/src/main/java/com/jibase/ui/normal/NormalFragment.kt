@@ -25,5 +25,5 @@ abstract class NormalFragment : Fragment() {
     }
 
     abstract fun onViewReady(savedInstanceState: Bundle?)
-    abstract fun onViewListener()
+    open fun onViewListener() {}
 }

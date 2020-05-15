@@ -19,5 +19,5 @@ abstract class NormalActivity : AppCompatActivity() {
     }
 
     abstract fun onViewReady(savedInstanceState: Bundle?)
-    abstract fun onViewListener()
+    open fun onViewListener() {}
 }
