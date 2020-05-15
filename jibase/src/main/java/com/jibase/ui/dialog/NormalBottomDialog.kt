@@ -12,16 +12,20 @@ import androidx.annotation.StyleRes
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.jibase.R
+import com.jibase.anotation.BindingInfo
+import com.jibase.anotation.BindingInfoHelper
 import com.jibase.extensions.inflate
 
-abstract class NormalBottomDialog(@LayoutRes private val layoutRes: Int, @StyleRes private val styleRes: Int = R.style.style_dialog_100) : BottomSheetDialogFragment() {
+abstract class NormalBottomDialog(@StyleRes private val styleRes: Int = R.style.style_dialog_100) : BottomSheetDialogFragment() {
+    open val bindingInfo: BindingInfo by lazy { BindingInfoHelper.getAnnotation(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_TITLE, styleRes)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return container?.inflate(layoutRes)
+        return container?.inflate(bindingInfo.layout)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,5 +41,5 @@ abstract class NormalBottomDialog(@LayoutRes private val layoutRes: Int, @StyleR
 
 
     abstract fun onViewReady(savedInstanceState: Bundle?)
-    abstract fun onViewListener()
+    open fun onViewListener(){}
 }

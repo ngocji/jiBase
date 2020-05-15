@@ -4,17 +4,21 @@ import android.os.Bundle
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
+import com.jibase.anotation.BindingInfo
+import com.jibase.anotation.BindingInfoHelper
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
 
-abstract class BindNoViewModelActivity(@LayoutRes private val layoutRes: Int) : AppCompatActivity() {
+@Suppress("LeakingThis")
+abstract class BindNoViewModelActivity : AppCompatActivity() {
+    open val bindingInfo: BindingInfo by lazy { BindingInfoHelper.getAnnotation(this) }
     lateinit var binding: ViewDataBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // init binding
-         binding = initBinding(layoutRes, null)
+         binding = initBinding(bindingInfo.layout, null)
 
         onViewReady(savedInstanceState)
         onViewListener()

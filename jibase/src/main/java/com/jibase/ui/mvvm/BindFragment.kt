@@ -7,14 +7,18 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import com.jibase.anotation.BindingInfo
+import com.jibase.anotation.BindingInfoHelper
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
+import org.koin.android.ext.android.bind
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.reflect.KClass
 
-abstract class BindFragment<VM : BindViewModel>(@LayoutRes private val layoutRes: Int, clazzViewModel: KClass<VM>) : Fragment() {
-
-    open val viewModel: VM by viewModel(clazzViewModel)
+@Suppress("LeakingThis", "UNCHECKED_CAST")
+abstract class BindFragment<VM : BindViewModel> : Fragment() {
+    open val bindingInfo: BindingInfo by lazy { BindingInfoHelper.getAnnotation(this) }
+    open val viewModel: VM by viewModel(bindingInfo.viewModel as KClass<VM>)
 
     lateinit var binding: ViewDataBinding
 
@@ -24,7 +28,7 @@ abstract class BindFragment<VM : BindViewModel>(@LayoutRes private val layoutRes
         savedInstanceState: Bundle?
     ): View? {
         // create data binding
-        binding = initBinding(layoutRes, inflater, container, viewModel)
+        binding = initBinding(bindingInfo.layout, inflater, container, viewModel)
 
         // return the view
         return binding.root

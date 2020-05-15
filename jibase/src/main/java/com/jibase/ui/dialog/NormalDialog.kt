@@ -7,14 +7,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.annotation.LayoutRes
 import androidx.annotation.StyleRes
 import androidx.fragment.app.DialogFragment
 import com.jibase.R
+import com.jibase.anotation.BindingInfo
+import com.jibase.anotation.BindingInfoHelper
 import com.jibase.extensions.inflate
 
-
-abstract class NormalDialog(@LayoutRes private val layoutRes: Int, @StyleRes private val style: Int = R.style.style_dialog_90) : DialogFragment() {
+abstract class NormalDialog(@StyleRes private val style: Int = R.style.style_dialog_90) : DialogFragment() {
+    open val bindingInfo: BindingInfo by lazy { BindingInfoHelper.getAnnotation(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +23,7 @@ abstract class NormalDialog(@LayoutRes private val layoutRes: Int, @StyleRes pri
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return container?.inflate(layoutRes)
+        return container?.inflate(bindingInfo.layout)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,5 +39,5 @@ abstract class NormalDialog(@LayoutRes private val layoutRes: Int, @StyleRes pri
 
 
     abstract fun onViewReady(savedInstanceState: Bundle?)
-    abstract fun onViewListener()
+    open fun onViewListener() {}
 }

@@ -2,14 +2,17 @@ package com.jibase.ui.normal
 
 import android.content.res.Resources.ID_NULL
 import android.os.Bundle
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import com.jibase.anotation.BindingInfo
+import com.jibase.anotation.BindingInfoHelper
 
-abstract class NormalActivity(@LayoutRes private val layoutRes: Int = ID_NULL) : AppCompatActivity() {
+abstract class NormalActivity : AppCompatActivity() {
+    open val bindingInfo: BindingInfo by lazy { BindingInfoHelper.getAnnotation(this) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (layoutRes != ID_NULL) {
-            setContentView(layoutRes)
+        if (bindingInfo.layout != ID_NULL) {
+            setContentView(bindingInfo.layout)
         }
         onViewReady(savedInstanceState)
         onViewListener()

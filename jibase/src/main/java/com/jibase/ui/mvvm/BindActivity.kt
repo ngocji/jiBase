@@ -1,17 +1,19 @@
 package com.jibase.ui.mvvm
 
 import android.os.Bundle
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
+import com.jibase.anotation.BindingInfo
+import com.jibase.anotation.BindingInfoHelper
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.reflect.KClass
 
-abstract class BindActivity<VM : BindViewModel>(@LayoutRes private val layoutRes: Int, clazzViewModel: KClass<VM>) : AppCompatActivity() {
-
-    open val viewModel: VM by viewModel(clazzViewModel)
+@Suppress("LeakingThis", "UNCHECKED_CAST")
+abstract class BindActivity<VM : BindViewModel> : AppCompatActivity() {
+    open val bindingInfo: BindingInfo by lazy { BindingInfoHelper.getAnnotation(this) }
+    open val viewModel by viewModel(bindingInfo.viewModel as KClass<VM>)
 
     lateinit var binding: ViewDataBinding
 
@@ -19,10 +21,12 @@ abstract class BindActivity<VM : BindViewModel>(@LayoutRes private val layoutRes
         super.onCreate(savedInstanceState)
 
         // init binding
-        binding = initBinding(layoutRes, viewModel)
+        binding = initBinding(bindingInfo.layout, viewModel)
 
         onViewReady(savedInstanceState)
         onViewListener()
+
+        BindActivity::class.java.methods.first().annotations
     }
 
     abstract fun onViewReady(savedInstanceState: Bundle?)
