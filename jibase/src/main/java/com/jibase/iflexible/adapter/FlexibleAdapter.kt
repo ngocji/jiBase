@@ -29,8 +29,8 @@ import kotlin.math.ceil
 import kotlin.math.max
 
 @Suppress("UNCHECKED_CAST")
-class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = mutableListOf(),
-                                        hasStateId: Boolean = false)
+open class FlexibleAdapter<T : IFlexible<*>>(private var listData: MutableList<T> = mutableListOf(),
+                                             hasStateId: Boolean = false)
     : AbstractFlexibleAnimatorAdapter(hasStateId), ItemTouchHelperCallback.AdapterCallback {
 
     companion object {
