@@ -97,7 +97,7 @@ open class ItemView @JvmOverloads constructor(context: Context, attributeSet: At
 
     fun setDescription(description: String?, textColor: Int = 0, textSize: Float = -1f) {
         with(tvDescription) {
-            if (description?.isNotEmpty() == true) {
+            if (description == null || description.isBlank()) {
                 gone()
             } else {
                 visible()

@@ -23,6 +23,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:itemIcon="@drawable/ic_category"
-            app:itemText="Category" />
+            app:itemText="Category"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
