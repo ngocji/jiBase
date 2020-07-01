@@ -3,8 +3,8 @@ package com.jibase.ui.mvvm
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
-import com.jibase.anotation.BindingInfo
-import com.jibase.anotation.BindingInfoHelper
+import com.jibase.anotation.Inflate
+import com.jibase.anotation.InflateHelper
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -12,8 +12,8 @@ import kotlin.reflect.KClass
 
 @Suppress("LeakingThis", "UNCHECKED_CAST")
 abstract class BindActivity<VM : BindViewModel> : AppCompatActivity() {
-    open val bindingInfo: BindingInfo by lazy { BindingInfoHelper.getAnnotation(this) }
-    open val viewModel by viewModel(bindingInfo.viewModel as KClass<VM>)
+    open val inflate: Inflate by lazy { InflateHelper.getAnnotation(this) }
+    open val viewModel by viewModel(inflate.viewModel as KClass<VM>)
 
     lateinit var binding: ViewDataBinding
 
@@ -21,7 +21,7 @@ abstract class BindActivity<VM : BindViewModel> : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // init binding
-        binding = initBinding(bindingInfo.layout, viewModel)
+        binding = initBinding(inflate.layout, viewModel)
 
         onViewReady(savedInstanceState)
         onViewListener()

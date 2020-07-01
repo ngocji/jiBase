@@ -9,5 +9,5 @@ import kotlin.reflect.KClass
 @Retention()
 @MustBeDocumented
 @Inherited
-annotation class BindingInfo(@LayoutRes val layout: Int,
-                             val viewModel: KClass<*> = BindViewModel::class)
+annotation class Inflate(@LayoutRes val layout: Int,
+                         val viewModel: KClass<*> = BindViewModel::class)

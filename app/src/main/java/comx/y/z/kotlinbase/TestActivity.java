@@ -1,44 +1,37 @@
 package comx.y.z.kotlinbase;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import com.jibase.anotation.BindingInfo;
-import com.jibase.iflexible.adapter.BindFlexibleAdapter;
-import com.jibase.iflexible.items.interfaceItems.IFlexible;
+import com.jibase.anotation.Inflate;
 import com.jibase.ui.mvvm.BindActivity;
-import com.jibase.utils.UI;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import comx.y.z.kotlinbase.databinding.ActivityMainBinding;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function0;
-
-
-@BindingInfo(layout = R.layout.activity_main, viewModel = Test2ViewModel.class)
+@Inflate(layout = R.layout.activity_main, viewModel = Test2ViewModel.class)
 public class TestActivity extends BindActivity<Test2ViewModel> {
-
-    private BindFlexibleAdapter<IFlexible<?>> adapter;
 
     @Override
     public void onViewReady(@Nullable Bundle savedInstanceState) {
-        adapter = (BindFlexibleAdapter<IFlexible<?>>) new BindFlexibleAdapter<>(getViewModel().test, false)
-        .setStickyHeaders(true)
-        .setDisplayHeadersAtStartUp(true);
-
-        ((ActivityMainBinding) getBinding()).recyclerView.setAdapter(adapter);
-
-        List<IFlexible<?>> holders = new ArrayList<>();
-        for (int i = 0; i < 100; i++) {
-            if (i%5 == 0){
-                holders.add(new TestHeader("Header"));
+        try {
+            if (!GoogleFitHelper.enableIfNeed(this, 1)){
+                performActionForRequestCode();
             }
-            holders.add(new TestHolder("data " + i));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
 
-        getViewModel().test.post(holders);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @androidx.annotation.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            performActionForRequestCode();
+        }
+    }
+
+    private void performActionForRequestCode() {
+        GoogleFitHelper.sendWorkout(this, "Workout - home", 1400000, true);
     }
 }

@@ -6,16 +6,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.jibase.anotation.BindingInfo
-import com.jibase.anotation.BindingInfoHelper
+import com.jibase.anotation.Inflate
+import com.jibase.anotation.InflateHelper
 import com.jibase.extensions.inflate
 
 
 abstract class NormalFragment : Fragment() {
-    open val bindingInfo: BindingInfo by lazy { BindingInfoHelper.getAnnotation(this) }
+    open val inflate: Inflate by lazy { InflateHelper.getAnnotation(this) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return if (bindingInfo.layout != ID_NULL) container?.inflate(bindingInfo.layout) else null
+        return if (inflate.layout != ID_NULL) container?.inflate(inflate.layout) else null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

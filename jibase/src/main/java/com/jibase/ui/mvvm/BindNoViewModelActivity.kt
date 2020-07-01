@@ -1,24 +1,23 @@
 package com.jibase.ui.mvvm
 
 import android.os.Bundle
-import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.ViewDataBinding
-import com.jibase.anotation.BindingInfo
-import com.jibase.anotation.BindingInfoHelper
+import com.jibase.anotation.Inflate
+import com.jibase.anotation.InflateHelper
 import com.jibase.extensions.destroy
 import com.jibase.extensions.initBinding
 
 @Suppress("LeakingThis")
 abstract class BindNoViewModelActivity : AppCompatActivity() {
-    open val bindingInfo: BindingInfo by lazy { BindingInfoHelper.getAnnotation(this) }
+    open val inflate: Inflate by lazy { InflateHelper.getAnnotation(this) }
     lateinit var binding: ViewDataBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // init binding
-         binding = initBinding(bindingInfo.layout, null)
+         binding = initBinding(inflate.layout, null)
 
         onViewReady(savedInstanceState)
         onViewListener()
