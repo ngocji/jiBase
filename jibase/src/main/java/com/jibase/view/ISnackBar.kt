@@ -3,11 +3,10 @@ package com.jibase.view
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
-import com.jibase.R
 import com.google.android.material.snackbar.Snackbar
+import com.jibase.R
 import com.jibase.utils.ResourceUtils.getColor
 import com.jibase.utils.ResourceUtils.getString
-import java.lang.IllegalArgumentException
 
 class ISnackBar {
     private val noneColor = getColor(R.color.trans)
@@ -105,5 +104,4 @@ class ISnackBar {
                 }
             }
     }
-
 }

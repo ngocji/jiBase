@@ -11,17 +11,18 @@ import android.util.AttributeSet
 import android.util.SparseIntArray
 import android.util.TypedValue
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 
-class IAutoTextView : TextView {
-    constructor(context: Context?) : super(context) {
+class IAutoTextView : AppCompatTextView {
+    constructor(context: Context) : super(context) {
         setup(null)
     }
 
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         setup(attrs)
     }
 
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
         setup(attrs)
     }
 

@@ -4,10 +4,12 @@ import android.annotation.TargetApi
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import com.jibase.ui.normal.NormalFragment
+import com.jibase.anotation.Inflate
+import com.jibase.ui.base.SimpleBaseFragment
 import io.reactivex.subjects.PublishSubject
 
-class RxPermissionFragment : NormalFragment() {
+@Inflate
+class RxPermissionFragment : SimpleBaseFragment() {
     companion object {
         const val REQ_PERMISSION = 42
     }

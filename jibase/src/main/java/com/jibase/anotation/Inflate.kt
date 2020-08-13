@@ -1,13 +1,13 @@
 package com.jibase.anotation
 
 import androidx.annotation.LayoutRes
-import com.jibase.ui.mvvm.BindViewModel
-import java.lang.annotation.Inherited
+import androidx.core.content.res.ResourcesCompat.ID_NULL
+import com.jibase.ui.BindViewModel
 import kotlin.reflect.KClass
 
-@Target(AnnotationTarget.CLASS)
-@Retention()
-@MustBeDocumented
-@Inherited
-annotation class Inflate(@LayoutRes val layout: Int,
-                         val viewModel: KClass<*> = BindViewModel::class)
+@Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+annotation class Inflate(
+    @LayoutRes val layout: Int = ID_NULL,
+    val viewModel: KClass<*> = BindViewModel::class
+)

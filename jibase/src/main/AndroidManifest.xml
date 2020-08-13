@@ -1,9 +1,4 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.jibase">
+<manifest package="com.jibase">
 
-    <application>
-        <activity
-            android:name=".permission.RequestPermissionActivity"
-            android:theme="@style/style_transparent" />
-    </application>
+    <application />
 </manifest>

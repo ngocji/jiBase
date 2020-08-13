@@ -2,9 +2,9 @@ package com.jibase.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.EditText
+import androidx.appcompat.widget.AppCompatEditText
 
-open class IEditText @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : EditText(context, attributeSet, defStyle) {
+open class IEditText @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : AppCompatEditText(context, attributeSet, defStyle) {
 
     init {
         initView(attributeSet)

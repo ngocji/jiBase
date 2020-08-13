@@ -3,30 +3,30 @@ package com.jibase.permission
 import android.os.Build
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentManager
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-object RxPermissions {
+class RxPermissions<T> private constructor(val target: T) {
+    companion object {
+        // region set target
+        @JvmStatic
+        fun with(target: Fragment): RxPermissions<Fragment> {
+            return RxPermissions(target)
+        }
+
+        @JvmStatic
+        fun with(target: FragmentActivity): RxPermissions<FragmentActivity> {
+            return RxPermissions(target)
+        }
+    }
+
     private var permissionFragment: RxPermissionFragment? = null
 
-    // region set target
-    @JvmStatic
-    fun with(target: Fragment): RxPermissions {
-        getLazyPermissionFragment(target.childFragmentManager)
-        return this
+    init {
+        getLazyPermissionFragment(target)
     }
-
-    @JvmStatic
-    fun with(target: FragmentActivity): RxPermissions {
-        getLazyPermissionFragment(target.supportFragmentManager)
-        return this
-    }
-
-    // endregion
 
     // region main
-    @JvmStatic
     fun request(vararg permissions: String): Observable<Boolean> {
         invalidRequestPermission(permissions)
         return requestImplementation(permissions.toList())
@@ -43,13 +43,11 @@ object RxPermissions {
                 }
     }
 
-    @JvmStatic
     fun requestEach(vararg permissions: String): Observable<Permission> {
         invalidRequestPermission(permissions)
         return requestImplementation(permissions.toList())
     }
 
-    @JvmStatic
     fun requestEachCombined(vararg permissions: String): Observable<Permission> {
         invalidRequestPermission(permissions)
         return requestImplementation(permissions.toList())
@@ -73,7 +71,6 @@ object RxPermissions {
      *
      * Always true if SDK &lt; 23.
      */
-    @JvmStatic
     fun isGranted(vararg permissions: String): Boolean {
         return !isRuntimeRequestPermission() || getPermissionFragment().isGranted(*permissions)
     }
@@ -84,12 +81,10 @@ object RxPermissions {
      *
      * Always false if SDK &lt; 23.
      */
-    @JvmStatic
     fun isRevoked(vararg permissions: String): Boolean {
         return isRuntimeRequestPermission() && getPermissionFragment().isRevoked(*permissions)
     }
 
-    @JvmStatic
     fun isRuntimeRequestPermission(): Boolean {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
     }
@@ -97,9 +92,13 @@ object RxPermissions {
     // endregion
 
     // region init permission fragment
-    private fun getLazyPermissionFragment(fragmentManager: FragmentManager) {
+    private fun getLazyPermissionFragment(target: T) {
         val tag = RxPermissionFragment::class.java.name
-
+        val fragmentManager = when (target) {
+            is FragmentActivity -> target.supportFragmentManager
+            is Fragment -> target.childFragmentManager
+            else -> throw NullPointerException("Target must not be null")
+        }
         permissionFragment = fragmentManager.findFragmentByTag(tag) as? RxPermissionFragment
                 ?: // create newInstance
                         RxPermissionFragment().apply {

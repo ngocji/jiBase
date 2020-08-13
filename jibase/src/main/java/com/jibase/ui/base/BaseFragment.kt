@@ -1,35 +1,33 @@
-package com.jibase.ui.mvvm
+package com.jibase.ui.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.ViewDataBinding
+import androidx.core.content.res.ResourcesCompat.ID_NULL
 import androidx.fragment.app.Fragment
 import com.jibase.anotation.Inflate
 import com.jibase.anotation.InflateHelper
-import com.jibase.extensions.destroy
-import com.jibase.extensions.initBinding
+import com.jibase.extensions.inflate
+import com.jibase.ui.BindViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.reflect.KClass
 
 @Suppress("LeakingThis", "UNCHECKED_CAST")
-abstract class BindFragment<VM : BindViewModel> : Fragment() {
+abstract class BaseFragment<VM : BindViewModel> : Fragment() {
     open val inflate: Inflate by lazy { InflateHelper.getAnnotation(this) }
     open val viewModel: VM by viewModel(inflate.viewModel as KClass<VM>)
 
-    lateinit var binding: ViewDataBinding
+    final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return initView(inflater, container)
+    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // create data binding
-        binding = initBinding(inflate.layout, inflater, container, viewModel)
-
-        // return the view
-        return binding.root
+    open fun initView(inflater: LayoutInflater, container: ViewGroup?): View? {
+        return if (this.inflate.layout != ID_NULL) {
+            container?.inflate(inflate.layout)
+        } else {
+            null
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -43,10 +41,6 @@ abstract class BindFragment<VM : BindViewModel> : Fragment() {
     open fun onViewListener() {
         // free implement
     }
-
-    override fun onDestroyView() {
-        // Hacky : There's a memory leak issue with data binding if we don't set lifeCycleOwner to null
-        binding.destroy()
-        super.onDestroyView()
-    }
 }
+
+typealias SimpleBaseFragment = BaseFragment<BindViewModel>

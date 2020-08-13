@@ -21,11 +21,11 @@
 
         <variable
             name="vm"
-            type="com.jibase.ui.mvvm.BindViewModel" />
+            type="com.jibase.ui.BindViewModel" />
 
         <variable
             name="activityVM"
-            type="com.jibase.ui.mvvm.BindViewModel" />
+            type="com.jibase.ui.BindViewModel" />
 
         <variable
             name="path"

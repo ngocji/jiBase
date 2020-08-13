@@ -1,8 +1,8 @@
 package com.jibase.utils
 
-import android.content.res.Resources.ID_NULL
+import android.view.ViewGroup
 import androidx.annotation.AnimRes
-import androidx.annotation.IdRes
+import androidx.core.content.res.ResourcesCompat.ID_NULL
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -16,14 +16,13 @@ object FragmentUtils : KoinComponent {
     // region main feature
     @JvmStatic
     @Throws(IllegalArgumentException::class)
-    fun <T> replace(target: T,
-                    @IdRes idContainer: Int,
-                    addToBackStack: Boolean,
-                    fragment: Fragment,
-                    @AnimRes enter: Int = ID_NULL,
-                    @AnimRes exit: Int = ID_NULL,
-                    @AnimRes popEnter: Int = ID_NULL,
-                    @AnimRes popExit: Int = ID_NULL) {
+    fun <T> ViewGroup.replace(target: T,
+                              fragment: Fragment,
+                              addToBackStack: Boolean = false,
+                              @AnimRes enter: Int = ID_NULL,
+                              @AnimRes exit: Int = ID_NULL,
+                              @AnimRes popEnter: Int = ID_NULL,
+                              @AnimRes popExit: Int = ID_NULL) {
         val fragmentManager = getFragmentManager(target)
         val tagName = getTag(fragment::class.java)
         // hide keyboard
@@ -33,31 +32,7 @@ object FragmentUtils : KoinComponent {
             if (addToBackStack) addToBackStack(tagName)
 
             setCustomAnimations(enter, exit, popEnter, popExit)
-            replace(idContainer, fragment, tagName)
-            commitAllowingStateLoss()
-        }
-    }
-
-    @JvmStatic
-    @Throws(IllegalArgumentException::class)
-    fun <T> show(target: T,
-                 @IdRes idContainer: Int,
-                 addToBackStack: Boolean,
-                 fragment: Fragment,
-                 @AnimRes enter: Int = ID_NULL,
-                 @AnimRes exit: Int = ID_NULL,
-                 @AnimRes popEnter: Int = ID_NULL,
-                 @AnimRes popExit: Int = ID_NULL) {
-        val fragmentManager = getFragmentManager(target)
-        val tagName = getTag(fragment::class.java)
-        // hide keyboard
-        keyboardHelper.hideKeyboardInternal(target)
-        fragmentManager.beginTransaction().run {
-            // add to back stack if need
-            if (addToBackStack) addToBackStack(tagName)
-
-            setCustomAnimations(enter, exit, popEnter, popExit)
-            add(idContainer, fragment, tagName)
+            replace(id, fragment, tagName)
             commitAllowingStateLoss()
         }
     }

@@ -46,7 +46,7 @@ open class ILiveData<T>(data: T? = null, isNotifyDataWhenInitialize: Boolean = f
         return if (data != null) {
             data
         } else {
-            post(default)
+            value = default
             default
         }
     }

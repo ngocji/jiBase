@@ -8,10 +8,6 @@ import com.jibase.utils.RuntimeTypeAdapterFactory
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
-/**
- * Create by Ngocji on 11/12/2018
- **/
-
 class GsonHelper {
     var mGson: Gson? = null
 

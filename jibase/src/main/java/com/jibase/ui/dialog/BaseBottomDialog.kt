@@ -9,21 +9,21 @@ import android.view.ViewGroup
 import android.view.Window
 import androidx.annotation.StyleRes
 import androidx.fragment.app.DialogFragment
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.jibase.R
 import com.jibase.anotation.Inflate
 import com.jibase.anotation.InflateHelper
-import com.jibase.extensions.inflate
 
-abstract class NormalDialog(@StyleRes private val style: Int = R.style.style_dialog_90) : DialogFragment() {
+abstract class BaseBottomDialog(@StyleRes private val styleRes: Int = R.style.style_dialog_100) : BottomSheetDialogFragment() {
     open val inflate: Inflate by lazy { InflateHelper.getAnnotation(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, style)
+        setStyle(DialogFragment.STYLE_NO_TITLE, styleRes)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return container?.inflate(inflate.layout)
+        return inflater.inflate(inflate.layout, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,6 +38,6 @@ abstract class NormalDialog(@StyleRes private val style: Int = R.style.style_dia
     }
 
 
-    abstract fun onViewReady(savedInstanceState: Bundle?)
+    open fun onViewReady(savedInstanceState: Bundle?) {}
     open fun onViewListener() {}
 }
