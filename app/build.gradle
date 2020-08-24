@@ -42,9 +42,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project (':jibase')
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    kapt "androidx.databinding:databinding-compiler:3.6.3"
-    implementation 'com.google.android.gms:play-services-fitness:18.0.0'
-    implementation 'com.google.android.gms:play-services-auth:18.0.0'
 }
