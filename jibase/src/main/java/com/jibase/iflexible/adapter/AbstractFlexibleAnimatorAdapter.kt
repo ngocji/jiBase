@@ -10,7 +10,7 @@ import android.view.animation.Interpolator
 import android.view.animation.LinearInterpolator
 import androidx.annotation.IntRange
 import androidx.recyclerview.widget.RecyclerView
-import com.jibase.iflexible.viewholder.simple.FlexibleViewHolder
+import com.jibase.iflexible.viewholder.FlexibleViewHolder
 import com.jibase.utils.Log
 import java.util.*
 

@@ -5,12 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
-open class ILiveData<T>(data: T? = null, isNotifyDataWhenInitialize: Boolean = false) : LiveData<T>(data) {
+open class ILiveData<T : Any>(data: T? = null, isNotifyDataWhenInitialize: Boolean = false) : LiveData<T>() {
     private val pendingFirstInitialize = AtomicBoolean(isNotifyDataWhenInitialize)
 
     init {
         if (data != null && isNotifyDataWhenInitialize) {
-            notifyDataChanged()
+            post(data)
         }
     }
 

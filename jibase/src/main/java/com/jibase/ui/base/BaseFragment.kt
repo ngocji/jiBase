@@ -6,25 +6,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat.ID_NULL
 import androidx.fragment.app.Fragment
-import com.jibase.anotation.Inflate
+import androidx.lifecycle.ViewModelProvider
 import com.jibase.anotation.InflateHelper
+import com.jibase.anotation.ViewInflate
 import com.jibase.extensions.inflate
-import com.jibase.ui.BindViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.reflect.KClass
+import com.jibase.ui.BaseViewModel
 
 @Suppress("LeakingThis", "UNCHECKED_CAST")
-abstract class BaseFragment<VM : BindViewModel> : Fragment() {
-    open val inflate: Inflate by lazy { InflateHelper.getAnnotation(this) }
-    open val viewModel: VM by viewModel(inflate.viewModel as KClass<VM>)
+abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
+    open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
+    open val viewModel by lazy {
+        ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(viewInflate.viewModel.java)
+    }
 
     final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return initView(inflater, container)
     }
 
     open fun initView(inflater: LayoutInflater, container: ViewGroup?): View? {
-        return if (this.inflate.layout != ID_NULL) {
-            container?.inflate(inflate.layout)
+        return if (this.viewInflate.layout != ID_NULL) {
+            container?.inflate(viewInflate.layout)
         } else {
             null
         }
@@ -43,4 +44,4 @@ abstract class BaseFragment<VM : BindViewModel> : Fragment() {
     }
 }
 
-typealias SimpleBaseFragment = BaseFragment<BindViewModel>
+typealias SimpleBaseFragment = BaseFragment<BaseViewModel>

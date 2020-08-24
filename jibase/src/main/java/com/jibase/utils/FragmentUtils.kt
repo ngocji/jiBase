@@ -7,12 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.jibase.helper.KeyboardHelper
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
-object FragmentUtils : KoinComponent {
-    private val keyboardHelper by inject<KeyboardHelper>()
-
+object FragmentUtils {
     // region main feature
     @JvmStatic
     @Throws(IllegalArgumentException::class)
@@ -26,7 +22,7 @@ object FragmentUtils : KoinComponent {
         val fragmentManager = getFragmentManager(target)
         val tagName = getTag(fragment::class.java)
         // hide keyboard
-        keyboardHelper.hideKeyboardInternal(target)
+        KeyboardHelper.hideKeyboardInternal(target)
         fragmentManager.beginTransaction().run {
             // add to back stack if need
             if (addToBackStack) addToBackStack(tagName)
@@ -46,7 +42,7 @@ object FragmentUtils : KoinComponent {
 
         val fragmentManager = getFragmentManager(target)
         val tag = getTag(fragment::class.java)
-        keyboardHelper.hideKeyboardInternal(target)
+        KeyboardHelper.hideKeyboardInternal(target)
 
         for (i in (count - 1) downTo 0) {
             fragmentManager.getBackStackEntryAt(i).also {
@@ -71,7 +67,7 @@ object FragmentUtils : KoinComponent {
         if (count <= 0) return
         val fragmentManager = getFragmentManager(target)
         val tag = getTag(fragmentCls)
-        keyboardHelper.hideKeyboardInternal(target)
+        KeyboardHelper.hideKeyboardInternal(target)
 
         for (i in (count - 1) downTo 0) {
             fragmentManager.getBackStackEntryAt(i).also {

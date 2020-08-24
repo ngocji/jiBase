@@ -10,12 +10,11 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.*
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import com.jibase.BaseApp
 import com.jibase.R
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 
-object ResourceUtils : KoinComponent {
-    private val context: Context by inject()
+object ResourceUtils {
+    private val context: Context by lazy { BaseApp.applicationContext }
 
     @JvmStatic
     fun getColor(@ColorRes id: Int) = ContextCompat.getColor(context, id)

@@ -2,13 +2,13 @@
 
 package com.jibase.extensions
 
-import com.jibase.ui.BindViewModel
+import com.jibase.ui.BaseViewModel
 import io.reactivex.disposables.Disposable
 
-fun <V : BindViewModel> Disposable.attachToComposite(viewModel: V) {
+fun <V : BaseViewModel> Disposable.attachToComposite(viewModel: V) {
     viewModel.compositeDisposable.add(this)
 }
 
-fun <V : BindViewModel> attachToComposite(viewModel: V, disposable: Disposable) {
+fun <V : BaseViewModel> attachToComposite(viewModel: V, disposable: Disposable) {
     disposable.attachToComposite(viewModel)
 }

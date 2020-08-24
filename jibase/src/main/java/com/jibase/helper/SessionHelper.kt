@@ -3,21 +3,21 @@
 package com.jibase.helper
 
 object SessionHelper {
-    private val listData = mutableMapOf<String, Any>()
+    private val sessionData = mutableMapOf<String, Any>()
 
     @JvmStatic
     fun put(key: String, data: Any) {
-        listData[key] = data
+        sessionData[key] = data
     }
 
     @JvmStatic
     fun <T : Any> get(key: String): T? {
-        return listData[key] as? T
+        return sessionData[key] as? T
     }
 
     @JvmStatic
     fun <T : Any> getNotNull(key: String, default: T): T {
-        return listData.getOrPut(key, { default }) as T
+        return sessionData.getOrPut(key, { default }) as T
     }
 
     /**
@@ -39,9 +39,9 @@ object SessionHelper {
     @JvmStatic
     fun clear(key: String = "") {
         if (key.isNotEmpty()) {
-            listData.remove(key)
+            sessionData.remove(key)
         } else {
-            listData.clear()
+            sessionData.clear()
         }
     }
 
@@ -51,6 +51,6 @@ object SessionHelper {
      */
     @JvmStatic
     fun containKey(key: String): Boolean {
-        return listData.containsKey(key)
+        return sessionData.containsKey(key)
     }
 }

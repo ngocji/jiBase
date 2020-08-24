@@ -7,7 +7,7 @@ import com.jibase.iflexible.common.FlexibleLayoutManager
 import com.jibase.iflexible.common.IFlexibleLayoutManager
 import com.jibase.iflexible.fastscroll.FastScroller
 import com.jibase.iflexible.entities.Payload
-import com.jibase.iflexible.viewholder.simple.FlexibleViewHolder
+import com.jibase.iflexible.viewholder.FlexibleViewHolder
 import com.jibase.utils.Log
 import java.util.*
 
@@ -17,8 +17,7 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
         const val SINGLE = 1
         const val MULTI = 2
 
-        private val TAG = "FlexibleAdapter"
-
+        private const val TAG = "FlexibleAdapter"
     }
 
     open var mode = IDLE

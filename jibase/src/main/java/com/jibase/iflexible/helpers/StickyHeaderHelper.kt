@@ -14,7 +14,7 @@ import com.jibase.extensions.visible
 import com.jibase.iflexible.adapter.FlexibleAdapter
 import com.jibase.iflexible.items.interfaceItems.IFlexible
 import com.jibase.iflexible.listener.OnStickyHeaderChangeListener
-import com.jibase.iflexible.viewholder.simple.FlexibleViewHolder
+import com.jibase.iflexible.viewholder.FlexibleViewHolder
 import com.jibase.utils.Log
 
 class StickyHeaderHelper<T : IFlexible<*>>(

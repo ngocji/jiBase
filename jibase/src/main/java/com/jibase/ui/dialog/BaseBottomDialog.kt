@@ -7,23 +7,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import androidx.annotation.StyleRes
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.jibase.R
-import com.jibase.anotation.Inflate
 import com.jibase.anotation.InflateHelper
+import com.jibase.anotation.ViewInflate
 
-abstract class BaseBottomDialog(@StyleRes private val styleRes: Int = R.style.style_dialog_100) : BottomSheetDialogFragment() {
-    open val inflate: Inflate by lazy { InflateHelper.getAnnotation(this) }
+abstract class BaseBottomDialog : BottomSheetDialogFragment() {
+    open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(DialogFragment.STYLE_NO_TITLE, styleRes)
+        setStyle(DialogFragment.STYLE_NO_TITLE, initStyle())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(inflate.layout, container, false)
+        return inflater.inflate(viewInflate.layout, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -37,7 +37,15 @@ abstract class BaseBottomDialog(@StyleRes private val styleRes: Int = R.style.st
         onViewListener()
     }
 
+    open fun initStyle(): Int {
+        return R.style.style_dialog_100
+    }
 
     open fun onViewReady(savedInstanceState: Bundle?) {}
     open fun onViewListener() {}
+
+    fun show(fragmentManager: FragmentManager) {
+        if (fragmentManager.findFragmentByTag(javaClass.name) != null) return
+        show(fragmentManager, javaClass.name)
+    }
 }

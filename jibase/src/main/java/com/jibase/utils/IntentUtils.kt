@@ -9,9 +9,8 @@ import android.provider.MediaStore
 import com.jibase.R
 import com.jibase.utils.ResourceUtils.getString
 import com.jibase.utils.ToastUtils.showText
-import org.koin.core.KoinComponent
 
-object IntentUtils : KoinComponent {
+object IntentUtils {
 
     /**
      *  go to google play store

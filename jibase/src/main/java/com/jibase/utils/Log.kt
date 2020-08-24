@@ -2,9 +2,8 @@ package com.jibase.utils
 
 import android.util.Log
 import com.jibase.BuildConfig
-import org.koin.core.KoinComponent
 
-object Log : KoinComponent {
+object Log {
     var prefix = "MY_LOG"
     var isEnable = BuildConfig.DEBUG
 

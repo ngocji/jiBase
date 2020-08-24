@@ -3,16 +3,17 @@ package com.jibase.ui.base
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat.ID_NULL
-import com.jibase.anotation.Inflate
+import androidx.lifecycle.ViewModelProvider
 import com.jibase.anotation.InflateHelper
-import com.jibase.ui.BindViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.reflect.KClass
+import com.jibase.anotation.ViewInflate
+import com.jibase.ui.BaseViewModel
 
 @Suppress("LeakingThis", "UNCHECKED_CAST")
-abstract class BaseActivity<VM : BindViewModel> : AppCompatActivity() {
-    open val inflate: Inflate by lazy { InflateHelper.getAnnotation(this) }
-    open val viewModel by viewModel(inflate.viewModel as KClass<VM>)
+abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
+    open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
+    open val viewModel: VM by lazy {
+        ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(viewInflate.viewModel.java) as VM
+    }
 
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,8 +21,8 @@ abstract class BaseActivity<VM : BindViewModel> : AppCompatActivity() {
     }
 
     open fun initView(savedInstanceState: Bundle?) {
-        if (inflate.layout != ID_NULL) {
-            setContentView(inflate.layout)
+        if (viewInflate.layout != ID_NULL) {
+            setContentView(viewInflate.layout)
         }
 
         onViewReady(savedInstanceState)
@@ -35,4 +36,4 @@ abstract class BaseActivity<VM : BindViewModel> : AppCompatActivity() {
     }
 }
 
-typealias SimpleBaseActivity = BaseActivity<BindViewModel>
+typealias SimpleBaseActivity = BaseActivity<BaseViewModel>

@@ -8,7 +8,7 @@ import com.jibase.utils.RuntimeTypeAdapterFactory
 import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
-class GsonHelper {
+object GsonHelper {
     var mGson: Gson? = null
 
     init {

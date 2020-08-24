@@ -21,8 +21,8 @@ import com.jibase.iflexible.helpers.ItemTouchHelperCallback
 import com.jibase.iflexible.helpers.StickyHeaderHelper
 import com.jibase.iflexible.items.interfaceItems.*
 import com.jibase.iflexible.listener.*
-import com.jibase.iflexible.viewholder.simple.FlexibleExpandableViewHolder
-import com.jibase.iflexible.viewholder.simple.FlexibleViewHolder
+import com.jibase.iflexible.viewholder.FlexibleExpandableViewHolder
+import com.jibase.iflexible.viewholder.FlexibleViewHolder
 import com.jibase.utils.Log
 import java.util.*
 import kotlin.math.ceil

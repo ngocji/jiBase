@@ -3,7 +3,7 @@ package com.jibase.iflexible.items.abstractItems
 import com.jibase.extensions.has
 import com.jibase.iflexible.items.interfaceItems.IExpandable
 import com.jibase.iflexible.items.interfaceItems.IFlexible
-import com.jibase.iflexible.viewholder.simple.FlexibleExpandableViewHolder
+import com.jibase.iflexible.viewholder.FlexibleExpandableViewHolder
 
 abstract class AbstractFlexibleExpandItem<VH : FlexibleExpandableViewHolder, S : IFlexible<*>>(private var preSubItems: MutableList<S> = mutableListOf()) : AbstractFlexibleItem<VH>(), IExpandable<VH, S> {
     /* Flags for FlexibleAdapter */

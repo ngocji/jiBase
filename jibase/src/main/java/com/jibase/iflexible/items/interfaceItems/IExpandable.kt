@@ -1,6 +1,6 @@
 package com.jibase.iflexible.items.interfaceItems
 
-import com.jibase.iflexible.viewholder.simple.FlexibleExpandableViewHolder
+import com.jibase.iflexible.viewholder.FlexibleExpandableViewHolder
 
 interface IExpandable<VH : FlexibleExpandableViewHolder, S : IFlexible<*>> : IFlexible<VH> {
     /*--------------------*/
