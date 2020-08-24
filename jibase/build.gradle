@@ -44,7 +44,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -91,7 +91,7 @@ dependencies {
     api "androidx.multidex:multidex:2.0.1"
 
     // room
-    def room_version ="2.2.5"
+    def room_version = "2.2.5"
     api "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
     api "androidx.room:room-rxjava2:$room_version"
@@ -99,5 +99,11 @@ dependencies {
     // rx
     api "io.reactivex.rxjava2:rxkotlin:2.2.0"
     api "io.reactivex.rxjava2:rxandroid:2.1.1"
+
+    // navigation
+    def navigation_version = "1.0.0"
+    api "android.arch.navigation:navigation-fragment:$navigation_version"
+    api "android.arch.navigation:navigation-ui:$navigation_version"
+
 }
 

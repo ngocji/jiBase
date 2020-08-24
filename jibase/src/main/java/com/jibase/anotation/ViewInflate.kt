@@ -9,5 +9,6 @@ import kotlin.reflect.KClass
 @Retention(AnnotationRetention.RUNTIME)
 annotation class ViewInflate(
         @LayoutRes val layout: Int = ID_NULL,
-        val viewModel: KClass<out BaseViewModel> = BaseViewModel::class
+        val viewModel: KClass<out BaseViewModel> = BaseViewModel::class,
+        val enableBackPressed: Boolean = false
 )

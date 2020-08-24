@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat.ID_NULL
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -33,6 +34,7 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        registerBackPressed()
         onViewReady(savedInstanceState)
         onViewListener()
     }
@@ -41,6 +43,18 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
 
     open fun onViewListener() {
         // free implement
+    }
+
+    open fun onBackPressed() {
+    }
+
+    private fun registerBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
+                object : OnBackPressedCallback(viewInflate.enableBackPressed) {
+                    override fun handleOnBackPressed() {
+                        onBackPressed()
+                    }
+                })
     }
 }
 

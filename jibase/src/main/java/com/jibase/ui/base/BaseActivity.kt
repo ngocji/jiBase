@@ -9,7 +9,7 @@ import com.jibase.anotation.ViewInflate
 import com.jibase.ui.BaseViewModel
 
 @Suppress("LeakingThis", "UNCHECKED_CAST")
-abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
+abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity()  {
     open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
     open val viewModel: VM by lazy {
         ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(viewInflate.viewModel.java) as VM
