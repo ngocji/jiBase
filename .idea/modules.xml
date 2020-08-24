@@ -5,7 +5,6 @@
       <module fileurl="file://$PROJECT_DIR$/KotlinBase.iml" filepath="$PROJECT_DIR$/KotlinBase.iml" group="KotlinBase" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="KotlinBase/app" />
       <module fileurl="file://$PROJECT_DIR$/jibase/jibase.iml" filepath="$PROJECT_DIR$/jibase/jibase.iml" group="KotlinBase/jibase" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jibinding/jibinding.iml" filepath="$PROJECT_DIR$/.idea/modules/jibinding/jibinding.iml" group="KotlinBase/jibinding" />
     </modules>
   </component>
 </project>

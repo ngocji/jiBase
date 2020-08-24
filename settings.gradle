@@ -1,3 +1,2 @@
-include ':jibinding'
 include ':app', ':jibase'
 rootProject.name='KotlinBase'
