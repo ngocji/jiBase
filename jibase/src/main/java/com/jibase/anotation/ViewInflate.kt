@@ -11,5 +11,5 @@ annotation class ViewInflate(
         @LayoutRes val layout: Int = ID_NULL,
         val viewModel: KClass<out BaseViewModel> = BaseViewModel::class,
         val enableBackPressed: Boolean = false,
-        val presenter: KClass<*> = Any::class
+        val presenter: KClass<out BaseViewModel> = BaseViewModel::class
 )
