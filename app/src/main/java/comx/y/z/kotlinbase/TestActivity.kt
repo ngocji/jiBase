@@ -9,6 +9,5 @@ import com.jibase.ui.base.BaseActivity
 class TestActivity : BaseActivity<BaseViewModel>() {
 
     override fun onViewReady(savedInstanceState: Bundle?) {
-        findNav
     }
 }
