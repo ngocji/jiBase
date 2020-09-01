@@ -1,30 +1,12 @@
 package com.jibase.ui.dialog
 
-import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
-import com.jibase.ui.DialogCallBackStore
-
-abstract class BaseBottomCallBackDialog<CallBack> : BaseBottomDialog() {
-    private val callbackStore: DialogCallBackStore<CallBack> by lazy {
-        ViewModelProvider(this,
-                ViewModelProvider.NewInstanceFactory())
-                .get(DialogCallBackStore::class.java) as DialogCallBackStore<CallBack>
-    }
-
-    private var tempCallBack: CallBack? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (callbackStore.callback == null) {
-            callbackStore.callback = tempCallBack
-        }
-    }
+abstract class BaseBottomCallBackDialog<CallBack : Any> : BaseBottomDialog() {
 
     fun setCallBack(callback: CallBack) {
-        tempCallBack = callback
+        addProperty("callback", callback)
     }
 
     fun getCallBack(): CallBack? {
-        return callbackStore.callback
+        return getProperty("callback")
     }
 }
