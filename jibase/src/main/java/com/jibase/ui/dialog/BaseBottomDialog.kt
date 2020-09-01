@@ -57,11 +57,15 @@ abstract class BaseBottomDialog : BottomSheetDialogFragment() {
         show(fragmentManager, javaClass.name)
     }
 
-    fun<T : Any> addProperty(key: String, data: T) {
-        tempProperties[key] = data
+    fun<T> addProperty(key: String, data: T) {
+        if (data != null) {
+            tempProperties[key] = data
+        } else {
+            tempProperties.remove(key)
+        }
     }
 
-    fun <T : Any> getProperty(key: String): T? {
+    fun <T> getProperty(key: String): T? {
         return dialogStore.get(key)
     }
 }
