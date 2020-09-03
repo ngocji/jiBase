@@ -13,7 +13,6 @@ class IViewpager @JvmOverloads constructor(context: Context, attributeSet: Attri
         initView(attributeSet)
     }
 
-
     override fun onTouchEvent(event: MotionEvent): Boolean {
         return if (this.isEnableSwipe) {
             super.onTouchEvent(event)
@@ -27,7 +26,6 @@ class IViewpager @JvmOverloads constructor(context: Context, attributeSet: Attri
         } else false
 
     }
-
 
     private fun initView(attributeSet: AttributeSet?) {
         attributeSet?.also {

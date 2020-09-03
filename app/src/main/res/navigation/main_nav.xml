@@ -1,18 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/main_nav"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_nav"
     app:startDestination="@id/testFragment">
 
     <fragment
         android:id="@+id/testFragment"
-        android:name="comx.y.z.kotlinbase.TestFragment"
-        android:label="TestFragment" >
+        android:name="comx.y.z.kotlinbase.fragment.TestFragment"
+        android:label="TestFragment">
         <action
             android:id="@+id/action_testFragment_to_test2Fragment"
             app:destination="@id/test2Fragment" />
     </fragment>
+
     <fragment
         android:id="@+id/test2Fragment"
-        android:name="comx.y.z.kotlinbase.Test2Fragment"
+        android:name="comx.y.z.kotlinbase.fragment.Test2Fragment"
         android:label="Test2Fragment" />
+
 </navigation>

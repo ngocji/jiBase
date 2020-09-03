@@ -82,26 +82,25 @@ class ISnackBar {
 
     @Throws
     fun create(): Snackbar {
-        return if (rootView == null) throw IllegalArgumentException("This root view not be null!")
-        else
-            Snackbar.make(rootView!!, message, duration).apply {
-                //Set background
-                if (backgroundColor != noneColor) {
-                    setBackgroundColor(backgroundColor)
-                }
-                //Set text color
-                if (messageColor != noneColor) {
-                    view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)?.also {
-                        it.setTextColor(messageColor)
-                    }
-                }
-                // set action color
-                if (actionColor != noneColor) {
-                    setActionTextColor(actionColor)
-                }
-                if (actionName.isNotEmpty() && action != null) {
-                    setAction(actionName) { v -> action?.invoke(v) }
+        val root = rootView ?: throw IllegalArgumentException("This root view not be null!")
+        return Snackbar.make(root, message, duration).apply {
+            //Set background
+            if (backgroundColor != noneColor) {
+                setBackgroundColor(backgroundColor)
+            }
+            //Set text color
+            if (messageColor != noneColor) {
+                view.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)?.also {
+                    it.setTextColor(messageColor)
                 }
             }
+            // set action color
+            if (actionColor != noneColor) {
+                setActionTextColor(actionColor)
+            }
+            if (actionName.isNotEmpty() && action != null) {
+                setAction(actionName) { v -> action?.invoke(v) }
+            }
+        }
     }
 }

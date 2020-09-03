@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login_nav"
+    app:startDestination="@id/testLogin1Fragment"
+    tools:ignore="UnusedNavigation">
+
+    <fragment
+        android:id="@+id/testLogin1Fragment"
+        android:name="comx.y.z.kotlinbase.fragment.login.TestLogin1Fragment"
+        android:label="TestLogin1Fragment">
+        <action
+            android:id="@+id/action_testLogin1Fragment_to_testLogin2Fragment"
+            app:destination="@id/testLogin2Fragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/testLogin2Fragment"
+        android:name="comx.y.z.kotlinbase.fragment.login.TestLogin2Fragment"
+        android:label="TestLogin2Fragment" />
+</navigation>
