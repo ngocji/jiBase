@@ -28,12 +28,12 @@ object SharePreferencesUtils {
     fun <T> getPref(key: String, defaultValue: T, clsOfT: Class<T>): T {
         val value = pref.getString(key, defaultValue.toString()) ?: return defaultValue
         return when (clsOfT) {
-            Boolean::class -> value.toBoolean() as T
-            Float::class -> value.toFloat() as T
-            Int::class -> value.toInt() as T
-            Long::class -> value.toLong() as T
-            String::class -> value as T
-            Double::class -> value.toDouble() as T
+            Boolean::class.java -> value.toBoolean() as T
+            Float::class.java -> value.toFloat() as T
+            Int::class.java -> value.toInt() as T
+            Long::class.java -> value.toLong() as T
+            String::class.java -> value as T
+            Double::class.java -> value.toDouble() as T
             else -> defaultValue
         }
     }
