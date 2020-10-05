@@ -3,10 +3,14 @@ package com.jibase.utils
 import android.content.Context
 import android.content.SharedPreferences
 import com.jibase.BaseApp
+import com.jibase.helper.GsonHelper
 
 object SharePreferencesUtils {
     val pref: SharedPreferences by lazy {
-        BaseApp.applicationContext.getSharedPreferences(BaseApp.applicationContext.packageName, Context.MODE_PRIVATE)
+        BaseApp.applicationContext.getSharedPreferences(
+            BaseApp.applicationContext.packageName,
+            Context.MODE_PRIVATE
+        )
     }
 
     inline fun <reified T> getPref(key: String, defaultValue: T): T {
@@ -18,7 +22,7 @@ object SharePreferencesUtils {
             Long::class -> value.toLong() as T
             String::class -> value as T
             Double::class -> value.toDouble() as T
-            else -> defaultValue
+            else -> GsonHelper.fromJson(value)
         }
     }
 
@@ -27,14 +31,14 @@ object SharePreferencesUtils {
     @JvmStatic
     fun <T> getPref(key: String, defaultValue: T, clsOfT: Class<T>): T {
         val value = pref.getString(key, defaultValue.toString()) ?: return defaultValue
-        return when (clsOfT) {
-            Boolean::class -> value.toBoolean() as T
-            Float::class -> value.toFloat() as T
-            Int::class -> value.toInt() as T
-            Long::class -> value.toLong() as T
-            String::class -> value as T
-            Double::class -> value.toDouble() as T
-            else -> defaultValue
+        return when (clsOfT.simpleName) {
+            "Boolean" -> value.toBoolean() as T
+            "Float" -> value.toFloat() as T
+            "Integer" -> value.toInt() as T
+            "Long" -> value.toLong() as T
+            "String" -> value as T
+            "Double" -> value.toDouble() as T
+            else -> GsonHelper.fromJson(value, clsOfT)
         }
     }
 

@@ -9,22 +9,14 @@ import java.lang.reflect.Type
 import kotlin.reflect.KClass
 
 object GsonHelper {
-    var mGson: Gson? = null
-
-    init {
-        mGson = createNewGson<Any>()
-    }
-
-    fun setCustomGson(gson: Gson) {
-        mGson = gson
-    }
+    val mGson: Gson by lazy { createNewGson<Any>() }
 
     fun <T> fromJsonList(data: String, type: Type): T {
-        return mGson?.fromJson(data, type) ?: throw Exception("Gson can't convert")
+        return mGson.fromJson(data, type) ?: throw Exception("Gson can't convert")
     }
 
     fun <T> toJson(data: T): String {
-        return mGson?.toJson(data) ?: ""
+        return mGson.toJson(data) ?: ""
     }
 
 
@@ -38,13 +30,17 @@ object GsonHelper {
     // parse string to list
     inline fun <reified T> fromJsonList(data: String): List<T> {
         val type = getTypeToken<T>()
-        return mGson?.fromJson(data, type) ?: throw Exception("Gson can't convert")
+        return mGson.fromJson(data, type) ?: throw Exception("Gson can't convert")
     }
 
 
     // parse string to data
     inline fun <reified T> fromJson(data: String): T {
-        return mGson?.fromJson(data, T::class.java) ?: throw Exception("Gson can't convert")
+        return mGson.fromJson(data, T::class.java) ?: throw Exception("Gson can't convert")
+    }
+
+    fun <T> fromJson(data: String, clazz: Class<T>): T {
+        return mGson.fromJson(data, clazz) ?: throw Exception("Gson can't convert")
     }
 
     // get type token from list
