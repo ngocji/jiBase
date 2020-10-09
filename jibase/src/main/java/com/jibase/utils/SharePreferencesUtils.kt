@@ -22,7 +22,13 @@ object SharePreferencesUtils {
             Long::class -> value.toLong() as T
             String::class -> value as T
             Double::class -> value.toDouble() as T
-            else -> GsonHelper.fromJson(value)
+            else -> {
+                try {
+                    GsonHelper.fromJson(value)
+                } catch (e: Exception) {
+                    defaultValue
+                }
+            }
         }
     }
 
@@ -38,14 +44,20 @@ object SharePreferencesUtils {
             "Long" -> value.toLong() as T
             "String" -> value as T
             "Double" -> value.toDouble() as T
-            else -> GsonHelper.fromJson(value, clsOfT)
+            else -> {
+                try {
+                    GsonHelper.fromJson(value, clsOfT)
+                } catch (e: Exception) {
+                    defaultValue
+                }
+            }
         }
     }
 
     @JvmStatic
     fun <T> putPref(key: String, value: T) {
         with(pref.edit()) {
-            putString(key, value.toString())
+            putString(key, toStringValue(value))
             apply()
         }
     }
@@ -58,5 +70,13 @@ object SharePreferencesUtils {
     @JvmStatic
     fun unregisterListener(listener: SharedPreferences.OnSharedPreferenceChangeListener) {
         pref.unregisterOnSharedPreferenceChangeListener(listener)
+    }
+
+    private fun <T> toStringValue(value: T): String {
+        return try {
+            GsonHelper.toJson(value)
+        } catch (e: Exception) {
+            value.toString()
+        }
     }
 }

@@ -2,14 +2,11 @@ package com.jibase.helper
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.gson.TypeAdapterFactory
 import com.google.gson.reflect.TypeToken
-import com.jibase.utils.RuntimeTypeAdapterFactory
 import java.lang.reflect.Type
-import kotlin.reflect.KClass
 
 object GsonHelper {
-    val mGson: Gson by lazy { createNewGson<Any>() }
+    val mGson: Gson by lazy { createSimpleGson() }
 
     fun <T> fromJsonList(data: String, type: Type): T {
         return mGson.fromJson(data, type) ?: throw Exception("Gson can't convert")
@@ -46,20 +43,9 @@ object GsonHelper {
     // get type token from list
     inline fun <reified T> getTypeToken(): Type = object : TypeToken<T>() {}.type
 
-    // create adapter factory
-    inline fun <reified T : Any> createAdapterFactory(vararg cls: KClass<out T>): TypeAdapterFactory {
-        val adapter = RuntimeTypeAdapterFactory.of(T::class.java)
-        cls.forEach {
-            adapter.registerSubtype(it.java)
-        }
-        return adapter
-    }
-
-
     // create new gson
-    inline fun <reified T : Any> createNewGson(vararg cls: KClass<out T>): Gson {
+    private fun createSimpleGson(): Gson {
         val builder = GsonBuilder().serializeSpecialFloatingPointValues()
-        builder.registerTypeAdapterFactory(createAdapterFactory(*cls))
         return builder.create()
     }
 
