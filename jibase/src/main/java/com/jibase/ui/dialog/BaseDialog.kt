@@ -18,16 +18,15 @@ import com.jibase.ui.DialogStore
 
 abstract class BaseDialog : DialogFragment() {
     open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
-    open val dialogStore: DialogStore by lazy {
-        ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(DialogStore::class.java)
-    }
+    lateinit var dialogStore: DialogStore
 
     private val tempProperties = hashMapOf<String, Any>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, initStyle())
-        dialogStore.add(tempProperties)
+        dialogStore = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(DialogStore::class.java)
+        dialogStore.addAll(tempProperties)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -61,11 +60,15 @@ abstract class BaseDialog : DialogFragment() {
         show(fragmentManager, javaClass.name)
     }
 
-    fun <T> addProperty(key: String, data: T) {
-        if (data != null) {
-            tempProperties[key] = data
+    fun <T> addProperty(key: String, data: T?) {
+        if (this::dialogStore.isInitialized) {
+            dialogStore.add(key, data)
         } else {
-            tempProperties.remove(key)
+            if (data != null) {
+                tempProperties[key] = data
+            } else {
+                tempProperties.remove(key)
+            }
         }
     }
 

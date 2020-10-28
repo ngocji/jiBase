@@ -28,7 +28,7 @@ abstract class BaseBottomDialog : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_TITLE, initStyle())
-        dialogStore.add(tempProperties)
+        dialogStore.addAll(tempProperties)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
