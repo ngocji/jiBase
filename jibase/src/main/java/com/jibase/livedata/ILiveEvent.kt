@@ -7,7 +7,14 @@ import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
 @Suppress("unused")
-class ILiveEvent<T> : LiveData<T>() {
+class ILiveEvent<T> private constructor() : LiveData<T>() {
+    companion object {
+        @JvmStatic
+        fun <T> newInstance(): ILiveEvent<T> {
+            return ILiveEvent()
+        }
+    }
+
     private val pending = hashMapOf<Int, AtomicBoolean>()
 
     @MainThread
