@@ -8,6 +8,13 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @Suppress("unused")
 class ILiveEvent<T> : LiveData<T>() {
+    companion object {
+        @JvmStatic
+        fun <T> newInstance(): ILiveEvent<T> {
+            return ILiveEvent()
+        }
+    }
+
     private val pending = hashMapOf<Int, AtomicBoolean>()
 
     @MainThread
