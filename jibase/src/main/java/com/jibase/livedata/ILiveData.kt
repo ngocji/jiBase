@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import java.util.concurrent.atomic.AtomicBoolean
 
-open class ILiveData<T : Any> constructor(data: T? = null, isNotifyDataWhenInitialize: Boolean = false) : LiveData<T>() {
+open class ILiveData<T : Any> constructor(data: T? = null, isNotifyDataWhenInitialize: Boolean = true) : LiveData<T>() {
     companion object {
         @JvmStatic
         fun <T : Any> newInstance(data: T? = null, isNotifyDataWhenInitialize: Boolean = false): ILiveData<T> {
