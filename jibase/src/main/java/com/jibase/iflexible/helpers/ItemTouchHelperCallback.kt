@@ -21,6 +21,14 @@ open class ItemTouchHelperCallback(val adapterCallBack: AdapterCallback) : ItemT
     var MOVE_THRESHOLD = 0.5f
     var swipeFlags = -1
 
+    override fun isLongPressDragEnabled(): Boolean {
+        return longPressDragEnabled
+    }
+
+    override fun isItemViewSwipeEnabled(): Boolean {
+        return swipeEnabled;
+    }
+
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         val layoutManager = recyclerView.layoutManager
         var dragFlags: Int
