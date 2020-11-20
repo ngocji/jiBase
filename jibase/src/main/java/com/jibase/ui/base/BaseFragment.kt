@@ -15,8 +15,8 @@ import com.jibase.ui.BaseViewModel
 @Suppress("LeakingThis", "UNCHECKED_CAST")
 abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
     open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
-    open val viewModel by lazy {
-        ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(viewInflate.viewModel.java)
+    open val viewModel: VM by lazy {
+        ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(viewInflate.viewModel.java) as VM
     }
 
     final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
