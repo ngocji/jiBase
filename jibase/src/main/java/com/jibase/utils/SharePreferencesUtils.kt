@@ -57,6 +57,14 @@ object SharePreferencesUtils {
     @JvmStatic
     fun <T> putPref(key: String, value: T) {
         with(pref.edit()) {
+            putString(key, value.toString())
+            apply()
+        }
+    }
+
+    @JvmStatic
+    fun <T> putObjectPref(key: String, value: T) {
+        with(pref.edit()) {
             putString(key, toStringValue(value))
             apply()
         }
