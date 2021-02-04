@@ -29,9 +29,10 @@ import kotlin.math.ceil
 import kotlin.math.max
 
 @Suppress("UNCHECKED_CAST")
-open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = mutableListOf(),
-                                             hasStateId: Boolean = false)
-    : AbstractFlexibleAnimatorAdapter(hasStateId), ItemTouchHelperCallback.AdapterCallback {
+open class FlexibleAdapter<T : IFlexible<*>>(
+    var listData: MutableList<T> = mutableListOf(),
+    hasStateId: Boolean = false
+) : AbstractFlexibleAnimatorAdapter(hasStateId), ItemTouchHelperCallback.AdapterCallback {
 
     companion object {
         private val TAG = "FlexibleAdapter"
@@ -128,15 +129,15 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
     private var mProgressItem: T? = null
 
     /* Listeners */
-    var mItemClickListener: OnItemClickListener? = null
-    var mItemLongClickListener: OnItemLongClickListener? = null
-    var mUpdateListener: OnUpdateListener? = null
-    var mFilterListener: OnFilterListener? = null
-    var mItemMoveListener: OnItemMoveListener? = null
-    var mItemSwipeListener: OnItemSwipeListener? = null
-    var mEndlessScrollListener: EndlessScrollListener? = null
-    var mDeleteCompleteListener: OnDeleteCompleteListener? = null
-    var mStickyHeaderChangeListener: OnStickyHeaderChangeListener? = null
+    var onItemClickListener: OnItemClickListener? = null
+    var onItemLongClickListener: OnItemLongClickListener? = null
+    var onUpdateListener: OnUpdateListener? = null
+    var onFilterListener: OnFilterListener? = null
+    var onItemMoveListener: OnItemMoveListener? = null
+    var onItemSwipeListener: OnItemSwipeListener? = null
+    var onEndlessScrollListener: EndlessScrollListener? = null
+    var onDeleteCompleteListener: OnDeleteCompleteListener? = null
+    var onStickyHeaderChangeListener: OnStickyHeaderChangeListener? = null
 
 
     init {
@@ -158,14 +159,14 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         when (listener) {
             is OnItemClickListener -> {
                 Log.d("- OnItemClickClickListener", TAG)
-                mItemClickListener = listener
+                onItemClickListener = listener
                 for (holder in getAllBoundViewHolders()) {
                     holder.contentView.setOnClickListener(holder)
                 }
             }
             is OnItemLongClickListener -> {
                 Log.d("- OnItemLongClickListener", TAG)
-                mItemLongClickListener = listener
+                onItemLongClickListener = listener
                 // Restore the event
                 for (holder in getAllBoundViewHolders()) {
                     holder.contentView.setOnLongClickListener(holder)
@@ -174,31 +175,31 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
 
             is OnItemMoveListener -> {
                 Log.d("- OnItemMoveListener", TAG)
-                mItemMoveListener = listener
+                onItemMoveListener = listener
             }
 
             is OnItemSwipeListener -> {
                 Log.d("- OnItemSwipeListener", TAG)
-                mItemSwipeListener = listener
+                onItemSwipeListener = listener
             }
             is OnDeleteCompleteListener -> {
                 Log.d("- OnDeleteCompleteListener", TAG)
-                mDeleteCompleteListener = listener
+                onDeleteCompleteListener = listener
             }
 
             is OnStickyHeaderChangeListener -> {
                 Log.d("- OnStickyHeaderChangeListener", TAG)
-                mStickyHeaderChangeListener = listener
+                onStickyHeaderChangeListener = listener
             }
             is OnUpdateListener -> {
                 Log.d("- OnUpdateListener", TAG)
-                mUpdateListener = listener
-                listener.onUpdateEmptyView(getMainItemCount())
+                onUpdateListener = listener
+                listener.onUpdateEmptyView(this, getMainItemCount())
             }
 
             is OnFilterListener -> {
                 Log.d("- OnFilterListener", TAG)
-                mFilterListener = listener
+                onFilterListener = listener
             }
         }
         return this
@@ -226,14 +227,14 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         when (listener) {
             is OnItemClickListener -> {
                 Log.d("- Remove OnItemClickListener", TAG)
-                mItemClickListener = null
+                onItemClickListener = null
                 for (holder in getAllBoundViewHolders()) {
                     holder.contentView.setOnClickListener(null)
                 }
             }
             is OnItemLongClickListener -> {
                 Log.d("- Remove OnItemLongClickListener", TAG)
-                mItemLongClickListener = null
+                onItemLongClickListener = null
                 // Restore the event
                 for (holder in getAllBoundViewHolders()) {
                     holder.contentView.setOnLongClickListener(null)
@@ -242,30 +243,30 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
 
             is OnItemMoveListener -> {
                 Log.d("- Remove OnItemMoveListener", TAG)
-                mItemMoveListener = null
+                onItemMoveListener = null
             }
 
             is OnItemSwipeListener -> {
                 Log.d("- Remove OnItemSwipeListener", TAG)
-                mItemSwipeListener = null
+                onItemSwipeListener = null
             }
             is OnDeleteCompleteListener -> {
                 Log.d("- Remove OnDeleteCompleteListener", TAG)
-                mDeleteCompleteListener = null
+                onDeleteCompleteListener = null
             }
 
             is OnStickyHeaderChangeListener -> {
                 Log.d("- Remove OnStickyHeaderChangeListener", TAG)
-                mStickyHeaderChangeListener = null
+                onStickyHeaderChangeListener = null
             }
             is OnUpdateListener -> {
                 Log.d("- Remove OnUpdateListener", TAG)
-                mUpdateListener = null
+                onUpdateListener = null
             }
 
             is OnFilterListener -> {
                 Log.d("- Remove OnFilterListener", TAG)
-                mFilterListener = null
+                onFilterListener = null
             }
         }
         return this
@@ -678,7 +679,13 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
                     // fix represents the situation when item is before the target position (used in moveItem)
                     val fix = if (itemPosition != -1 && itemPosition < headerPosition) 0 else 1
                     val result = headerPosition + sortedList.indexOf(item) + fix
-                    Log.d("Calculated finalPosition=$result sectionPosition=$headerPosition relativePosition=${sortedList.indexOf(item)} fix=$fix", TAG)
+                    Log.d(
+                        "Calculated finalPosition=$result sectionPosition=$headerPosition relativePosition=${
+                            sortedList.indexOf(
+                                item
+                            )
+                        } fix=$fix", TAG
+                    )
                     return result
                 }
             }
@@ -756,7 +763,8 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         return if (!mScrollableHeaders.contains(headerItem)) {
             headerItem.setSelectable(false)
             headerItem.setDraggable(false)
-            val progressFix = if (isEndlessProgressItemOf(headerItem)) mScrollableHeaders.size else 0
+            val progressFix =
+                if (isEndlessProgressItemOf(headerItem)) mScrollableHeaders.size else 0
             mScrollableHeaders.add(headerItem)
             setScrollAnimate(true) // Headers will scroll animate
             performInsert(progressFix, listOf(headerItem), true)
@@ -796,7 +804,8 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
             Log.d("Add scrollable footer $footerItem", TAG)
             footerItem.setSelectable(false)
             footerItem.setDraggable(false)
-            val progressFix = if (isEndlessProgressItemOf(footerItem)) mScrollableFooters.size else 0
+            val progressFix =
+                if (isEndlessProgressItemOf(footerItem)) mScrollableFooters.size else 0
             //Prevent wrong position after a possible updateDataSet
             if (progressFix > 0 && mScrollableFooters.size > 0) {
                 mScrollableFooters.add(0, footerItem)
@@ -878,8 +887,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @param scrollToPosition true to scroll to the header item position once it has been added
      * @see addScrollableHeader
      */
-    fun addScrollableHeaderWithDelay(headerItem: T, @IntRange(from = 0) delay: Long,
-                                     scrollToPosition: Boolean) {
+    fun addScrollableHeaderWithDelay(
+        headerItem: T, @IntRange(from = 0) delay: Long,
+        scrollToPosition: Boolean
+    ) {
         Log.d("Enqueued adding scrollable header ($delay ms) $headerItem", TAG)
         mHandler.postDelayed({
             if (addScrollableHeader(headerItem) && scrollToPosition) {
@@ -897,8 +908,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @param scrollToPosition true to scroll to the footer item position once it has been added
      * @see addScrollableFooter
      */
-    fun addScrollableFooterWithDelay(footerItem: T, @IntRange(from = 0) delay: Long,
-                                     scrollToPosition: Boolean) {
+    fun addScrollableFooterWithDelay(
+        footerItem: T, @IntRange(from = 0) delay: Long,
+        scrollToPosition: Boolean
+    ) {
         Log.d("Enqueued adding scrollable footer ($delay ms) $footerItem", TAG)
         mHandler.postDelayed({
             if (addScrollableFooter(footerItem) && scrollToPosition) {
@@ -1183,7 +1196,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @see setStickyHeaderElevation
      */
     fun setStickyHeaders(sticky: Boolean, stickyContainer: ViewGroup?): FlexibleAdapter<T> {
-        Log.d("Set stickyHeaders=$sticky (in Post!)${if (stickyContainer != null) " with user defined Sticky Container" else ""}", TAG)
+        Log.d(
+            "Set stickyHeaders=$sticky (in Post!)${if (stickyContainer != null) " with user defined Sticky Container" else ""}",
+            TAG
+        )
 
         // With user defined container
         mStickyContainer = stickyContainer
@@ -1193,8 +1209,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
             // Enable or Disable the sticky headers layout
             if (sticky) {
                 if (mStickyHeaderHelper == null) {
-                    mStickyHeaderHelper = StickyHeaderHelper(this@FlexibleAdapter,
-                            mStickyHeaderChangeListener, mStickyContainer)
+                    mStickyHeaderHelper = StickyHeaderHelper(
+                        this@FlexibleAdapter,
+                        onStickyHeaderChangeListener, mStickyContainer
+                    )
                     mStickyHeaderHelper?.attachToRecyclerView(mRecyclerView)
                     Log.d("Sticky headers enabled", TAG)
                 }
@@ -1295,7 +1313,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
             mHandler.post(Runnable {
                 // #144 - Check if headers are already shown, discard the call to not duplicate headers
                 if (headersShown) {
-                    Log.d("Double call detected! Headers already shown OR the method showAllHeaders() was already called!", TAG)
+                    Log.d(
+                        "Double call detected! Headers already shown OR the method showAllHeaders() was already called!",
+                        TAG
+                    )
                     return@Runnable
                 }
                 showAllHeadersWithReset(false)
@@ -1303,7 +1324,8 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
                 // for the first time. Header item is not visible at position 0: it has to be
                 // displayed by scrolling to it. This resolves the first item below sticky
                 // header when enabled as well.
-                val firstVisibleItem = getFlexibleLayoutManager().findFirstCompletelyVisibleItemPosition()
+                val firstVisibleItem =
+                    getFlexibleLayoutManager().findFirstCompletelyVisibleItemPosition()
                 if (firstVisibleItem == 0 && isHeader(getItem(0)) && !isHeader(getItem(1))) {
                     mRecyclerView.scrollToPosition(0)
                 }
@@ -1434,7 +1456,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
                 item.setHeader(header)
                 // Notify items
                 if (payload != null) {
-                    if (!header.isHidden()) notifyItemChanged(getGlobalPositionOf(header as T), payload)
+                    if (!header.isHidden()) notifyItemChanged(
+                        getGlobalPositionOf(header as T),
+                        payload
+                    )
                     if (!item.isHidden()) notifyItemChanged(getGlobalPositionOf(item), payload)
                 }
             }
@@ -1463,7 +1488,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
             sectionable.setHeader(null)
             // Notify items
             if (payload != null) {
-                if (header != null && !header.isHidden()) notifyItemChanged(getGlobalPositionOf(header as T), payload)
+                if (header != null && !header.isHidden()) notifyItemChanged(
+                    getGlobalPositionOf(
+                        header as T
+                    ), payload
+                )
                 if (!item.isHidden()) notifyItemChanged(getGlobalPositionOf(item), payload)
             }
         }
@@ -1507,7 +1536,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         val item = getViewTypeInstance(viewType)
         if (item == null || !autoMap) {
             throw IllegalStateException(
-                    String.format("ViewType instance not found for viewType %s. You should implement the AutoMap properly.", viewType))
+                String.format(
+                    "ViewType instance not found for viewType %s. You should implement the AutoMap properly.",
+                    viewType
+                )
+            )
         }
         return item.createViewHolder(parent, this)
     }
@@ -1531,7 +1564,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @see IFlexible.bindViewHolder
      * @see onBindViewHolder
      */
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<*>) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: List<*>
+    ) {
         if (!autoMap) {
             // If everything has been set properly, this should never happen ;-)
             throw IllegalStateException("AutoMap is not active, this method cannot be called. You should implement the AutoMap properly.")
@@ -1545,10 +1582,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
             // Avoid to show the double background in case header has transparency
             // The visibility will be restored when header is reset in StickyHeaderHelper
             if (areHeadersSticky() &&
-                    isHeader(item) &&
-                    !isFastScroll &&
-                    (mStickyHeaderHelper?.getStickyPosition() ?: -1 >= 0) &&
-                    payloads.isEmpty()) {
+                isHeader(item) &&
+                !isFastScroll &&
+                (mStickyHeaderHelper?.getStickyPosition() ?: -1 >= 0) &&
+                payloads.isEmpty()
+            ) {
                 val headerPos = getFlexibleLayoutManager().findFirstVisibleItemPosition() - 1
                 if (headerPos == position) {
                     holder.itemView.invisible()
@@ -1784,10 +1822,12 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @see isEndlessScrollEnabled
      * @see setEndlessProgressItem
      */
-    fun setEndlessScrollListener(endlessScrollListener: EndlessScrollListener,
-                                 progressItem: T): FlexibleAdapter<T> {
+    fun setEndlessScrollListener(
+        endlessScrollListener: EndlessScrollListener,
+        progressItem: T
+    ): FlexibleAdapter<T> {
         Log.d("Set endlessScrollListener=$endlessScrollListener", TAG)
-        mEndlessScrollListener = endlessScrollListener
+        onEndlessScrollListener = endlessScrollListener
         return setEndlessProgressItem(progressItem)
     }
 
@@ -1833,7 +1873,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         if (!mTopEndless && (position == getGlobalPositionOf(mProgressItem) || position < threshold) || mTopEndless && position > 0 && position > threshold) {
             return
         }
-        Log.d("onLoadMore:   topEndless=$mTopEndless\nloading=$endlessLoading\nposition=$position\nitemCount=$itemCount\nthreshold=$mEndlessScrollThreshold\ncurrentThreshold=$threshold", TAG)
+        Log.d(
+            "onLoadMore:   topEndless=$mTopEndless\nloading=$endlessLoading\nposition=$position\nitemCount=$itemCount\nthreshold=$mEndlessScrollThreshold\ncurrentThreshold=$threshold",
+            TAG
+        )
         // Load more if not loading and inside the threshold
         endlessLoading = true
         // Insertion is in post, as suggested by Android because: java.lang.IllegalStateException:
@@ -1842,7 +1885,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
             // Show progressItem if not already shown
             showProgressItem()
             Log.d("onLoadMore     invoked!")
-            mEndlessScrollListener?.onLoadMore(getMainItemCount(), getEndlessCurrentPage())
+            onEndlessScrollListener?.onLoadMore(this, getMainItemCount(), getEndlessCurrentPage())
         }
     }
 
@@ -1870,7 +1913,8 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         val progressPosition = getGlobalPositionOf(mProgressItem)
         // Check if features are enabled and the limits have been reached
         if (mEndlessPageSize > 0 && newItemsSize < mEndlessPageSize || // Is feature enabled and Not enough items?
-                mEndlessTargetCount in 1..totalItemCount) { // Is feature enabled and Max limit has been reached?
+            mEndlessTargetCount in 1..totalItemCount
+        ) { // Is feature enabled and Max limit has been reached?
             // Disable the EndlessScroll feature
             Log.d("onLoadMore     disable endless", TAG)
             setEndlessProgressItem(null)
@@ -1885,7 +1929,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         }
         // Add any new items
         if (newItemsSize > 0) {
-            Log.d("onLoadMore     performing adding $newItemsSize new items on page=${getEndlessCurrentPage()}", TAG)
+            Log.d(
+                "onLoadMore     performing adding $newItemsSize new items on page=${getEndlessCurrentPage()}",
+                TAG
+            )
             addItems(progressPosition, newItems)
         }
         // Eventually notify noMoreLoad
@@ -1936,7 +1983,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         Log.d("noMoreLoad!", TAG)
         val positionToNotify = getGlobalPositionOf(mProgressItem)
         if (positionToNotify >= 0) notifyItemChanged(positionToNotify, Payload.NO_MORE_LOAD)
-        mEndlessScrollListener?.noMoreLoad(newItemsSize)
+        onEndlessScrollListener?.noMoreLoad(this, newItemsSize)
     }
 
     /*--------------------*/
@@ -2233,7 +2280,12 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @see expand
      * @see expandAll
      */
-    fun expand(item: T, expandAll: Boolean = false, init: Boolean = false, notifyParent: Boolean = false): Int {
+    fun expand(
+        item: T,
+        expandAll: Boolean = false,
+        init: Boolean = false,
+        notifyParent: Boolean = false
+    ): Int {
         return expand(getGlobalPositionOf(item), expandAll, init, notifyParent)
     }
 
@@ -2253,7 +2305,12 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @param notifyParent true to notify the parent with [Payload.EXPANDED]
      * @return the number of subItems expanded
      */
-    fun expand(position: Int, expandAll: Boolean = false, init: Boolean = false, notifyParent: Boolean = false): Int {
+    fun expand(
+        position: Int,
+        expandAll: Boolean = false,
+        init: Boolean = false,
+        notifyParent: Boolean = false
+    ): Int {
         var newPosition = position
         val item = getItem(newPosition)
 
@@ -2262,11 +2319,17 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         val expandable = item as IExpandable<*, *>
         if (!hasSubItems(expandable)) {
             expandable.setExpanded(false) // Clear the expanded flag
-            Log.d("No subItems to Expand on position $newPosition expanded ${expandable.isExpanded()}", TAG)
+            Log.d(
+                "No subItems to Expand on position $newPosition expanded ${expandable.isExpanded()}",
+                TAG
+            )
             return 0
         }
         if (!init && !expandAll) {
-            Log.d("Request to Expand on position=$newPosition expanded=${expandable.isExpanded()} anyParentSelected=$parentSelected", TAG)
+            Log.d(
+                "Request to Expand on position=$newPosition expanded=${expandable.isExpanded()} anyParentSelected=$parentSelected",
+                TAG
+            )
         }
         var subItemsCount = 0
         if (init || !expandable.isExpanded() && (!parentSelected || expandable.getExpansionLevel() <= mSelectedLevel)) {
@@ -2308,7 +2371,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
             if (!expandSHF(mScrollableHeaders, expandable))
                 expandSHF(mScrollableFooters, expandable)
 
-            Log.d("$subItemsCount $newPosition subItems on position=${if (init) "Initially expanded" else "Expanded"}", TAG)
+            Log.d(
+                "$subItemsCount $newPosition subItems on position=${if (init) "Initially expanded" else "Expanded"}",
+                TAG
+            )
         }
         return subItemsCount
     }
@@ -2370,9 +2436,20 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         val subItems = getExpandableList(expandable, true)
         var subItemsCount = subItems.size
 
-        Log.d("Request to Collapse on position=$position expanded=${expandable.isExpanded()} hasSubItemsSelected=${hasSubItemsSelected(position, subItems)}", TAG)
+        Log.d(
+            "Request to Collapse on position=$position expanded=${expandable.isExpanded()} hasSubItemsSelected=${
+                hasSubItemsSelected(
+                    position,
+                    subItems
+                )
+            }", TAG
+        )
 
-        if (expandable.isExpanded() && subItemsCount > 0 && (!hasSubItemsSelected(position, subItems) || getPendingRemovedItem(item) != null)) {
+        if (expandable.isExpanded() && subItemsCount > 0 && (!hasSubItemsSelected(
+                position,
+                subItems
+            ) || getPendingRemovedItem(item) != null)
+        ) {
 
             // Recursive collapse of all sub expandable
             if (collapseSubLevels) {
@@ -2413,7 +2490,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
             val subItem = subItems[i]
             if (isExpanded(subItem)) {
                 val expandable = subItem as IExpandable<*, *>
-                if (expandable.getExpansionLevel() >= level && collapse(startPosition + i, true) > 0) {
+                if (expandable.getExpansionLevel() >= level && collapse(
+                        startPosition + i,
+                        true
+                    ) > 0
+                ) {
                     collapsed++
                 }
             }
@@ -2497,11 +2578,18 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @see addSubItems
      * @see removeItemWithDelay
      */
-    fun addItemWithDelay(@IntRange(from = 0) position: Int,
-                         item: T,
-                         @IntRange(from = 0) delay: Long,
-                         scrollToPosition: Boolean) {
-        mHandler.postDelayed({ if (addItem(position, item) && scrollToPosition) autoScrollWithDelay(position, -1) }, delay)
+    fun addItemWithDelay(
+        @IntRange(from = 0) position: Int,
+        item: T,
+        @IntRange(from = 0) delay: Long,
+        scrollToPosition: Boolean
+    ) {
+        mHandler.postDelayed({
+            if (addItem(position, item) && scrollToPosition) autoScrollWithDelay(
+                position,
+                -1
+            )
+        }, delay)
     }
 
     /**
@@ -2567,7 +2655,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         showOrUpdateHeaders(items)
         // Call listener to update EmptyView
         if (!recursive && !multiRange && initialCount == 0 && itemCount > 0) {
-            mUpdateListener?.onUpdateEmptyView(getMainItemCount())
+            onUpdateListener?.onUpdateEmptyView(this, getMainItemCount())
         }
         return true
     }
@@ -2625,8 +2713,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @return true if the internal list was successfully modified, false otherwise
      * @see addSubItems
      */
-    fun addSubItem(@IntRange(from = 0) parentPosition: Int,
-                   @IntRange(from = 0) subPosition: Int, item: T): Boolean {
+    fun addSubItem(
+        @IntRange(from = 0) parentPosition: Int,
+        @IntRange(from = 0) subPosition: Int, item: T
+    ): Boolean {
         return this.addSubItem(parentPosition, subPosition, item, false, Payload.CHANGE)
     }
 
@@ -2646,11 +2736,13 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @return true if the internal list was successfully modified, false otherwise
      * @see addSubItems
      */
-    fun addSubItem(@IntRange(from = 0) parentPosition: Int,
-                   @IntRange(from = 0) subPosition: Int,
-                   item: T,
-                   expandParent: Boolean,
-                   payload: Any? = null): Boolean {
+    fun addSubItem(
+        @IntRange(from = 0) parentPosition: Int,
+        @IntRange(from = 0) subPosition: Int,
+        item: T,
+        expandParent: Boolean,
+        payload: Any? = null
+    ): Boolean {
         // Build a new list with 1 item to chain the methods of addSubItems
         return addSubItems(parentPosition, subPosition, listOf(item), expandParent, payload)
     }
@@ -2662,9 +2754,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @return true if the internal list was successfully modified, false otherwise
      * @see addSubItems
      */
-    fun addSubItems(@IntRange(from = 0) parentPosition: Int,
-                    @IntRange(from = 0) subPosition: Int,
-                    items: List<T>): Boolean {
+    fun addSubItems(
+        @IntRange(from = 0) parentPosition: Int,
+        @IntRange(from = 0) subPosition: Int,
+        items: List<T>
+    ): Boolean {
         return this.addSubItems(parentPosition, subPosition, items, false, Payload.CHANGE)
     }
 
@@ -2684,15 +2778,24 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @return true if the internal list was successfully modified, false otherwise
      * @see addSubItems
      */
-    fun addSubItems(@IntRange(from = 0) parentPosition: Int,
-                    @IntRange(from = 0) subPosition: Int,
-                    items: List<T>,
-                    expandParent: Boolean,
-                    payload: Any? = null): Boolean {
+    fun addSubItems(
+        @IntRange(from = 0) parentPosition: Int,
+        @IntRange(from = 0) subPosition: Int,
+        items: List<T>,
+        expandParent: Boolean,
+        payload: Any? = null
+    ): Boolean {
         val parent = getItem(parentPosition)
         if (isExpandableItem(parent)) {
             val expandable = parent as IExpandable<*, *>?
-            return addSubItems(parentPosition, subPosition, expandable!!, items, expandParent, payload)
+            return addSubItems(
+                parentPosition,
+                subPosition,
+                expandable!!,
+                items,
+                expandParent,
+                payload
+            )
         }
         Log.d("addSubItems Provided parentPosition doesn't belong to an Expandable item!", TAG)
         return false
@@ -2719,12 +2822,14 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @return true if the internal list was successfully modified, false otherwise
      * @see addItems
      */
-    private fun addSubItems(@IntRange(from = 0) parentPosition: Int,
-                            @IntRange(from = 0) subPosition: Int,
-                            parent: IExpandable<*, *>,
-                            subItems: List<T>,
-                            expandParent: Boolean,
-                            payload: Any?): Boolean {
+    private fun addSubItems(
+        @IntRange(from = 0) parentPosition: Int,
+        @IntRange(from = 0) subPosition: Int,
+        parent: IExpandable<*, *>,
+        subItems: List<T>,
+        expandParent: Boolean,
+        payload: Any?
+    ): Boolean {
         var added = false
         // Expand parent if requested and not already expanded
         if (expandParent && !parent.isExpanded()) {
@@ -2733,7 +2838,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         // Notify the adapter of the new addition to display it and animate it.
         // If parent is collapsed there's no need to add sub items.
         if (parent.isExpanded()) {
-            added = addItems(parentPosition + 1 + getRecursiveSubItemCount(parent, subPosition), subItems)
+            added = addItems(
+                parentPosition + 1 + getRecursiveSubItemCount(parent, subPosition),
+                subItems
+            )
         }
         // Notify the parent about the change if requested and not already done as Header
         if (payload != null && !isHeader(parent as T)) {
@@ -2790,7 +2898,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @return the calculated final position for the new item
      * @see addItemToSection
      */
-    fun addItemToSection(sectionable: ISectionable<*, *>, header: IHeader<*>, comparator: Comparator<T>): Int {
+    fun addItemToSection(
+        sectionable: ISectionable<*, *>,
+        header: IHeader<*>,
+        comparator: Comparator<T>
+    ): Int {
         val index = if (!header.isHidden()) {
             val sectionItems = mutableListOf<ISectionable<*, *>>()
             sectionItems.addAll(getSectionItems(header))
@@ -2816,7 +2928,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @return the calculated final position for the new item
      * @see addItemToSection
      */
-    fun addItemToSection(sectionable: ISectionable<*, *>, header: IHeader<*>?, @IntRange(from = 0) index: Int): Int {
+    fun addItemToSection(
+        sectionable: ISectionable<*, *>,
+        header: IHeader<*>?,
+        @IntRange(from = 0) index: Int
+    ): Int {
         Log.d("addItemToSection relativePosition=$index")
         val headerPosition = getGlobalPositionOf(header as T)
         if (index >= 0) {
@@ -2889,8 +3005,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @see removeAllSelectedItems
      * @see addItemWithDelay
      */
-    fun removeItemWithDelay(item: T, @IntRange(from = 0) delay: Long,
-                            permanent: Boolean) {
+    fun removeItemWithDelay(
+        item: T, @IntRange(from = 0) delay: Long,
+        permanent: Boolean
+    ) {
         mHandler.postDelayed({ performRemove(item, permanent) }, delay)
     }
 
@@ -3062,8 +3180,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @see removeAllSelectedItems
      * @see removeRange
      */
-    fun removeRange(@IntRange(from = 0) positionStart: Int,
-                    @IntRange(from = 0) itemCount: Int) {
+    fun removeRange(
+        @IntRange(from = 0) positionStart: Int,
+        @IntRange(from = 0) itemCount: Int
+    ) {
         this.removeRange(positionStart, itemCount, Payload.REM_SUB_ITEM)
     }
 
@@ -3099,9 +3219,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      * @see restoreDeletedItems
      * @see emptyBin
      */
-    fun removeRange(@IntRange(from = 0) positionStart: Int,
-                    @IntRange(from = 0) itemCount: Int,
-                    payload: Any? = null) {
+    fun removeRange(
+        @IntRange(from = 0) positionStart: Int,
+        @IntRange(from = 0) itemCount: Int,
+        payload: Any? = null
+    ) {
         val initialCount = getItemCount()
         Log.d("removeRange positionStart=$positionStart itemCount=$itemCount", TAG)
         if (positionStart < 0 || positionStart + itemCount > initialCount) {
@@ -3168,7 +3290,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
 
         // Update empty view
         if (!multiRange && initialCount > 0 && getItemCount() == 0)
-            mUpdateListener?.onUpdateEmptyView(getMainItemCount())
+            onUpdateListener?.onUpdateEmptyView(this, getMainItemCount())
     }
 
 
@@ -3272,8 +3394,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
             if (restoreInfo.relativePosition >= 0) {
                 // Restore child
                 Log.d("Restore SubItem $restoreInfo", TAG)
-                addSubItem(restoreInfo.getRestorePosition(true), restoreInfo.relativePosition,
-                        restoreInfo.item, false, Payload.UNDO)
+                addSubItem(
+                    restoreInfo.getRestorePosition(true), restoreInfo.relativePosition,
+                    restoreInfo.item, false, Payload.UNDO
+                )
             } else {
                 // Restore parent or simple item
                 Log.d("Restore Item $restoreInfo", TAG)
@@ -3307,7 +3431,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         // Call listener to update EmptyView
         multiRange = false
         if (initialCount == 0 && itemCount > 0)
-            mUpdateListener?.onUpdateEmptyView(getMainItemCount())
+            onUpdateListener?.onUpdateEmptyView(this, getMainItemCount())
 
         emptyBin()
     }
@@ -3538,7 +3662,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         if (delay <= 0L) {
             mHandler.sendMessage(Message.obtain(mHandler, MSG_FILTER, unfilteredItems))
         } else {
-            mHandler.sendMessageDelayed(Message.obtain(mHandler, MSG_FILTER, unfilteredItems), delay)
+            mHandler.sendMessageDelayed(
+                Message.obtain(mHandler, MSG_FILTER, unfilteredItems),
+                delay
+            )
         }
     }
 
@@ -3695,7 +3822,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
             if (isExpandableItem(item)) {
                 val expandable = item as IExpandable<*, *>
                 // Reset expanded flag
-                expandable.setExpanded(mExpandedFilterFlags != null && true == mExpandedFilterFlags?.contains(expandable))
+                expandable.setExpanded(
+                    mExpandedFilterFlags != null && true == mExpandedFilterFlags?.contains(
+                        expandable
+                    )
+                )
                 if (hasSubItems(expandable)) {
                     val subItems = expandable.getSubItems()
                     // Reset subItem hidden flag2
@@ -3703,7 +3834,9 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
                         (subItem as IFlexible<out FlexibleExpandableViewHolder>).setHidden(false)
                         if (subItem is IExpandable<*, *>) {
                             subItem.setExpanded(false)
-                            resetFilterFlags(subItem.getSubItems().toMutableList() as MutableList<T>)
+                            resetFilterFlags(
+                                subItem.getSubItems().toMutableList() as MutableList<T>
+                            )
                         }
                     }
                     // Show subItems for expanded items
@@ -3810,7 +3943,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
 
     @Synchronized
     private fun animateDiff(newItems: List<T>) {
-        Log.d("Animate changes with DiffUtils! oldSize=" + itemCount + " newSize=" + newItems.size, TAG)
+        Log.d(
+            "Animate changes with DiffUtils! oldSize=" + itemCount + " newSize=" + newItems.size,
+            TAG
+        )
         // create default instance if not set diffUtilCallBack
         if (diffUtilCallback == null) {
             diffUtilCallback = FlexibleDiffCallback(listData, newItems)
@@ -3837,13 +3973,22 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
     private fun animateTo(newItems: List<T>, payloadChange: Payload) {
         mNotifications = mutableListOf()
         if (newItems.size <= mAnimateToLimit) {
-            Log.d("Animate changes! oldSize=$itemCount newSize=${newItems.size} limit=$mAnimateToLimit", TAG)
+            Log.d(
+                "Animate changes! oldSize=$itemCount newSize=${newItems.size} limit=$mAnimateToLimit",
+                TAG
+            )
             mTempItems = listData.map { it }.toMutableList()
             applyAndAnimateRemovals(mTempItems as MutableList<T>, newItems)
             applyAndAnimateAdditions(mTempItems as MutableList<T>, newItems)
-            if (notifyMoveOfFilteredItems) applyAndAnimateMovedItems(mTempItems as MutableList<T>, newItems)
+            if (notifyMoveOfFilteredItems) applyAndAnimateMovedItems(
+                mTempItems as MutableList<T>,
+                newItems
+            )
         } else {
-            Log.d("NotifyDataSetChanged! oldSize=$itemCount newSize=${newItems.size} limit=$mAnimateToLimit", TAG)
+            Log.d(
+                "NotifyDataSetChanged! oldSize=$itemCount newSize=${newItems.size} limit=$mAnimateToLimit",
+                TAG
+            )
             mTempItems = newItems.map { it }.toList()
             mNotifications?.add(Notification(operation = NONE))
         }
@@ -3975,7 +4120,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         if (diffResult != null) {
             Log.d("Dispatching notifications use Diff", TAG)
             listData = diffUtilCallback?.newList?.toMutableList()
-                    ?: mutableListOf()// Update mItems in the UI Thread
+                ?: mutableListOf()// Update mItems in the UI Thread
             diffResult?.dispatchUpdatesTo(this)
             diffResult = null
         } else {
@@ -4217,13 +4362,23 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
      */
     fun swapItems(list: List<T>, fromPosition: Int, toPosition: Int) {
         if (fromPosition < 0 || fromPosition >= itemCount ||
-                toPosition < 0 || toPosition >= itemCount) {
+            toPosition < 0 || toPosition >= itemCount
+        ) {
             return
         }
-        Log.d("swapItems from=$fromPosition [selected? ${isSelected(fromPosition)}] to=$toPosition [selected? ${isSelected(toPosition)}]", TAG)
+        Log.d(
+            "swapItems from=$fromPosition [selected? ${isSelected(fromPosition)}] to=$toPosition [selected? ${
+                isSelected(
+                    toPosition
+                )
+            }]", TAG
+        )
 
         // Collapse expandable before swapping (otherwise items are mixed badly)
-        if (fromPosition < toPosition && isExpandableItem(getItem(fromPosition)) && isExpanded(toPosition)) {
+        if (fromPosition < toPosition && isExpandableItem(getItem(fromPosition)) && isExpanded(
+                toPosition
+            )
+        ) {
             collapse(toPosition)
         }
 
@@ -4299,29 +4454,33 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
 
     override fun onActionStateChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         viewHolder?.also {
-            if (mItemMoveListener != null)
-                mItemMoveListener?.onActionStateChanged(viewHolder, actionState)
-            else if (mItemSwipeListener != null) {
-                mItemSwipeListener?.onActionStateChanged(viewHolder, actionState)
+            if (onItemMoveListener != null)
+                onItemMoveListener?.onActionStateChanged(this, viewHolder, actionState)
+            else if (onItemSwipeListener != null) {
+                onItemSwipeListener?.onActionStateChanged(this, viewHolder, actionState)
             }
         }
     }
 
     override fun shouldMove(fromPosition: Int, toPosition: Int): Boolean {
         val toItem = getItem(toPosition)
-        return !(mScrollableHeaders.contains(toItem) || mScrollableFooters.contains(toItem)) && (mItemMoveListener == null || true == mItemMoveListener?.shouldMoveItem(fromPosition, toPosition))
+        return !(mScrollableHeaders.contains(toItem) || mScrollableFooters.contains(toItem)) && (onItemMoveListener == null || true == onItemMoveListener?.shouldMoveItem(
+            this,
+            fromPosition,
+            toPosition
+        ))
     }
 
 
     override fun onItemMove(fromPosition: Int, toPosition: Int): Boolean {
         swapItems(listData, fromPosition, toPosition)
         // After the swap, delegate further actions to the user
-        mItemMoveListener?.onItemMove(fromPosition, toPosition)
+        onItemMoveListener?.onItemMove(this, fromPosition, toPosition)
         return true
     }
 
     override fun onItemSwiped(position: Int, direction: Int) {
-        mItemSwipeListener?.onItemSwipe(position, direction)
+        onItemSwipeListener?.onItemSwipe(this, position, direction)
     }
 
     /*------------------------*/
@@ -4336,7 +4495,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
     private fun mapViewTypeFrom(item: T) {
         if (!mTypeInstances.containsKey(item.getItemViewType())) {
             mTypeInstances[item.getItemViewType()] = item
-            Log.d("Mapped viewType ${item.getItemViewType()} from ${item::class.java.simpleName}", TAG)
+            Log.d(
+                "Mapped viewType ${item.getItemViewType()} from ${item::class.java.simpleName}",
+                TAG
+            )
         }
     }
 
@@ -4371,7 +4533,13 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         val siblings = getExpandableList(expandable, false)
         val childPosition = siblings.indexOf(item)
         mRestoreList.add(RestoreInfo(expandable as T, item, childPosition))
-        Log.d("Recycled SubItem ${mRestoreList[mRestoreList.size - 1]} with Parent position=${getGlobalPositionOf(expandable)}", TAG)
+        Log.d(
+            "Recycled SubItem ${mRestoreList[mRestoreList.size - 1]} with Parent position=${
+                getGlobalPositionOf(
+                    expandable
+                )
+            }", TAG
+        )
     }
 
 
@@ -4409,7 +4577,8 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
                     subItems.add(subItem as T)
                     // If expandable, expanded, and of non-zero size, recursively add sub-subItems
                     if (isRecursive && isExpanded(subItem) &&
-                            (subItem as IExpandable<*, *>).getSubItems().isNotEmpty()) {
+                        (subItem as IExpandable<*, *>).getSubItems().isNotEmpty()
+                    ) {
                         subItems.addAll(getExpandableList(subItem as IExpandable<*, *>, true))
                     }
                 }
@@ -4429,8 +4598,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
     private fun hasSubItemsSelected(startPosition: Int, subItems: List<T>): Boolean {
         var position = startPosition
         for (subItem in subItems) {
-            if (isSelected(++position) || isExpanded(subItem) && hasSubItemsSelected(position,
-                            getExpandableList(subItem as IExpandable<*, *>, false)))
+            if (isSelected(++position) || isExpanded(subItem) && hasSubItemsSelected(
+                    position,
+                    getExpandableList(subItem as IExpandable<*, *>, false)
+                )
+            )
                 return true
         }
         return false
@@ -4454,7 +4626,8 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         // Must be delayed to give time at RecyclerView to recalculate positions after a layout change
         Handler(Looper.getMainLooper(), Handler.Callback {
             // #492 - NullPointerException when expanding item with auto-scroll
-            val firstVisibleItem = getFlexibleLayoutManager().findFirstCompletelyVisibleItemPosition()
+            val firstVisibleItem =
+                getFlexibleLayoutManager().findFirstCompletelyVisibleItemPosition()
             val lastVisibleItem = getFlexibleLayoutManager().findLastCompletelyVisibleItemPosition()
             val itemsToShow = position + subItemsCount - lastVisibleItem
             // log.v("autoScroll itemsToShow=%s firstVisibleItem=%s lastVisibleItem=%s RvChildCount=%s", itemsToShow, firstVisibleItem, lastVisibleItem, mRecyclerView.getChildCount());
@@ -4467,7 +4640,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
                     scrollBy = scrollBy % spanCount + spanCount
                 }
                 val scrollTo = firstVisibleItem + scrollBy
-                Log.d("autoScroll scrollMin=$scrollMin scrollMax=$scrollMax scrollBy=$scrollBy scrollTo=$scrollTo", TAG)
+                Log.d(
+                    "autoScroll scrollMin=$scrollMin scrollMax=$scrollMax scrollBy=$scrollBy scrollTo=$scrollTo",
+                    TAG
+                )
                 performScroll(scrollTo)
             } else if (position < firstVisibleItem) {
                 performScroll(position)
@@ -4601,7 +4777,8 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
         }
     }
 
-    private inner class FilterAsyncTask(private val what: Int, newItems: List<T>?) : AsyncTask<Void, Void, Void>() {
+    private inner class FilterAsyncTask(private val what: Int, newItems: List<T>?) :
+        AsyncTask<Void, Void, Void>() {
         private val listDoing = mutableListOf<T>()
 
         init {
@@ -4618,7 +4795,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
             if (isRestoreInTime()) {
                 Log.d("Removing all deleted items before filtering/updating", TAG)
                 listDoing.removeAll(getDeletedItems())
-                mDeleteCompleteListener?.onDeleteConfirmed(DISMISS_EVENT_MANUAL) //  = 3
+                onDeleteCompleteListener?.onDeleteConfirmed(DISMISS_EVENT_MANUAL) //  = 3
             }
         }
 
@@ -4715,7 +4892,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
     @CallSuper
     fun onPostUpdate() {
         // Call listener to update EmptyView, assuming the update always made a change
-        mUpdateListener?.onUpdateEmptyView(getMainItemCount())
+        onUpdateListener?.onUpdateEmptyView(this, getMainItemCount())
     }
 
     /**
@@ -4727,12 +4904,13 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
     @CallSuper
     fun onPostFilter() {
         // Call listener to update FilterView, assuming the filter always made a change
-        mFilterListener?.onUpdateFilterView(getMainItemCount())
+        onFilterListener?.onUpdateFilterView(this, getMainItemCount())
     }
 
 
     private inner class RestoreInfo(val refItem: T, val item: T, var relativePosition: Int) {
         var refPosition = -1
+
         /**
          * @return the position where the deleted item should be restored
          */
@@ -4776,7 +4954,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(var listData: MutableList<T> = muta
                 // #320 - To include adapter changes just notified we need a new layout pass:
                 // We must give time to LayoutManager otherwise the findFirstVisibleItemPosition()
                 // will return wrong position!
-                mRecyclerView.postDelayed({ if (areHeadersSticky()) mStickyHeaderHelper?.updateOrClearHeader(true) }, 100L)
+                mRecyclerView.postDelayed({
+                    if (areHeadersSticky()) mStickyHeaderHelper?.updateOrClearHeader(
+                        true
+                    )
+                }, 100L)
             }
         }
 

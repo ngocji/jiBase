@@ -11,7 +11,6 @@ import com.jibase.iflexible.helpers.ItemTouchHelperCallback
 import com.jibase.iflexible.adapter.FlexibleAdapter
 import com.jibase.iflexible.adapter.AbstractFlexibleAdapter.Companion.MULTI
 import com.jibase.iflexible.utils.LayoutUtils
-import com.jibase.iflexible.viewholder.AbstractContentViewHolder
 import com.jibase.utils.Log
 
 abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>, isStickyHeader: Boolean = false) : AbstractContentViewHolder(preItemView, adapter, isStickyHeader), ItemTouchHelperCallback.ViewHolderCallback, View.OnClickListener, View.OnLongClickListener, View.OnTouchListener {
@@ -25,8 +24,8 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
     open var mActionState = ItemTouchHelper.ACTION_STATE_IDLE
 
     init {
-        if (adapter.mItemClickListener != null) contentView.setOnClickListener(this)
-        if (adapter.mItemClickListener != null) contentView.setOnLongClickListener(this)
+        if (adapter.onItemClickListener != null) contentView.setOnClickListener(this)
+        if (adapter.onItemClickListener != null) contentView.setOnLongClickListener(this)
     }
 
     override fun onLongClick(v: View): Boolean {
@@ -34,9 +33,9 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
         if (!adapter.isItemEnabled(position)) return false
         // If LongPressDrag is enabled, then LongClick must be skipped and the listener will
         // be called in onActionStateChanged in Drag mode.
-        if (adapter.mItemLongClickListener != null && !adapter.isLongPressDragEnabled()) {
+        if (adapter.onItemLongClickListener != null && !adapter.isLongPressDragEnabled()) {
             Log.d("onClick on position $position mode=  ${LayoutUtils.getModeName(adapter.mode)}")
-            adapter.mItemLongClickListener?.onItemLongClick(position)
+            adapter.onItemLongClickListener?.onItemLongClick(adapter, position)
             toggleActivation()
             return true
         }
@@ -52,7 +51,7 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
         if (mActionState == ItemTouchHelper.ACTION_STATE_IDLE) {
             Log.d("onClick on position $position mode=${LayoutUtils.getModeName(adapter.mode)}")
             // Get the permission to activate the View from user
-            if (true == adapter.mItemClickListener?.onItemClick(v, position)) {
+            if (true == adapter.onItemClickListener?.onItemClick(adapter, v, position)) {
                 // Now toggle the activation
                 toggleActivation()
             }
@@ -245,9 +244,9 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
                     if (isLongClickSkipped || adapter.mode == MULTI) {
                         // Next check, allows to initiate the ActionMode and to add selection if configured
                         if ((shouldAddSelectionInActionMode() || adapter.mode != MULTI) &&
-                                adapter.mItemLongClickListener != null && adapter.isSelectable(position)) {
+                                adapter.onItemLongClickListener != null && adapter.isSelectable(position)) {
                             Log.d("onClick on position  $position mode= ${LayoutUtils.getModeName(adapter.mode)}")
-                            adapter.mItemLongClickListener?.onItemLongClick(position)
+                            adapter.onItemLongClickListener?.onItemLongClick(adapter, position)
                             isAlreadySelected = true // Keep selection on release!
                         }
                     }
@@ -295,7 +294,7 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
             when {
                 (shouldAddSelectionInActionMode() && adapter.mode == MULTI) -> {
                     Log.d("onClick on position  $position mode= ${LayoutUtils.getModeName(adapter.mode)}")
-                    adapter.mItemLongClickListener?.onItemLongClick(position)
+                    adapter.onItemLongClickListener?.onItemLongClick(adapter, position)
                     if (adapter.isSelected(position)) {
                         toggleActivation()
                     }

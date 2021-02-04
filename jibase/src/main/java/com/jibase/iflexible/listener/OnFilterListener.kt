@@ -1,5 +1,7 @@
 package com.jibase.iflexible.listener
 
+import com.jibase.iflexible.adapter.FlexibleAdapter
+
 interface OnFilterListener{
-     fun onUpdateFilterView(size: Int)
+     fun onUpdateFilterView(adapter: FlexibleAdapter<*>, size: Int)
 }

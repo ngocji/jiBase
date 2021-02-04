@@ -1,5 +1,7 @@
 package com.jibase.iflexible.listener
 
+import com.jibase.iflexible.adapter.FlexibleAdapter
+
 interface OnUndoActionListener {
     /**
      * Called when Undo event is triggered. Perform custom action after restoration.
@@ -9,7 +11,7 @@ interface OnUndoActionListener {
      * @param action one of [UndoHelper.Action.REMOVE], [UndoHelper.Action.UPDATE]
      * @param positions positions affected
      */
-    fun onActionCanceled(action: Int, positions: List<Int>)
+    fun onActionCanceled(adapter: FlexibleAdapter<*>, action: Int, positions: List<Int>)
 
     /**
      * Called when Undo timeout is over and action must be committed in the user Database.
@@ -24,5 +26,5 @@ interface OnUndoActionListener {
      *               [Snackbar.Callback.DISMISS_EVENT_TIMEOUT],
      *               [Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE]
      */
-    fun onActionConfirm(action: Int, event: Int)
+    fun onActionConfirm(adapter: FlexibleAdapter<*>, action: Int, event: Int)
 }

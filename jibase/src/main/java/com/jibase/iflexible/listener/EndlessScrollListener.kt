@@ -1,5 +1,7 @@
 package com.jibase.iflexible.listener
 
+import com.jibase.iflexible.adapter.FlexibleAdapter
+
 interface EndlessScrollListener {
     /**
      * No more data to load.
@@ -11,7 +13,7 @@ interface EndlessScrollListener {
      *
      * @param newItemsSize the last size of the new items loaded
      */
-    fun noMoreLoad(newItemsSize: Int)
+    fun noMoreLoad(adapter: FlexibleAdapter<*>, newItemsSize: Int)
 
     /**
      * Loads more data.
@@ -22,5 +24,5 @@ interface EndlessScrollListener {
      * @param lastPosition the position of the last main item in the adapter
      * @param currentPage  the current page
      */
-    fun onLoadMore(lastPosition: Int, currentPage: Int)
+    fun onLoadMore(adapter: FlexibleAdapter<*>, lastPosition: Int, currentPage: Int)
 }

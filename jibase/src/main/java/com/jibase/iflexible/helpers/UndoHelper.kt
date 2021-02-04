@@ -158,7 +158,7 @@ class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionList
                 .withActionName(actionText)
                 .withDuration(duration)
                 .setAction {
-                    callback.onActionCanceled(mAction, adapter.getUndoPositions())
+                    callback.onActionCanceled(adapter, mAction, adapter.getUndoPositions())
                     adapter.emptyBin()
                 }
                 .create()
@@ -181,7 +181,7 @@ class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionList
     /*---------------------*/
 
     override fun onDeleteConfirmed(event: Int) {
-        callback.onActionConfirm(mAction, event)
+        callback.onActionConfirm(adapter, mAction, event)
         adapter.confirmDeletion()
 
         if (true == mSnackbar?.isShown && mAction == Action.REMOVE && !adapter.isRestoreInTime()) {
@@ -237,7 +237,7 @@ class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionList
         }
 
         if (adapter.isPermanentDelete()) {
-            callback.onActionConfirm(mAction, DISMISS_EVENT_MANUAL)
+            callback.onActionConfirm(adapter, mAction, DISMISS_EVENT_MANUAL)
         }
     }
 

@@ -147,7 +147,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
     }
 
     private fun onStickyHeaderChange(newPosition: Int, oldPosition: Int) {
-        mStickyHeaderChangeListener?.onStickyHeaderChange(newPosition, oldPosition)
+        mStickyHeaderChangeListener?.onStickyHeaderChange(mAdapter, newPosition, oldPosition)
     }
 
     private fun updateHeader(headerPosition: Int, updateHeaderContent: Boolean) {

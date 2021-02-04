@@ -1,5 +1,7 @@
 package com.jibase.iflexible.listener
 
+import com.jibase.iflexible.adapter.FlexibleAdapter
+
 interface OnItemMoveListener : OnActionStateListener{
     /**
      * Called when the item would like to be swapped.
@@ -11,7 +13,7 @@ interface OnItemMoveListener : OnActionStateListener{
      * @return return true if the items can swap (`onItemMove()` will be called),
      * false otherwise (nothing happens)
      */
-     fun shouldMoveItem(fromPosition: Int, toPosition: Int): Boolean
+     fun shouldMoveItem(adapter: FlexibleAdapter<*>, fromPosition: Int, toPosition: Int): Boolean
 
     /**
      * Called when an item has been dragged far enough to trigger a move. **This is called
@@ -25,5 +27,5 @@ interface OnItemMoveListener : OnActionStateListener{
      * @param fromPosition the start position of the moved item
      * @param toPosition   the resolved position of the moved item
      */
-     fun onItemMove(fromPosition: Int, toPosition: Int)
+     fun onItemMove(adapter: FlexibleAdapter<*>, fromPosition: Int, toPosition: Int)
 }

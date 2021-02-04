@@ -1,5 +1,7 @@
 package com.jibase.iflexible.listener
 
+import com.jibase.iflexible.adapter.FlexibleAdapter
+
 interface OnItemSwipeListener : OnActionStateListener{
     /**
      * Called when swiping ended its animation and item is not visible anymore.
@@ -11,5 +13,5 @@ interface OnItemSwipeListener : OnActionStateListener{
      *                  {@link ItemTouchHelper#UP},
      *                  {@link ItemTouchHelper#DOWN},
      */
-     fun onItemSwipe(position: Int, direction: Int)
+     fun onItemSwipe(adapter: FlexibleAdapter<*>, position: Int, direction: Int)
 }
