@@ -5,6 +5,10 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.widget.LinearLayout
+import androidx.annotation.ColorInt
+import androidx.annotation.DimenRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.core.view.GravityCompat
 import androidx.core.view.updateLayoutParams
 import com.jibase.R
@@ -13,8 +17,13 @@ import com.jibase.extensions.inflate
 import com.jibase.extensions.visible
 import com.jibase.utils.ResourceUtils
 import kotlinx.android.synthetic.main.layout_item_view.view.*
+import kotlin.math.roundToInt
 
-open class ItemView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : LinearLayout(context, attributeSet, defStyle) {
+open class ItemView @JvmOverloads constructor(
+    context: Context,
+    attributeSet: AttributeSet? = null,
+    defStyle: Int = 0
+) : LinearLayout(context, attributeSet, defStyle) {
     init {
         initView(attributeSet)
     }
@@ -28,20 +37,27 @@ open class ItemView @JvmOverloads constructor(context: Context, attributeSet: At
             // for icon
             val icon = a.getDrawable(R.styleable.ItemView_itemIcon)
             val iconColor = a.getColor(R.styleable.ItemView_itemIconColor, 0)
-            val iconSize = a.getDimensionPixelSize(R.styleable.ItemView_itemIconSize, -1)
-            setIcon(icon, iconColor, iconSize)
+            val iconSize = a.getDimension(R.styleable.ItemView_itemIconSize, 0f)
+            setItemIcon(icon)
+            setItemIconColor(iconColor)
+            setItemIconSize(iconSize)
 
             // for text
             val text = a.getString(R.styleable.ItemView_itemText)
             val textColor = a.getColor(R.styleable.ItemView_itemTextColor, 0)
-            val textSize = a.getDimension(R.styleable.ItemView_isTextOnly, -1f)
-            setText(text, textColor, textSize)
+            val textSize = a.getDimension(R.styleable.ItemView_isTextOnly, 0f)
+            setItemText(text)
+            setItemTextColor(textColor)
+            setItemTextSize(textSize)
 
             // for description
             val description = a.getString(R.styleable.ItemView_itemDescription)
             val descriptionColor = a.getColor(R.styleable.ItemView_itemDescriptionColor, 0)
-            val descriptionSize = a.getDimension(R.styleable.ItemView_itemDescriptionSize, -1f)
-            setDescription(description, descriptionColor, descriptionSize)
+            val descriptionSize = a.getDimension(R.styleable.ItemView_itemDescriptionSize, 0f)
+
+            setItemDescription(description)
+            setItemDescriptionColor(descriptionColor)
+            setItemDescriptionSize(descriptionSize)
 
             // for ui
             val isIconOnly = a.getBoolean(R.styleable.ItemView_isIconOnly, false)
@@ -69,46 +85,86 @@ open class ItemView @JvmOverloads constructor(context: Context, attributeSet: At
         }
     }
 
-    fun setIcon(icon: Drawable?, iconColor: Int = 0, iconSize: Int = -1) {
-        with(imageIcon) {
-            setImageDrawable(icon)
-            setColorFilter(iconColor)
+    fun setItemIcon(@DrawableRes icon: Int) {
+        imageIcon.setImageResource(icon)
+    }
 
-            if (iconSize != -1) {
-                updateLayoutParams<LayoutParams> {
-                    height = iconSize
-                    width = iconSize
-                }
+    fun setItemIcon(icon: Drawable?) {
+        if (icon != null) imageIcon.setImageDrawable(icon)
+    }
+
+    fun setItemIconColor(color: Int) {
+        if (color == 0) {
+            imageIcon.clearColorFilter()
+        } else {
+            imageIcon.setColorFilter(color)
+        }
+    }
+
+    fun setItemIconSize(size: Float) {
+        if (size > 0f) {
+            imageIcon.updateLayoutParams<LayoutParams> {
+                height = size.roundToInt()
+                width = size.roundToInt()
             }
         }
     }
 
-    fun setText(text: String?, textColor: Int = 0, textSize: Float = -1f) {
-        with(tvText) {
-            setText(text)
-            if (textColor != 0) {
-                setTextColor(textColor)
-            }
-            if (textSize != -1f) {
-                setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
-            }
+    fun setItemIconSize(@DimenRes sizeRes: Int) {
+        if (sizeRes != NO_ID) {
+            setItemIconSize(context.resources.getDimension(sizeRes))
         }
     }
 
-    fun setDescription(description: String?, textColor: Int = 0, textSize: Float = -1f) {
-        with(tvDescription) {
-            if (description == null || description.isBlank()) {
-                gone()
-            } else {
-                visible()
-                text = description
-                if (textColor != 0) {
-                    setTextColor(textColor)
-                }
-                if (textSize != -1f) {
-                    setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
-                }
-            }
+    fun setItemText(@StringRes text: Int) {
+        tvText.setText(text)
+    }
+
+    fun setItemText(text: String?) {
+        tvText.text = text
+    }
+
+    fun setItemTextColor(@ColorInt color: Int) {
+        if (color != 0) {
+            tvText.setTextColor(color)
+        }
+    }
+
+    fun setItemTextSize(textSize: Float) {
+        if (textSize != 0f) {
+            tvText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+        }
+    }
+
+    fun setItemTextSize(@DimenRes textSizeRes: Int) {
+        if (textSizeRes != NO_ID) {
+            setItemTextSize(context.resources.getDimension(textSizeRes))
+        }
+    }
+
+    fun setItemDescription(@StringRes text: Int) {
+        tvText.setText(text)
+    }
+
+    fun setItemDescription(text: String?) {
+        tvText.text = text
+    }
+
+    fun setItemDescriptionColor(@ColorInt color: Int) {
+        if (color != 0) {
+            tvText.setTextColor(color)
+        }
+    }
+
+    fun setItemDescriptionSize(textSize: Float) {
+        if (textSize != 0f) {
+            tvText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+        }
+    }
+
+    fun setItemDescriptionSize(@DimenRes textSizeRes: Int) {
+        if (textSizeRes != NO_ID) {
+            setItemTextSize(context.resources.getDimension(textSizeRes))
         }
     }
 
