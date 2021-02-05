@@ -14,7 +14,11 @@ import com.jibase.extensions.visible
 import com.jibase.utils.ResourceUtils
 import kotlinx.android.synthetic.main.layout_item_view.view.*
 
-open class ItemView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyle: Int = 0) : LinearLayout(context, attributeSet, defStyle) {
+open class ItemView @JvmOverloads constructor(
+    context: Context,
+    attributeSet: AttributeSet? = null,
+    defStyle: Int = 0
+) : LinearLayout(context, attributeSet, defStyle) {
     init {
         initView(attributeSet)
     }
@@ -71,7 +75,7 @@ open class ItemView @JvmOverloads constructor(context: Context, attributeSet: At
 
     fun setIcon(icon: Drawable?, iconColor: Int = 0, iconSize: Int = -1) {
         with(imageIcon) {
-            setImageDrawable(icon)
+            if (icon != null) setImageDrawable(icon)
             setColorFilter(iconColor)
 
             if (iconSize != -1) {
@@ -83,9 +87,13 @@ open class ItemView @JvmOverloads constructor(context: Context, attributeSet: At
         }
     }
 
+    fun setItemIcon(icon: Int) {
+        imageIcon.setImageResource(icon)
+    }
+
     fun setText(text: String?, textColor: Int = 0, textSize: Float = -1f) {
         with(tvText) {
-            setText(text)
+            if (text != null) setText(text)
             if (textColor != 0) {
                 setTextColor(textColor)
             }
@@ -95,6 +103,10 @@ open class ItemView @JvmOverloads constructor(context: Context, attributeSet: At
         }
     }
 
+    fun setItemText(text: Int) {
+        tvText.setText(text)
+    }
+
     fun setDescription(description: String?, textColor: Int = 0, textSize: Float = -1f) {
         with(tvDescription) {
             if (description == null || description.isBlank()) {
@@ -102,14 +114,20 @@ open class ItemView @JvmOverloads constructor(context: Context, attributeSet: At
             } else {
                 visible()
                 text = description
-                if (textColor != 0) {
-                    setTextColor(textColor)
-                }
-                if (textSize != -1f) {
-                    setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
-                }
+            }
+
+            if (textColor != 0) {
+                setTextColor(textColor)
+            }
+            if (textSize != -1f) {
+                setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
             }
         }
+    }
+
+    fun setItemDescription(desc: Int) {
+        tvDescription.setText(desc)
+        visible()
     }
 
     fun setIconOnly(isShow: Boolean) {
