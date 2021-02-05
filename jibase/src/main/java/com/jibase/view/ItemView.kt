@@ -45,7 +45,7 @@ open class ItemView @JvmOverloads constructor(
             // for text
             val text = a.getString(R.styleable.ItemView_itemText)
             val textColor = a.getColor(R.styleable.ItemView_itemTextColor, 0)
-            val textSize = a.getDimension(R.styleable.ItemView_isTextOnly, 0f)
+            val textSize = a.getDimension(R.styleable.ItemView_itemTextSize, -1f)
             setItemText(text)
             setItemTextColor(textColor)
             setItemTextSize(textSize)
@@ -53,7 +53,7 @@ open class ItemView @JvmOverloads constructor(
             // for description
             val description = a.getString(R.styleable.ItemView_itemDescription)
             val descriptionColor = a.getColor(R.styleable.ItemView_itemDescriptionColor, 0)
-            val descriptionSize = a.getDimension(R.styleable.ItemView_itemDescriptionSize, 0f)
+            val descriptionSize = a.getDimension(R.styleable.ItemView_itemDescriptionSize, -1f)
 
             setItemDescription(description)
             setItemDescriptionColor(descriptionColor)
@@ -131,7 +131,7 @@ open class ItemView @JvmOverloads constructor(
     }
 
     fun setItemTextSize(textSize: Float) {
-        if (textSize != 0f) {
+        if (textSize != -1f) {
             tvText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
         }
     }
@@ -147,40 +147,36 @@ open class ItemView @JvmOverloads constructor(
     }
 
     fun setItemDescription(text: String?) {
-        tvText.text = text
+        tvDescription.text = text
     }
 
     fun setItemDescriptionColor(@ColorInt color: Int) {
         if (color != 0) {
-            tvText.setTextColor(color)
+            tvDescription.setTextColor(color)
         }
     }
 
     fun setItemDescriptionSize(textSize: Float) {
-        if (textSize != 0f) {
-            tvText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+        if (textSize != -1f) {
+            tvDescription.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
         }
     }
 
     fun setItemDescriptionSize(@DimenRes textSizeRes: Int) {
         if (textSizeRes != NO_ID) {
-            setItemTextSize(context.resources.getDimension(textSizeRes))
+            setItemDescriptionSize(context.resources.getDimension(textSizeRes))
         }
     }
 
     fun setIconOnly(isShow: Boolean) {
         if (isShow) {
             llText.gone()
-        } else {
-            llText.visible()
         }
     }
 
     fun setTextOnly(isShow: Boolean) {
         if (isShow) {
             imageIcon.gone()
-        } else {
-            imageIcon.visible()
         }
     }
 }
