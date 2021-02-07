@@ -57,4 +57,14 @@ class ILiveEvent<T> : LiveData<T>() {
         pending.values.forEach { it.set(true) }
         postValue(null)
     }
+
+    fun setIfNotNull(data: T?) {
+        data?.also {
+            setValue(data)
+        }
+    }
+
+    fun set(data: T){
+        setValue(data)
+    }
 }

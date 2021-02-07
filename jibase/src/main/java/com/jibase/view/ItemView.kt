@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
+import android.view.Gravity
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
@@ -14,7 +15,6 @@ import androidx.core.view.updateLayoutParams
 import com.jibase.R
 import com.jibase.extensions.gone
 import com.jibase.extensions.inflate
-import com.jibase.extensions.visible
 import com.jibase.utils.ResourceUtils
 import kotlinx.android.synthetic.main.layout_item_view.view.*
 import kotlin.math.roundToInt
@@ -35,39 +35,35 @@ open class ItemView @JvmOverloads constructor(
             val a = context.resources.obtainAttributes(it, R.styleable.ItemView)
 
             // for icon
-            val icon = a.getDrawable(R.styleable.ItemView_itemIcon)
-            val iconColor = a.getColor(R.styleable.ItemView_itemIconColor, 0)
-            val iconSize = a.getDimension(R.styleable.ItemView_itemIconSize, 0f)
-            setItemIcon(icon)
-            setItemIconColor(iconColor)
-            setItemIconSize(iconSize)
+            setItemIcon(a.getDrawable(R.styleable.ItemView_itemIcon))
+            setItemIconColor(a.getColor(R.styleable.ItemView_itemIconColor, 0))
+            setItemIconSize(a.getDimension(R.styleable.ItemView_itemIconSize, 0f))
 
             // for text
-            val text = a.getString(R.styleable.ItemView_itemText)
-            val textColor = a.getColor(R.styleable.ItemView_itemTextColor, 0)
-            val textSize = a.getDimension(R.styleable.ItemView_itemTextSize, -1f)
-            setItemText(text)
-            setItemTextColor(textColor)
-            setItemTextSize(textSize)
+            setItemText(a.getString(R.styleable.ItemView_itemText))
+            setItemTextColor(a.getColor(R.styleable.ItemView_itemTextColor, 0))
+            setItemTextSize(a.getDimension(R.styleable.ItemView_itemTextSize, -1f))
+            setItemTextGravity(a.getInt(R.styleable.ItemView_itemTextGravity, Gravity.CENTER))
+            setItemTextLines(a.getInt(R.styleable.ItemView_itemTextLines, -1))
+            setItemTextMaxLines(a.getInt(R.styleable.ItemView_itemTextMaxLines, -1))
 
             // for description
-            val description = a.getString(R.styleable.ItemView_itemDescription)
-            val descriptionColor = a.getColor(R.styleable.ItemView_itemDescriptionColor, 0)
-            val descriptionSize = a.getDimension(R.styleable.ItemView_itemDescriptionSize, -1f)
+            setItemDescription(a.getString(R.styleable.ItemView_itemDescription))
+            setItemDescriptionColor(a.getColor(R.styleable.ItemView_itemDescriptionColor, 0))
+            setItemDescriptionSize(a.getDimension(R.styleable.ItemView_itemDescriptionSize, -1f))
+            setItemDescriptionGravity(
+                a.getInt(
+                    R.styleable.ItemView_itemTextGravity,
+                    Gravity.CENTER
+                )
+            )
+            setItemDescriptionLines(a.getInt(R.styleable.ItemView_itemTextLines, -1))
+            setItemDescriptionMaxLines(a.getInt(R.styleable.ItemView_itemTextMaxLines, -1))
 
-            setItemDescription(description)
-            setItemDescriptionColor(descriptionColor)
-            setItemDescriptionSize(descriptionSize)
-
-            // for ui
-            val isIconOnly = a.getBoolean(R.styleable.ItemView_isIconOnly, false)
-            setIconOnly(isIconOnly)
-
-            val isTextOnly = a.getBoolean(R.styleable.ItemView_isTextOnly, false)
-            setTextOnly(isTextOnly)
-
-            val orientation = a.getInt(R.styleable.ItemView_android_orientation, VERTICAL)
-            setOrientation(orientation)
+            // for global
+            setIconOnly(a.getBoolean(R.styleable.ItemView_isIconOnly, false))
+            setTextOnly(a.getBoolean(R.styleable.ItemView_isTextOnly, false))
+            setOrientation(a.getInt(R.styleable.ItemView_android_orientation, VERTICAL))
 
             a.recycle()
         }
@@ -142,6 +138,20 @@ open class ItemView @JvmOverloads constructor(
         }
     }
 
+    fun setItemTextGravity(gravity: Int) {
+        tvText.gravity = gravity
+    }
+
+    fun setItemTextLines(lines: Int) {
+        if (lines <= 0) return
+        tvText.setLines(lines)
+    }
+
+    fun setItemTextMaxLines(lines: Int) {
+        if (lines <= 0) return
+        tvText.maxLines = lines
+    }
+
     fun setItemDescription(@StringRes text: Int) {
         tvText.setText(text)
     }
@@ -166,6 +176,20 @@ open class ItemView @JvmOverloads constructor(
         if (textSizeRes != NO_ID) {
             setItemDescriptionSize(context.resources.getDimension(textSizeRes))
         }
+    }
+
+    fun setItemDescriptionGravity(gravity: Int) {
+        tvDescription.gravity = gravity
+    }
+
+    fun setItemDescriptionLines(lines: Int) {
+        if (lines <= 0) return
+        tvDescription.setLines(lines)
+    }
+
+    fun setItemDescriptionMaxLines(lines: Int) {
+        if (lines <= 0) return
+        tvDescription.maxLines = lines
     }
 
     fun setIconOnly(isShow: Boolean) {

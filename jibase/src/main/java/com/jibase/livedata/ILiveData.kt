@@ -66,4 +66,14 @@ open class ILiveData<T : Any> constructor(data: T? = null, isNotifyDataWhenIniti
     fun get(): T? {
         return value
     }
+
+    fun setIfNotNull(data: T?) {
+        data?.also {
+            value = it
+        }
+    }
+    
+    fun set(data: T?){
+        value = data
+    }
 }
