@@ -1,6 +1,7 @@
 package com.jibase.view
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
@@ -24,6 +25,8 @@ open class ItemView @JvmOverloads constructor(
     attributeSet: AttributeSet? = null,
     defStyle: Int = 0
 ) : LinearLayout(context, attributeSet, defStyle) {
+    private var iconTint: ColorStateList? = null
+
     init {
         initView(attributeSet)
     }
@@ -36,12 +39,26 @@ open class ItemView @JvmOverloads constructor(
 
             // for icon
             setItemIcon(a.getDrawable(R.styleable.ItemView_itemIcon))
-            setItemIconColor(a.getColor(R.styleable.ItemView_itemIconColor, 0))
+
+            iconTint = a.getColorStateList(R.styleable.ItemView_itemIconColor)
+            if (iconTint != null) {
+                setItemIconColor(iconTint)
+            } else {
+                setItemIconColor(a.getColor(R.styleable.ItemView_itemIconColor, 0))
+            }
             setItemIconSize(a.getDimension(R.styleable.ItemView_itemIconSize, 0f))
+            setItemIconRotation(a.getInt(R.styleable.ItemView_itemIconRotation, 0))
 
             // for text
             setItemText(a.getString(R.styleable.ItemView_itemText))
-            setItemTextColor(a.getColor(R.styleable.ItemView_itemTextColor, 0))
+
+            val textColor = a.getColorStateList(R.styleable.ItemView_itemTextColor)
+            if (textColor != null) {
+                setItemTextColor(textColor)
+            } else {
+                setItemTextColor(a.getColor(R.styleable.ItemView_itemTextColor, 0))
+            }
+
             setItemTextSize(a.getDimension(R.styleable.ItemView_itemTextSize, -1f))
             setItemTextGravity(a.getInt(R.styleable.ItemView_itemTextGravity, Gravity.CENTER))
             setItemTextLines(a.getInt(R.styleable.ItemView_itemTextLines, -1))
@@ -49,7 +66,13 @@ open class ItemView @JvmOverloads constructor(
 
             // for description
             setItemDescription(a.getString(R.styleable.ItemView_itemDescription))
-            setItemDescriptionColor(a.getColor(R.styleable.ItemView_itemDescriptionColor, 0))
+
+            val descColor = a.getColorStateList(R.styleable.ItemView_itemDescriptionColor)
+            if (descColor != null) {
+                setItemDescriptionColor(descColor)
+            } else {
+                setItemDescriptionColor(a.getColor(R.styleable.ItemView_itemDescriptionColor, 0))
+            }
             setItemDescriptionSize(a.getDimension(R.styleable.ItemView_itemDescriptionSize, -1f))
             setItemDescriptionGravity(
                 a.getInt(
@@ -70,7 +93,7 @@ open class ItemView @JvmOverloads constructor(
     }
 
     override fun setOrientation(orientation: Int) {
-        if (orientation == HORIZONTAL) {
+        if (orientation == HORIZONTAL && container != null) {
             container.orientation = orientation
             with(llText) {
                 gravity = GravityCompat.START
@@ -83,10 +106,12 @@ open class ItemView @JvmOverloads constructor(
 
     fun setItemIcon(@DrawableRes icon: Int) {
         imageIcon.setImageResource(icon)
+        setItemIconColor(iconTint)
     }
 
     fun setItemIcon(icon: Drawable?) {
         if (icon != null) imageIcon.setImageDrawable(icon)
+        setItemIconColor(iconTint)
     }
 
     fun setItemIconColor(color: Int) {
@@ -97,6 +122,11 @@ open class ItemView @JvmOverloads constructor(
         }
     }
 
+    fun setItemIconColor(colorStateList: ColorStateList?) {
+        iconTint = colorStateList
+        imageIcon.drawable?.setTintList(colorStateList)
+    }
+
     fun setItemIconSize(size: Float) {
         if (size > 0f) {
             imageIcon.updateLayoutParams<LayoutParams> {
@@ -104,6 +134,10 @@ open class ItemView @JvmOverloads constructor(
                 width = size.roundToInt()
             }
         }
+    }
+
+    fun setItemIconRotation(rotation: Int) {
+        imageIcon.rotation = rotation.toFloat()
     }
 
     fun setItemIconSize(@DimenRes sizeRes: Int) {
@@ -124,6 +158,10 @@ open class ItemView @JvmOverloads constructor(
         if (color != 0) {
             tvText.setTextColor(color)
         }
+    }
+
+    fun setItemTextColor(colorStateList: ColorStateList?) {
+        tvText.setTextColor(colorStateList)
     }
 
     fun setItemTextSize(textSize: Float) {
@@ -164,6 +202,10 @@ open class ItemView @JvmOverloads constructor(
         if (color != 0) {
             tvDescription.setTextColor(color)
         }
+    }
+
+    fun setItemDescriptionColor(colorStateList: ColorStateList?) {
+        tvDescription.setTextColor(colorStateList)
     }
 
     fun setItemDescriptionSize(textSize: Float) {

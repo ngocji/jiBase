@@ -25,8 +25,8 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity()  {
             setContentView(viewInflate.layout)
         }
 
-        onViewReady(savedInstanceState)
         onViewListener()
+        onViewReady(savedInstanceState)
     }
 
     abstract fun onViewReady(savedInstanceState: Bundle?)

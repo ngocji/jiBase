@@ -19,7 +19,7 @@ object KeyboardHelper {
         imm.showSoftInput(target, InputMethodManager.HIDE_IMPLICIT_ONLY)
     }
 
-    fun <T> hideKeyboardInternal(target: T) {
+    fun <T> hideKeyboard(target: T) {
         when (target) {
             is View -> {
                 hideKeyboardInternal(target)

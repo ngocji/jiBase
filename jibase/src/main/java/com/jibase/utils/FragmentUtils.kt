@@ -22,7 +22,7 @@ object FragmentUtils {
         val fragmentManager = getFragmentManager(target)
         val tagName = getTag(fragment::class.java)
         // hide keyboard
-        KeyboardHelper.hideKeyboardInternal(target)
+        KeyboardHelper.hideKeyboard(target)
         fragmentManager.beginTransaction().run {
             // add to back stack if need
             if (addToBackStack) addToBackStack(tagName)
@@ -42,7 +42,7 @@ object FragmentUtils {
 
         val fragmentManager = getFragmentManager(target)
         val tag = getTag(fragment::class.java)
-        KeyboardHelper.hideKeyboardInternal(target)
+        KeyboardHelper.hideKeyboard(target)
 
         for (i in (count - 1) downTo 0) {
             fragmentManager.getBackStackEntryAt(i).also {
@@ -67,7 +67,7 @@ object FragmentUtils {
         if (count <= 0) return
         val fragmentManager = getFragmentManager(target)
         val tag = getTag(fragmentCls)
-        KeyboardHelper.hideKeyboardInternal(target)
+        KeyboardHelper.hideKeyboard(target)
 
         for (i in (count - 1) downTo 0) {
             fragmentManager.getBackStackEntryAt(i).also {

@@ -478,6 +478,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(
         }
     }
 
+    fun setData(items: List<T>) {
+        listData = items.toMutableList()
+    }
+
     /**
      * Returns the object of the generic type **T**.
      *

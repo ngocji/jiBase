@@ -5,13 +5,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.jibase.extensions.changeElevation
 import com.jibase.iflexible.common.FlexibleLayoutManager
 import com.jibase.iflexible.common.IFlexibleLayoutManager
-import com.jibase.iflexible.fastscroll.FastScroller
 import com.jibase.iflexible.entities.Payload
+import com.jibase.iflexible.fastscroll.FastScroller
 import com.jibase.iflexible.viewholder.FlexibleViewHolder
 import com.jibase.utils.Log
 import java.util.*
 
-abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(), FastScroller.BubbleTextCreator, FastScroller.OnScrollStateChangeListener, FastScroller.AdapterInterface {
+abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(),
+    FastScroller.BubbleTextCreator, FastScroller.OnScrollStateChangeListener,
+    FastScroller.AdapterInterface {
     companion object {
         const val IDLE = 0
         const val SINGLE = 1
@@ -204,8 +206,10 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
             addSelection(position, true)
         }
 //        notifyItemChanged(position)
-        Log.d("toggleSelection $position on position $position, current $selectedPositions ," +
-                if (contains) "removed" else "added", TAG)
+        Log.d(
+            "toggleSelection $position on position $position, current $selectedPositions ," +
+                    if (contains) "removed" else "added", TAG
+        )
     }
 
     /**
@@ -285,7 +289,10 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
                 }
             }
         }
-        Log.d("selectAll notifyItemRangeChanged from positionStart=${positionStart} itemCount=${getItemCount()} ---> ", TAG)
+        Log.d(
+            "selectAll notifyItemRangeChanged from positionStart=${positionStart} itemCount=${getItemCount()} ---> ",
+            TAG
+        )
         notifySelectionChanged(positionStart, getItemCount(), payload)
     }
 
@@ -326,7 +333,15 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
-    private fun notifySelectionChanged(positionStart: Int, itemCount: Int, payload: Payload? = null) {
+    open fun clearAdjustSelection() {
+        selectedPositions.clear()
+    }
+
+    private fun notifySelectionChanged(
+        positionStart: Int,
+        itemCount: Int,
+        payload: Payload? = null
+    ) {
         if (itemCount > 0) {
             // Avoid to rebind the VH, direct call to the itemView activation
             for (flexHolder in boundViewHolders) {
@@ -342,7 +357,11 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<*>) {
+    override fun onBindViewHolder(
+        holder: RecyclerView.ViewHolder,
+        position: Int,
+        payloads: List<*>
+    ) {
         // Bind the correct view elevation
         if (holder is FlexibleViewHolder) {
             holder.contentView.isActivated = isSelected(position)
@@ -363,7 +382,10 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
         if (holder is FlexibleViewHolder) {
             val recycled = boundViewHolders.remove(holder)
-            Log.d("onViewRecycled viewSize=${boundViewHolders.size} ---> $holder recycled=$recycled", TAG)
+            Log.d(
+                "onViewRecycled viewSize=${boundViewHolders.size} ---> $holder recycled=$recycled",
+                TAG
+            )
         }
     }
 
