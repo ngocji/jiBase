@@ -57,7 +57,17 @@ object SharePreferencesUtils {
     @JvmStatic
     fun <T> putPref(key: String, value: T) {
         with(pref.edit()) {
-            putString(key, value.toString())
+            when (value) {
+                is Boolean, is Float, is Int, is Long, is String, is Double -> {
+                    Log.d("share: push normal data")
+                    putString(key, value.toString())
+                }
+                else -> {
+                    Log.d("share: push object data")
+                    putString(key, toStringValue(value))
+                }
+            }
+
             apply()
         }
     }
