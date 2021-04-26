@@ -12,7 +12,11 @@ import com.jibase.iflexible.adapter.AbstractFlexibleAdapter.Companion.SINGLE
 import com.jibase.iflexible.adapter.FlexibleAdapter
 import com.jibase.utils.Log
 
-class ActionModeHelper(val adapter: FlexibleAdapter<*>, @MenuRes val cabMenu: Int, val callback: ActionMode.Callback? = null) : ActionMode.Callback {
+class ActionModeHelper(
+        val targetActivity: AppCompatActivity,
+        val adapter: FlexibleAdapter<*>,
+        @MenuRes val cabMenu: Int,
+        val callback: ActionModeListener? = null) : ActionMode.Callback {
 
     private val TAG = javaClass.simpleName
 
@@ -22,6 +26,9 @@ class ActionModeHelper(val adapter: FlexibleAdapter<*>, @MenuRes val cabMenu: In
     private var longPressDragDisableByHelper = false
     private var dragDisableByHelper = false
     private var swipeDisableByHelper = false
+    private var finishIfNoneSelect = false
+    private var finishToClickActionItem = false
+    private var enableActionModeLongPress = false
 
     private var mActionMode: ActionMode? = null
 
@@ -40,6 +47,21 @@ class ActionModeHelper(val adapter: FlexibleAdapter<*>, @MenuRes val cabMenu: In
     fun withDefaultMode(defaultMode: Int): ActionModeHelper {
         if (defaultMode == IDLE || defaultMode == SINGLE)
             this.defaultMode = defaultMode
+        return this
+    }
+
+    fun enableFinishIfNoneSelected(finish: Boolean): ActionModeHelper {
+        this.finishIfNoneSelect = finish
+        return this
+    }
+
+    fun enableFinishToClickActionItem(finish: Boolean): ActionModeHelper {
+        this.finishToClickActionItem = finish
+        return this
+    }
+
+    fun enableActionModeWhenLongPress(enable: Boolean): ActionModeHelper {
+        this.enableActionModeLongPress = enable
         return this
     }
 
@@ -75,6 +97,8 @@ class ActionModeHelper(val adapter: FlexibleAdapter<*>, @MenuRes val cabMenu: In
     fun getActionMode(): ActionMode? {
         return mActionMode
     }
+
+    fun isActionModeStarted() = mActionMode != null
 
     /**
      * Gets the activated position only when mode is [SINGLE].
@@ -112,23 +136,21 @@ class ActionModeHelper(val adapter: FlexibleAdapter<*>, @MenuRes val cabMenu: In
      * @param position the position of the clicked item
      * @return the initialized ActionMode or null if nothing was done
      */
-    fun onItemLongClick(activity: AppCompatActivity, position: Int): ActionMode? {
-        if (mActionMode == null) {
-            mActionMode = activity.startSupportActionMode(this)
-        }
+    fun onItemLongClick(position: Int): ActionMode? {
+        if (enableActionModeLongPress) startActionMode()
         toggleSelection(position)
         return mActionMode
     }
 
 
     fun toggleSelection(position: Int) {
-        if (adapter.hasPosition(position) &&
-                (adapter.mode == SINGLE && !adapter.isSelected(position) || adapter.mode == MULTI)) {
+        if (adapter.hasPosition(position) && (adapter.mode == SINGLE && !adapter.isSelected(position) || adapter.mode == MULTI)) {
             adapter.toggleSelection(position)
         }
+
         mActionMode?.also {
             val count = adapter.getSelectedItemCount()
-            if (count == 0) {
+            if (count == 0 && finishIfNoneSelect) {
                 it.finish()
             } else {
                 updateContextTitle(count)
@@ -137,15 +159,19 @@ class ActionModeHelper(val adapter: FlexibleAdapter<*>, @MenuRes val cabMenu: In
     }
 
 
-    fun updateContextTitle(count: Int) {
-        mActionMode?.title = count.toString()
+    private fun updateContextTitle(count: Int) {
+        if (callback != null) {
+            callback.onUpdateSelectionTitle(mActionMode, count)
+        } else {
+            mActionMode?.title = count.toString()
+        }
     }
 
-    fun restoreSelection(activity: AppCompatActivity) {
-        if ((defaultMode == IDLE && adapter.getSelectedItemCount() > 0) ||
-                (defaultMode == SINGLE && adapter.getSelectedItemCount() > 1)) {
-            onItemLongClick(activity, -1)
+    fun startActionMode() {
+        if (mActionMode == null) {
+            mActionMode = targetActivity.startSupportActionMode(this)
         }
+        updateContextTitle(0)
     }
 
     fun destroyActionModeIfCan(): Boolean {
@@ -178,7 +204,7 @@ class ActionModeHelper(val adapter: FlexibleAdapter<*>, @MenuRes val cabMenu: In
     override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
         val consumed = callback?.onActionItemClicked(mode, item) ?: false
 
-        if (!consumed) {
+        if (!consumed && finishToClickActionItem) {
             // Finish the actionMode
             mode?.finish()
         }
@@ -231,4 +257,26 @@ class ActionModeHelper(val adapter: FlexibleAdapter<*>, @MenuRes val cabMenu: In
         }
     }
 
+
+    interface ActionModeListener : ActionMode.Callback {
+        fun onUpdateSelectionTitle(mode: ActionMode?, count: Int) {
+            mode?.title = count.toString()
+        }
+
+        override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return true
+        }
+
+        override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+            return true
+        }
+
+        override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
+            return true
+        }
+
+        override fun onDestroyActionMode(mode: ActionMode?) {
+
+        }
+    }
 }

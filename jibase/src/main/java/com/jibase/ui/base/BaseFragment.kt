@@ -19,6 +19,14 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
         ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(viewInflate.viewModel.java) as VM
     }
 
+    private val backPressedCallback by lazy {
+        object : OnBackPressedCallback(viewInflate.enableBackPressed) {
+            override fun handleOnBackPressed() {
+                onBackPressed()
+            }
+        }
+    }
+
     final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return initView(inflater, container)
     }
@@ -47,13 +55,12 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
     open fun onBackPressed() {
     }
 
-    private fun registerBackPressed() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,
-                object : OnBackPressedCallback(viewInflate.enableBackPressed) {
-                    override fun handleOnBackPressed() {
-                        onBackPressed()
-                    }
-                })
+    fun registerBackPressed() {
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
+    }
+
+    fun removeBackPressed() {
+        backPressedCallback.remove()
     }
 }
 

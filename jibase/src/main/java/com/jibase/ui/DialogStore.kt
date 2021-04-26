@@ -1,8 +1,6 @@
 package com.jibase.ui
 
-import androidx.lifecycle.ViewModel
-
-class DialogStore : ViewModel() {
+class DialogStore : BaseViewModel() {
     private val properties = hashMapOf<String, Any>()
 
     fun addAll(map: Map<String, Any>) {

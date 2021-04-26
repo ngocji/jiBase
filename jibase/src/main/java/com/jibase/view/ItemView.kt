@@ -13,9 +13,12 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.core.view.GravityCompat
 import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
+import androidx.core.widget.ImageViewCompat
 import com.jibase.R
 import com.jibase.extensions.gone
 import com.jibase.extensions.inflate
+import com.jibase.extensions.load
 import com.jibase.utils.ResourceUtils
 import kotlinx.android.synthetic.main.layout_item_view.view.*
 import kotlin.math.roundToInt
@@ -46,8 +49,12 @@ open class ItemView @JvmOverloads constructor(
             } else {
                 setItemIconColor(a.getColor(R.styleable.ItemView_itemIconColor, 0))
             }
-            setItemIconSize(a.getDimension(R.styleable.ItemView_itemIconSize, 0f))
+            setItemIconSize(
+                a.getDimension(R.styleable.ItemView_itemIconSize, 0f),
+                a.getDimensionPixelOffset(R.styleable.ItemView_itemIconPadding, 0)
+            )
             setItemIconRotation(a.getInt(R.styleable.ItemView_itemIconRotation, 0))
+            setItemIconBackground(a.getResourceId(R.styleable.ItemView_itemIconBackground, 0))
 
             // for text
             setItemText(a.getString(R.styleable.ItemView_itemText))
@@ -114,25 +121,31 @@ open class ItemView @JvmOverloads constructor(
         setItemIconColor(iconTint)
     }
 
+    fun setItemIcon(icon: String) {
+        imageIcon.load(icon)
+    }
+
     fun setItemIconColor(color: Int) {
         if (color == 0) {
             imageIcon.clearColorFilter()
         } else {
-            imageIcon.setColorFilter(color)
+            ImageViewCompat.setImageTintList(imageIcon, ColorStateList.valueOf(color))
         }
     }
 
     fun setItemIconColor(colorStateList: ColorStateList?) {
         iconTint = colorStateList
-        imageIcon.drawable?.setTintList(colorStateList)
+        ImageViewCompat.setImageTintList(imageIcon, iconTint)
     }
 
-    fun setItemIconSize(size: Float) {
+    fun setItemIconSize(size: Float, padd: Int) {
         if (size > 0f) {
             imageIcon.updateLayoutParams<LayoutParams> {
                 height = size.roundToInt()
                 width = size.roundToInt()
             }
+
+            imageIcon.updatePadding(padd, padd, padd, padd)
         }
     }
 
@@ -142,8 +155,13 @@ open class ItemView @JvmOverloads constructor(
 
     fun setItemIconSize(@DimenRes sizeRes: Int) {
         if (sizeRes != NO_ID) {
-            setItemIconSize(context.resources.getDimension(sizeRes))
+            setItemIconSize(context.resources.getDimension(sizeRes), 0)
         }
+    }
+
+    fun setItemIconBackground(@DrawableRes resourceId: Int) {
+        if (resourceId == NO_ID) return
+        imageIcon.setBackgroundResource(resourceId)
     }
 
     fun setItemText(@StringRes text: Int) {

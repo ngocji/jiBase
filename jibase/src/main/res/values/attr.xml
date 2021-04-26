@@ -13,6 +13,8 @@
         <attr name="itemIconColor" format="color" />
         <attr name="itemIconSize" format="dimension" />
         <attr name="itemIconRotation" format="integer"/>
+        <attr name="itemIconBackground" format="reference" />
+        <attr name="itemIconPadding" format="dimension" />
 
         <attr name="itemText" format="string" />
         <attr name="itemTextColor" format="color" />
