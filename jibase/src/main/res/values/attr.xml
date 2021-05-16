@@ -12,17 +12,35 @@
         <attr name="itemIcon" format="reference" />
         <attr name="itemIconColor" format="color" />
         <attr name="itemIconSize" format="dimension" />
-        <attr name="itemIconRotation" format="integer"/>
+        <attr name="itemIconRotation" format="integer" />
         <attr name="itemIconBackground" format="reference" />
         <attr name="itemIconPadding" format="dimension" />
+
+        <attr name="itemIconMarginStart" format="dimension" />
+        <attr name="itemIconMarginEnd" format="dimension" />
+        <attr name="itemIconMarginTop" format="dimension" />
+        <attr name="itemIconMarginBottom" format="dimension" />
+        <attr name="itemIconMargin" format="dimension" />
 
         <attr name="itemText" format="string" />
         <attr name="itemTextColor" format="color" />
         <attr name="itemTextSize" format="dimension" />
+        <attr name="itemTextStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="italic" value="2" />
+        </attr>
+        <attr name="itemTextFont" format="reference" />
 
         <attr name="itemDescription" format="string" />
         <attr name="itemDescriptionColor" format="color" />
         <attr name="itemDescriptionSize" format="dimension" />
+        <attr name="itemDescriptionStyle">
+            <flag name="normal" value="0" />
+            <flag name="bold" value="1" />
+            <flag name="italic" value="2" />
+        </attr>
+        <attr name="itemDescriptionFont" format="reference" />
 
         <attr name="itemTextGravity" format="integer">
             <flag name="top" value="0x30" />

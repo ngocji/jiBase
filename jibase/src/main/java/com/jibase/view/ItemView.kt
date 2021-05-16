@@ -2,10 +2,12 @@ package com.jibase.view
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
@@ -55,6 +57,13 @@ open class ItemView @JvmOverloads constructor(
             )
             setItemIconRotation(a.getInt(R.styleable.ItemView_itemIconRotation, 0))
             setItemIconBackground(a.getResourceId(R.styleable.ItemView_itemIconBackground, 0))
+            setItemIconMargin(
+                a.getDimensionPixelOffset(R.styleable.ItemView_itemIconMarginStart, 0),
+                a.getDimensionPixelOffset(R.styleable.ItemView_itemIconMarginTop, 0),
+                a.getDimensionPixelOffset(R.styleable.ItemView_itemIconMarginEnd, 0),
+                a.getDimensionPixelOffset(R.styleable.ItemView_itemIconMarginBottom, 0),
+                a.getDimensionPixelOffset(R.styleable.ItemView_itemIconMargin, 0)
+            )
 
             // for text
             setItemText(a.getString(R.styleable.ItemView_itemText))
@@ -70,6 +79,10 @@ open class ItemView @JvmOverloads constructor(
             setItemTextGravity(a.getInt(R.styleable.ItemView_itemTextGravity, Gravity.CENTER))
             setItemTextLines(a.getInt(R.styleable.ItemView_itemTextLines, -1))
             setItemTextMaxLines(a.getInt(R.styleable.ItemView_itemTextMaxLines, -1))
+            setItemTextFont(
+                a.getInt(R.styleable.ItemView_itemTextFont, 0),
+                a.getInt(R.styleable.ItemView_itemTextStyle, 0)
+            )
 
             // for description
             setItemDescription(a.getString(R.styleable.ItemView_itemDescription))
@@ -83,12 +96,16 @@ open class ItemView @JvmOverloads constructor(
             setItemDescriptionSize(a.getDimension(R.styleable.ItemView_itemDescriptionSize, -1f))
             setItemDescriptionGravity(
                 a.getInt(
-                    R.styleable.ItemView_itemTextGravity,
+                    R.styleable.ItemView_itemDescriptionGravity,
                     Gravity.CENTER
                 )
             )
             setItemDescriptionLines(a.getInt(R.styleable.ItemView_itemTextLines, -1))
             setItemDescriptionMaxLines(a.getInt(R.styleable.ItemView_itemTextMaxLines, -1))
+            setItemDescriptionFont(
+                a.getInt(R.styleable.ItemView_itemDescriptionFont, 0),
+                a.getInt(R.styleable.ItemView_itemDescriptionStyle, 0)
+            )
 
             // for global
             setIconOnly(a.getBoolean(R.styleable.ItemView_isIconOnly, false))
@@ -164,6 +181,16 @@ open class ItemView @JvmOverloads constructor(
         imageIcon.setBackgroundResource(resourceId)
     }
 
+    fun setItemIconMargin(start: Int, top: Int, end: Int, bottom: Int, margin: Int) {
+        imageIcon.updateLayoutParams<LayoutParams> {
+            if (margin != 0) {
+                setMargins(margin, margin, margin, margin)
+            } else {
+                setMargins(start, top, end, bottom)
+            }
+        }
+    }
+
     fun setItemText(@StringRes text: Int) {
         tvText.setText(text)
     }
@@ -208,12 +235,21 @@ open class ItemView @JvmOverloads constructor(
         tvText.maxLines = lines
     }
 
+    fun setItemTextFont(fontId: Int, style: Int) {
+        tvText.typeface =
+            Typeface.create(
+                if (fontId != 0) ResourceUtils.getFont(fontId) else tvText.typeface,
+                style
+            )
+    }
+
     fun setItemDescription(@StringRes text: Int) {
         tvText.setText(text)
     }
 
     fun setItemDescription(text: String?) {
         tvDescription.text = text
+        tvDescription.visibility = if (text?.isBlank() == true) View.GONE else View.VISIBLE
     }
 
     fun setItemDescriptionColor(@ColorInt color: Int) {
@@ -250,6 +286,14 @@ open class ItemView @JvmOverloads constructor(
     fun setItemDescriptionMaxLines(lines: Int) {
         if (lines <= 0) return
         tvDescription.maxLines = lines
+    }
+
+    fun setItemDescriptionFont(fontId: Int, style: Int) {
+        tvDescription.typeface =
+            Typeface.create(
+                if (fontId != 0) ResourceUtils.getFont(fontId) else tvDescription.typeface,
+                style
+            )
     }
 
     fun setIconOnly(isShow: Boolean) {
