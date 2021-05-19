@@ -21,6 +21,7 @@ import com.jibase.R
 import com.jibase.extensions.gone
 import com.jibase.extensions.inflate
 import com.jibase.extensions.load
+import com.jibase.extensions.visible
 import com.jibase.utils.ResourceUtils
 import kotlinx.android.synthetic.main.layout_item_view.view.*
 import kotlin.math.roundToInt
@@ -182,11 +183,13 @@ open class ItemView @JvmOverloads constructor(
     }
 
     fun setItemIconMargin(start: Int, top: Int, end: Int, bottom: Int, margin: Int) {
-        imageIcon.updateLayoutParams<LayoutParams> {
-            if (margin != 0) {
-                setMargins(margin, margin, margin, margin)
-            } else {
-                setMargins(start, top, end, bottom)
+        if (start != 0 || top != 0 || end != 0 || bottom != 0 || margin != 0) {
+            imageIcon.updateLayoutParams<LayoutParams> {
+                if (margin != 0) {
+                    setMargins(margin, margin, margin, margin)
+                } else {
+                    setMargins(start, top, end, bottom)
+                }
             }
         }
     }
@@ -248,8 +251,10 @@ open class ItemView @JvmOverloads constructor(
     }
 
     fun setItemDescription(text: String?) {
-        tvDescription.text = text
-        tvDescription.visibility = if (text?.isBlank() == true) View.GONE else View.VISIBLE
+        if (text?.isNotBlank() == true) {
+            tvDescription.text = text
+            tvDescription.visible()
+        }
     }
 
     fun setItemDescriptionColor(@ColorInt color: Int) {
