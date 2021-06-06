@@ -1243,6 +1243,16 @@ open class FlexibleAdapter<T : IFlexible<*>>(
     }
 
     /**
+     * Gets the sticky header helper.
+     *
+     * @return the StickyHeaderHelper<*>
+     * @see setStickyHeaders
+     */
+    fun getStickyHeaderHelper(): StickyHeaderHelper<*>? {
+        return mStickyHeaderHelper
+    }
+
+    /**
      * Sets the elevation in dpi for the sticky header layout.
      *
      * **Note:** This setting is ignored if the header item has already an elevation. The

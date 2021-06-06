@@ -109,6 +109,22 @@ class StickyHeaderHelper<T : IFlexible<*>>(
         }
     }
 
+    fun clearHeader() {
+        mStickyHeaderViewHolder?.also {
+            Log.d("clearHeader")
+            resetHeader(it)
+            mStickyHolderLayout?.apply {
+                alpha = 0f
+                animate().cancel()
+                animate().setListener(null)
+            }
+            mStickyHeaderViewHolder = null
+            restoreHeaderItemVisibility()
+            val oldPosition = mHeaderPosition
+            mHeaderPosition = RecyclerView.NO_POSITION
+            onStickyHeaderChange(mHeaderPosition, oldPosition)
+        }
+    }
 
     /*******************/
     /* Private method  */
@@ -316,24 +332,6 @@ class StickyHeaderHelper<T : IFlexible<*>>(
         header.itemView.layoutParams.width = view.layoutParams.width
         header.itemView.layoutParams.height = view.layoutParams.height
     }
-
-    private fun clearHeader() {
-        mStickyHeaderViewHolder?.also {
-            Log.d("clearHeader")
-            resetHeader(it)
-            mStickyHolderLayout?.apply {
-                alpha = 0f
-                animate().cancel()
-                animate().setListener(null)
-            }
-            mStickyHeaderViewHolder = null
-            restoreHeaderItemVisibility()
-            val oldPosition = mHeaderPosition
-            mHeaderPosition = RecyclerView.NO_POSITION
-            onStickyHeaderChange(mHeaderPosition, oldPosition)
-        }
-    }
-
 
     private fun addViewToParent(parent: ViewGroup, child: View) {
         try {
