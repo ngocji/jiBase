@@ -6,7 +6,7 @@ import android.animation.Animator
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.core.view.ViewCompat
+import androidx.core.view.*
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.jibase.extensions.invisible
@@ -20,7 +20,8 @@ import com.jibase.utils.Log
 class StickyHeaderHelper<T : IFlexible<*>>(
         private val mAdapter: FlexibleAdapter<T>,
         private val mStickyHeaderChangeListener: OnStickyHeaderChangeListener?,
-        private var mStickyHolderLayout: ViewGroup?) : RecyclerView.OnScrollListener() {
+        private var mStickyHolderLayout: ViewGroup?
+) : RecyclerView.OnScrollListener() {
 
     private lateinit var mRecyclerView: RecyclerView
     private var mHeaderPosition = RecyclerView.NO_POSITION
@@ -60,12 +61,14 @@ class StickyHeaderHelper<T : IFlexible<*>>(
     }
 
     fun updateOrClearHeader(updateHeaderContent: Boolean) {
+        Log.d("updateOrClearHeader $updateHeaderContent")
         if (!mAdapter.areHeadersShown() || mAdapter.itemCount == 0) {
             clearHeaderWithAnimation()
             return
         }
         val firstHeaderPosition = getStickyPosition(RecyclerView.NO_POSITION)
         if (firstHeaderPosition >= 0) {
+            Log.d("updateOrClearHeader $updateHeaderContent ---> $firstHeaderPosition")
             updateHeader(firstHeaderPosition, updateHeaderContent)
         } else {
             clearHeader()
@@ -78,6 +81,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
             holder.itemView.layoutParams.height = holder.contentView.measuredHeight
             // Ensure the itemView is hidden to avoid double background
             holder.itemView.invisible()
+            Log.d("Ensure headerParent: ${holder.itemView.measuredWidth} / ${holder.itemView.measuredHeight} / ${holder.itemView.visibility}")
             applyLayoutParamsAndMargins(holder.contentView)
             removeViewFromParent(holder.contentView)
             mStickyHolderLayout?.also {
@@ -90,6 +94,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
 
     fun clearHeaderWithAnimation() {
         if (mStickyHeaderViewHolder != null && mHeaderPosition != RecyclerView.NO_POSITION) {
+            Log.d("clear header with animation")
             mStickyHolderLayout?.animate()?.setListener(object : Animator.AnimatorListener {
                 override fun onAnimationStart(animation: Animator) {
                     mHeaderPosition = RecyclerView.NO_POSITION
@@ -111,13 +116,13 @@ class StickyHeaderHelper<T : IFlexible<*>>(
 
     fun clearHeader() {
         mStickyHeaderViewHolder?.also {
-            Log.d("clearHeader")
             resetHeader(it)
             mStickyHolderLayout?.apply {
                 alpha = 0f
                 animate().cancel()
                 animate().setListener(null)
             }
+            Log.d("clearHeader")
             mStickyHeaderViewHolder = null
             restoreHeaderItemVisibility()
             val oldPosition = mHeaderPosition
@@ -145,7 +150,8 @@ class StickyHeaderHelper<T : IFlexible<*>>(
             // Initialize Holder Layout, will be also used for elevation
             mStickyHolderLayout = createContainer(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT)
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            )
             oldParentLayout.addView(mStickyHolderLayout)
             Log.d("Default StickyHolderLayout initialized")
         } else {
@@ -168,9 +174,11 @@ class StickyHeaderHelper<T : IFlexible<*>>(
 
     private fun updateHeader(headerPosition: Int, updateHeaderContent: Boolean) {
         if (mHeaderPosition != headerPosition) {
-            val firstVisibleItemPosition = mAdapter.getFlexibleLayoutManager().findFirstVisibleItemPosition()
+            val firstVisibleItemPosition =
+                    mAdapter.getFlexibleLayoutManager().findFirstVisibleItemPosition()
             if (displayWithAnimation && mHeaderPosition == RecyclerView.NO_POSITION &&
-                    headerPosition != firstVisibleItemPosition) {
+                    headerPosition != firstVisibleItemPosition
+            ) {
                 displayWithAnimation = false
                 mStickyHolderLayout?.apply {
                     alpha = 0f
@@ -188,6 +196,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
                 mStickyHeaderViewHolder?.also {
                     mAdapter.onBindViewHolder(it, headerPosition)
                 }
+                Log.d("updateHeader content ended")
             } else {
                 Log.d("updateHeader Wrong itemViewType for StickyViewHolder")
             }
@@ -202,7 +211,8 @@ class StickyHeaderHelper<T : IFlexible<*>>(
             mElevation = ViewCompat.getElevation(holder)
             if (mElevation == 0f) {
                 // 2. Take elevation settings
-                mElevation = mRecyclerView.context.resources.displayMetrics.density * mAdapter.getStickyHeaderElevation()
+                mElevation =
+                        mRecyclerView.context.resources.displayMetrics.density * mAdapter.getStickyHeaderElevation()
             }
             if (mElevation > 0) {
                 // Needed to elevate the view
@@ -228,7 +238,9 @@ class StickyHeaderHelper<T : IFlexible<*>>(
                     val adapterPos = mRecyclerView.getChildAdapterPosition(nextChild)
                     val nextHeaderPosition = getStickyPosition(adapterPos)
                     if (mHeaderPosition != nextHeaderPosition) {
-                        if (mAdapter.getFlexibleLayoutManager().getOrientation() == OrientationHelper.HORIZONTAL) {
+                        if (mAdapter.getFlexibleLayoutManager()
+                                        .getOrientation() == OrientationHelper.HORIZONTAL
+                        ) {
                             if (nextChild.left > 0) {
                                 val headerWidth = mStickyHolderLayout?.measuredWidth ?: 0
                                 val nextHeaderOffsetX = nextChild.left - headerWidth -
@@ -260,6 +272,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
                 // Apply translation (pushed up by another header)
                 translationX = headerOffsetX.toFloat()
                 translationY = headerOffsetY.toFloat()
+                Log.d("Translate header: $headerOffsetX / $headerOffsetY --> ${this.measuredWidth} / ${this.measuredHeight}  --> ${this.childCount}")
             }
         }
     }
@@ -285,8 +298,8 @@ class StickyHeaderHelper<T : IFlexible<*>>(
         val itemView = mStickyHeaderViewHolder?.itemView
         if (manager != null && itemView != null) {
             (mStickyHolderLayout?.layoutParams as? ViewGroup.MarginLayoutParams)?.apply {
-                width = view.layoutParams.width
-                height = view.layoutParams.height
+                width = view.measuredWidth
+                height = view.measuredHeight
                 // Margins from current offset
                 if (leftMargin == 0)
                     leftMargin = manager.getLeftDecorationWidth(itemView)
@@ -297,6 +310,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
                 if (bottomMargin == 0)
                     bottomMargin = manager.getBottomDecorationHeight(itemView)
             }
+            Log.d("UpdateLayoutParams; ${mStickyHolderLayout?.measuredWidth} / ${mStickyHolderLayout?.measuredHeight} \n--> margin: ${mStickyHolderLayout?.marginStart}/${mStickyHolderLayout?.marginTop}/${mStickyHolderLayout?.marginRight}/${mStickyHolderLayout?.marginBottom}")
         }
     }
 
@@ -313,6 +327,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
                 oldHeader.visible()
             }
         }
+        Log.d("restore header item")
     }
 
     private fun resetHeader(header: FlexibleViewHolder) {
@@ -331,11 +346,13 @@ class StickyHeaderHelper<T : IFlexible<*>>(
         // - Expandable header is not resized / redrawn on automatic configuration change when sticky headers are enabled
         header.itemView.layoutParams.width = view.layoutParams.width
         header.itemView.layoutParams.height = view.layoutParams.height
+        Log.d("ResetHeader ${view.layoutParams.width} / ${view.layoutParams.height}")
     }
 
     private fun addViewToParent(parent: ViewGroup, child: View) {
         try {
             parent.addView(child)
+            Log.d("AddView to parent")
         } catch (e: IllegalStateException) {
             Log.d("The specified child already has a parent! (but parent was removed!)")
         }
@@ -345,6 +362,7 @@ class StickyHeaderHelper<T : IFlexible<*>>(
     private fun removeViewFromParent(view: View) {
         val parent = view.parent
         if (parent is ViewGroup) {
+            Log.d("RemoveView to parent")
             parent.removeView(view)
         }
     }
@@ -359,7 +377,8 @@ class StickyHeaderHelper<T : IFlexible<*>>(
         }
         val header = mAdapter.getSectionHeader(position)
         // Header cannot be sticky if it's also an Expandable in collapsed status, RV will raise an exception
-        return if (header == null || mAdapter.isExpandableItem(header as? T) && !mAdapter.isExpanded(header as? T)) {
+        return if (header == null || mAdapter.isExpandableItem(header as? T) && !mAdapter.isExpanded(
+                        header as? T)) {
             RecyclerView.NO_POSITION
         } else mAdapter.getGlobalPositionOf(header as T)
     }
@@ -377,7 +396,10 @@ class StickyHeaderHelper<T : IFlexible<*>>(
 
         if (holder == null) {
             // Create and binds a new ViewHolder
-            holder = mAdapter.createViewHolder(mRecyclerView, mAdapter.getItemViewType(position)) as FlexibleViewHolder
+            holder = mAdapter.createViewHolder(
+                    mRecyclerView,
+                    mAdapter.getItemViewType(position)
+            ) as FlexibleViewHolder
             // Skip ViewHolder caching by setting not recyclable
             holder.setIsRecyclable(false)
             mAdapter.bindViewHolder(holder, position)
@@ -386,25 +408,40 @@ class StickyHeaderHelper<T : IFlexible<*>>(
             // Calculate width and height
             val widthSpec: Int
             val heightSpec: Int
-            if (mAdapter.getFlexibleLayoutManager().getOrientation() == OrientationHelper.VERTICAL) {
-                widthSpec = View.MeasureSpec.makeMeasureSpec(mRecyclerView.width, View.MeasureSpec.EXACTLY)
-                heightSpec = View.MeasureSpec.makeMeasureSpec(mRecyclerView.height, View.MeasureSpec.UNSPECIFIED)
+            if (mAdapter.getFlexibleLayoutManager()
+                            .getOrientation() == OrientationHelper.VERTICAL
+            ) {
+                widthSpec =
+                        View.MeasureSpec.makeMeasureSpec(mRecyclerView.width, View.MeasureSpec.EXACTLY)
+                heightSpec = View.MeasureSpec.makeMeasureSpec(
+                        mRecyclerView.height,
+                        View.MeasureSpec.UNSPECIFIED
+                )
             } else {
-                widthSpec = View.MeasureSpec.makeMeasureSpec(mRecyclerView.width, View.MeasureSpec.UNSPECIFIED)
-                heightSpec = View.MeasureSpec.makeMeasureSpec(mRecyclerView.height, View.MeasureSpec.EXACTLY)
+                widthSpec = View.MeasureSpec.makeMeasureSpec(
+                        mRecyclerView.width,
+                        View.MeasureSpec.UNSPECIFIED
+                )
+                heightSpec =
+                        View.MeasureSpec.makeMeasureSpec(mRecyclerView.height, View.MeasureSpec.EXACTLY)
             }
 
             // Measure and Layout the stickyView
             val headerView = holder.contentView
-            val childWidth = ViewGroup.getChildMeasureSpec(widthSpec,
+            val childWidth = ViewGroup.getChildMeasureSpec(
+                    widthSpec,
                     mRecyclerView.paddingLeft + mRecyclerView.paddingRight,
-                    headerView.layoutParams.width)
-            val childHeight = ViewGroup.getChildMeasureSpec(heightSpec,
+                    headerView.layoutParams.width
+            )
+            val childHeight = ViewGroup.getChildMeasureSpec(
+                    heightSpec,
                     mRecyclerView.paddingTop + mRecyclerView.paddingBottom,
-                    headerView.layoutParams.height)
+                    headerView.layoutParams.height
+            )
 
             headerView.measure(childWidth, childHeight)
             headerView.layout(0, 0, headerView.measuredWidth, headerView.measuredHeight)
+            Log.d("GetHeaderViewHolder $childWidth / $childHeight")
         }
         // Be sure VH has the backup Adapter position
         holder.backupPosition = position
