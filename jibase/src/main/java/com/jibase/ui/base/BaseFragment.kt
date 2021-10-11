@@ -11,12 +11,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.jibase.anotation.InflateHelper
 import com.jibase.anotation.ViewInflate
 import com.jibase.ui.BaseViewModel
+import io.reactivex.disposables.Disposable
 
 @Suppress("LeakingThis", "UNCHECKED_CAST")
 abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
     open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
     open val viewModel: VM by lazy {
-        ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(viewInflate.viewModel.java) as VM
+        ViewModelProvider(
+            this,
+            ViewModelProvider.NewInstanceFactory()
+        ).get(viewInflate.viewModel.java) as VM
     }
 
     private val backPressedCallback by lazy {
@@ -27,7 +31,11 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
         }
     }
 
-    final override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    final override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return initView(inflater, container)
     }
 
@@ -56,11 +64,18 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
     }
 
     fun registerBackPressed() {
-        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, backPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            backPressedCallback
+        )
     }
 
     fun removeBackPressed() {
         backPressedCallback.remove()
+    }
+
+    fun Disposable.putToComposite() {
+        viewModel.compositeDisposable.add(this)
     }
 }
 

@@ -7,12 +7,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.jibase.anotation.InflateHelper
 import com.jibase.anotation.ViewInflate
 import com.jibase.ui.BaseViewModel
+import io.reactivex.disposables.Disposable
 
 @Suppress("LeakingThis", "UNCHECKED_CAST")
-abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity()  {
+abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity() {
     open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
     open val viewModel: VM by lazy {
-        ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(viewInflate.viewModel.java) as VM
+        ViewModelProvider(
+            this,
+            ViewModelProvider.NewInstanceFactory()
+        ).get(viewInflate.viewModel.java) as VM
     }
 
     final override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,6 +37,10 @@ abstract class BaseActivity<VM : BaseViewModel> : AppCompatActivity()  {
 
     open fun onViewListener() {
         // free implement
+    }
+
+    fun Disposable.putToComposite() {
+        viewModel.compositeDisposable.add(this)
     }
 }
 

@@ -16,6 +16,10 @@ fun NavController.hasBackStack(actionId: Int): Boolean {
     }
 }
 
+fun NavController.isDestinationVisible(actionId: Int): Boolean {
+    return actionId == this.currentDestination?.id
+}
+
 fun Fragment.findNavController(viewId: Int): NavController {
     return requireActivity().findNavController(viewId)
 }
