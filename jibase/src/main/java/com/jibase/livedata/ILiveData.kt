@@ -25,7 +25,9 @@ open class ILiveData<T> constructor(data: T? = null, isNotifyDataWhenInitialize:
     private val pendingFirstInitialize = AtomicBoolean(isNotifyDataWhenInitialize)
 
     init {
-        set(data)
+        data?.also {
+            set(data)
+        }
     }
 
     override fun observe(owner: LifecycleOwner, observer: Observer<in T>) {
