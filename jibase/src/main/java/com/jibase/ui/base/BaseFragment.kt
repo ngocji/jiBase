@@ -74,6 +74,10 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
         backPressedCallback.remove()
     }
 
+    fun enableBackPressed() {
+        registerBackPressed()
+    }
+
     fun Disposable.putToComposite() {
         viewModel.compositeDisposable.add(this)
     }
