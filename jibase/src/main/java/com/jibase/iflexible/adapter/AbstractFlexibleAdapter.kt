@@ -235,6 +235,10 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
         return selectedPositions.add(position)
     }
 
+    fun addAdjustedSelection(positions: List<Int>) {
+        selectedPositions.addAll(positions)
+    }
+
     /**
      * Removes the selection status for the given position without notifying the change.
      *
