@@ -1,43 +1,31 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'signing'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'kotlin-kapt'
-
-
-repositories {
-    mavenCentral()
-    google()
-    jcenter()
-    maven { url "https://jitpack.io" }
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'signing'
+    id 'kotlin-android-extensions'
 }
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
-    }
-}
 
 group = 'com.github.ngocji'
 version = '1.0'
 
 android {
-    compileSdkVersion compile_sdk_version
+    compileSdk compile_sdk
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion compile_sdk_version
-        versionCode 1
-        versionName "1.0"
+        minSdk min_sdk
+        targetSdk target_sdk
+
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 
     buildTypes {
@@ -48,53 +36,44 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility java_source_version
+        targetCompatibility java_target_version
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = java_target_version
     }
 }
 
 dependencies {
-    //kotlin
-    api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    api "androidx.core:core-ktx:$kotlin_ktx_version"
+    // Kotlin
+    api rootProject.deps.coroutine
+    api rootProject.deps.coroutine_core
 
-    //image
-    api "com.github.bumptech.glide:glide:$glide_version"
+    // AndroidX
+    api rootProject.deps.core_ktx
+    api rootProject.deps.material
+    api rootProject.deps.appcompat
+
+    // Navigation Components
+    api rootProject.deps.navFragment
+    api rootProject.deps.navUi
+
+    // Hilt
+    api rootProject.deps.hilt
+    kapt rootProject.deps.hilt_compiler
+
+    // Glide
+    api rootProject.deps.glide
+    kapt rootProject.deps.kaptGlide
 
     // gson
-    api "com.google.code.gson:gson:$gson_version"
+    api rootProject.deps.gson
 
-    // android x core
-    api "androidx.appcompat:appcompat:$appcompat_version"
-    api "androidx.recyclerview:recyclerview:$recyclerview_version"
-    api "androidx.cardview:cardview:$cardview_version"
-    api "com.google.android.material:material:$material_version"
-    api "androidx.annotation:annotation:$annotation_version"
-    api "androidx.transition:transition:$transition_version"
-    api "androidx.slidingpanelayout:slidingpanelayout:$slidingpane_version"
-    api "androidx.swiperefreshlayout:swiperefreshlayout:$swipefreshlayout_version"
-    api "androidx.constraintlayout:constraintlayout:$contraintlayout_version"
-    api "androidx.coordinatorlayout:coordinatorlayout:$cordinatorlayout_version"
-    api "androidx.multidex:multidex:$multidex_version"
-
-    // room
-    api "androidx.room:room-runtime:$room_version"
-    kapt "androidx.room:room-compiler:$room_version"
-    api "androidx.room:room-rxjava2:$room_version"
-
-    // rx
-    api "io.reactivex.rxjava2:rxkotlin:$rxkotlin_version"
-    api "io.reactivex.rxjava2:rxandroid:$rxjava_version"
-
-    // navigation
-    api "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    api "androidx.navigation:navigation-ui-ktx:$nav_version"
-    api "androidx.navigation:navigation-dynamic-features-fragment:$nav_version"
-
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    // Lifecycle
+    api rootProject.deps.lifecycle_runtime
+    api rootProject.deps.lifecycle_extension
+    api rootProject.deps.lifecycle_viewmodel
+    api rootProject.deps.lifecycle_common
 }
 
