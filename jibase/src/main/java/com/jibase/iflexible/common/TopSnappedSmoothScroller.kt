@@ -32,12 +32,12 @@ class TopSnappedSmoothScroller(context: Context) : LinearSmoothScroller(context)
         val firstChildPos = flexibleLayoutManager.findFirstCompletelyVisibleItemPosition()
         val direction = if (targetPosition < firstChildPos) -1 else 1
 
-        if (flexibleLayoutManager.getOrientation() == OrientationHelper.HORIZONTAL) {
+        return if (flexibleLayoutManager.getOrientation() == OrientationHelper.HORIZONTAL) {
             vectorPosition.set(direction.toFloat(), 0f)
-            return vectorPosition
+            vectorPosition
         } else {
             vectorPosition.set(0f, direction.toFloat())
-            return vectorPosition
+            vectorPosition
         }
     }
 
@@ -46,6 +46,6 @@ class TopSnappedSmoothScroller(context: Context) : LinearSmoothScroller(context)
     }
 
     override fun getVerticalSnapPreference(): Int {
-        return LinearSmoothScroller.SNAP_TO_START
+        return SNAP_TO_START
     }
 }

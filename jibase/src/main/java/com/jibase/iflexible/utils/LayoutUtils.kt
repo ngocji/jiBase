@@ -2,8 +2,8 @@ package com.jibase.iflexible.utils
 
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.jibase.iflexible.adapter.AbstractFlexibleAdapter.Companion.MULTI
-import com.jibase.iflexible.adapter.AbstractFlexibleAdapter.Companion.SINGLE
+import com.jibase.iflexible.adapter.FlexibleAdapter.Companion.MULTI
+import com.jibase.iflexible.adapter.FlexibleAdapter.Companion.SINGLE
 import com.jibase.iflexible.common.FlexibleLayoutManager
 
 object LayoutUtils {

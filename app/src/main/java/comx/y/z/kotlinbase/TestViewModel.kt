@@ -1,5 +1,5 @@
 package comx.y.z.kotlinbase
 
-import com.jibase.ui.BaseViewModel
+import androidx.lifecycle.ViewModel
 
-class TestViewModel : BaseViewModel()
+class TestViewModel : ViewModel()

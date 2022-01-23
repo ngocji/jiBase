@@ -3,7 +3,7 @@
 package com.jibase.helper
 
 object SessionHelper {
-    private val sessionData = mutableMapOf<String, Any>()
+    private val sessionData = mutableMapOf<String, Any?>()
 
     @JvmStatic
     fun put(key: String, data: Any) {

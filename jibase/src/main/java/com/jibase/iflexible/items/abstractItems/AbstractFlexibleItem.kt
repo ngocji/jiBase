@@ -104,6 +104,6 @@ abstract class AbstractFlexibleItem<VH : RecyclerView.ViewHolder> : IFlexible<VH
      * If not overridden return value is the same of [.getLayoutRes].
      */
     override fun getItemViewType(): Int {
-        return getLayoutRes()
+        return this::class.java.name.hashCode()
     }
 }

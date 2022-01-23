@@ -7,22 +7,18 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
-import android.view.View
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.core.content.res.ResourcesCompat.getFont
 import androidx.core.view.GravityCompat
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.core.widget.ImageViewCompat
 import com.jibase.R
-import com.jibase.extensions.gone
-import com.jibase.extensions.inflate
-import com.jibase.extensions.load
-import com.jibase.extensions.visible
-import com.jibase.utils.ResourceUtils
+import com.jibase.extensions.*
 import kotlinx.android.synthetic.main.layout_item_view.view.*
 import kotlin.math.roundToInt
 
@@ -123,7 +119,7 @@ open class ItemView @JvmOverloads constructor(
             with(llText) {
                 gravity = GravityCompat.START
                 updateLayoutParams<LayoutParams> {
-                    setMargins(ResourceUtils.getDimenPixel(R.dimen._5sdp), 0, 0, 0)
+                    setMargins(getDimensionPixelOffset(R.dimen._5sdp), 0, 0, 0)
                 }
             }
         }
@@ -241,7 +237,7 @@ open class ItemView @JvmOverloads constructor(
     fun setItemTextFont(fontId: Int, style: Int) {
         tvText.typeface =
             Typeface.create(
-                if (fontId != 0) ResourceUtils.getFont(fontId) else tvText.typeface,
+                if (fontId != 0) getFont(context, fontId) else tvText.typeface,
                 style
             )
     }
@@ -296,7 +292,7 @@ open class ItemView @JvmOverloads constructor(
     fun setItemDescriptionFont(fontId: Int, style: Int) {
         tvDescription.typeface =
             Typeface.create(
-                if (fontId != 0) ResourceUtils.getFont(fontId) else tvDescription.typeface,
+                if (fontId != 0) getFont(context, fontId) else tvDescription.typeface,
                 style
             )
     }

@@ -2,7 +2,6 @@ package com.jibase.iflexible.items.interfaceItems
 
 import android.view.ViewGroup
 import androidx.annotation.IntRange
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.jibase.iflexible.adapter.FlexibleAdapter
 
@@ -137,18 +136,6 @@ interface IFlexible<VH : RecyclerView.ViewHolder> {
      * @return user defined item view type identifier or layout reference if not overridden
      */
     fun getItemViewType(): Int
-
-    /**
-     * Returns the layout resource ID to auto-inflate the View for this item. Optionally, you
-     * can assign same layout for multiple item types, but [.getItemViewType] must
-     * return **unique** values!
-     *
-     * **NOTE:** Should identify a resource Layout reference [android.R.layout].
-     *
-     * @return layout identifier
-     */
-    @LayoutRes
-    fun getLayoutRes(): Int
 
     /**
      * Delegates the creation of the ViewHolder to the user (AutoMap).

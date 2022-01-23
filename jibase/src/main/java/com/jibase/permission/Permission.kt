@@ -1,14 +1,16 @@
 package com.jibase.permission
 
-import io.reactivex.Observable
-
 class Permission {
     val name: String
     val granted: Boolean
     val shouldShowRequestPermissionRationale: Boolean
 
     @JvmOverloads
-    constructor(name: String, granted: Boolean, shouldShowRequestPermissionRationale: Boolean = false) {
+    constructor(
+        name: String,
+        granted: Boolean,
+        shouldShowRequestPermissionRationale: Boolean = false
+    ) {
         this.name = name
         this.granted = granted
         this.shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale
@@ -17,7 +19,8 @@ class Permission {
     constructor(permissions: List<Permission>) {
         name = combineName(permissions)
         granted = combineGranted(permissions)
-        shouldShowRequestPermissionRationale = combineShouldShowRequestPermissionRationale(permissions)
+        shouldShowRequestPermissionRationale =
+            combineShouldShowRequestPermissionRationale(permissions)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -44,24 +47,14 @@ class Permission {
     }
 
     private fun combineName(permissions: List<Permission>): String {
-        return Observable.fromIterable(permissions)
-                .map { permission -> permission.name }
-                .collectInto(StringBuilder(), { s, s2 ->
-                    if (s.isEmpty()) {
-                        s.append(s2)
-                    } else {
-                        s.append(", ").append(s2)
-                    }
-                }).blockingGet().toString()
+        return permissions.joinToString(", ")
     }
 
     private fun combineGranted(permissions: List<Permission>): Boolean {
-        return Observable.fromIterable(permissions)
-                .all { permission -> permission.granted }.blockingGet()
+        return permissions.all { it.granted }
     }
 
     private fun combineShouldShowRequestPermissionRationale(permissions: List<Permission>): Boolean {
-        return Observable.fromIterable(permissions)
-                .any { permission -> permission.shouldShowRequestPermissionRationale }.blockingGet()
+        return permissions.any { it.shouldShowRequestPermissionRationale }
     }
 }

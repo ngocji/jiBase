@@ -1,6 +1,6 @@
 package com.jibase.iflexible.items.abstractItems
 
-import com.jibase.extensions.has
+import com.jibase.extensions.hasPosition
 import com.jibase.iflexible.items.interfaceItems.IExpandable
 import com.jibase.iflexible.items.interfaceItems.IFlexible
 import com.jibase.iflexible.viewholder.FlexibleExpandableViewHolder
@@ -38,7 +38,7 @@ abstract class AbstractFlexibleExpandItem<VH : FlexibleExpandableViewHolder, S :
     }
 
     fun addSubItems(position: Int, subItems: List<S>): AbstractFlexibleExpandItem<VH, S> {
-        if (this.subItems has position) {
+        if (this.subItems hasPosition position) {
             this.subItems.addAll(position, subItems)
         } else {
             this.subItems.addAll(subItems)
@@ -52,7 +52,7 @@ abstract class AbstractFlexibleExpandItem<VH : FlexibleExpandableViewHolder, S :
     }
 
     fun addSubItem(position: Int, subItem: S): AbstractFlexibleExpandItem<VH, S> {
-        if (subItems has position) {
+        if (this.subItems hasPosition position) {
             subItems.add(position, subItem)
         } else {
             addSubItem(subItem)
@@ -66,8 +66,7 @@ abstract class AbstractFlexibleExpandItem<VH : FlexibleExpandableViewHolder, S :
 
 
     fun getSubItem(position: Int): S? {
-        return if (subItems has position) subItems[position]
-        else null
+        return subItems.getOrNull(position)
     }
 
     fun getSubItemPosition(subItem: S): Int {
@@ -87,11 +86,10 @@ abstract class AbstractFlexibleExpandItem<VH : FlexibleExpandableViewHolder, S :
     }
 
     fun removeSubItem(position: Int): Boolean {
-        if (subItems has position) {
+        if (this.subItems hasPosition position) {
             subItems.removeAt(position)
             return true
         }
         return false
     }
-
 }

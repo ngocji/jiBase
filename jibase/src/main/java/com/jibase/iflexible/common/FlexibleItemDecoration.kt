@@ -9,14 +9,14 @@ import android.view.View
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.jibase.extensions.getDimensionPixelOffset
 import com.jibase.iflexible.adapter.FlexibleAdapter
 import com.jibase.iflexible.utils.LayoutUtils
-import com.jibase.utils.ResourceUtils.getDimenPixel
-import com.jibase.utils.ResourceUtils.getDrawable
 import kotlin.math.roundToInt
 
 open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecoration() {
@@ -65,7 +65,7 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
      * @return this FlexibleItemDecoration instance so the call can be chained
      */
     fun withDivider(@DrawableRes resId: Int, vararg viewTypes: Int): FlexibleItemDecoration {
-        mDivider = getDrawable(resId)
+        mDivider = ContextCompat.getDrawable(context, resId)
         mViewTypes = viewTypes.toList()
         return this
     }
@@ -224,7 +224,7 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
      * @return this FlexibleItemDecoration instance so the call can be chained
      */
     fun withSectionGapOffset(@DimenRes sectionOffset: Int): FlexibleItemDecoration {
-        mSectionOffset = getDimenPixel(sectionOffset)
+        mSectionOffset = context.getDimensionPixelOffset(sectionOffset)
         return this
     }
 
@@ -340,7 +340,7 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
      * @return this FlexibleItemDecoration instance so the call can be chained
      */
     fun withOffset(@DimenRes offset: Int): FlexibleItemDecoration {
-        mOffset = getDimenPixel(offset)
+        mOffset = context.getDimensionPixelOffset(offset)
         return this
     }
 
@@ -393,10 +393,10 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
     ): FlexibleItemDecoration {
         mDecorations.put(
                 viewType, ItemDecoration(
-                getDimenPixel(left),
-                getDimenPixel(top),
-                getDimenPixel(right),
-                getDimenPixel(bottom)
+                context.getDimensionPixelOffset(left),
+                context.getDimensionPixelOffset(top),
+                context.getDimensionPixelOffset(right),
+                context.getDimensionPixelOffset(bottom)
         )
         )
         return this
@@ -598,7 +598,7 @@ open class FlexibleItemDecoration(val context: Context) : RecyclerView.ItemDecor
 
         constructor(offset: Int) : this(offset, offset, offset, offset)
 
-        internal fun hasOffset(): Boolean {
+        fun hasOffset(): Boolean {
             return this.top >= 0 || this.left >= 0 || this.right >= 0 || this.bottom >= 0
         }
     }

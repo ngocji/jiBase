@@ -6,9 +6,9 @@ import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
-import com.jibase.iflexible.adapter.AbstractFlexibleAdapter.Companion.IDLE
-import com.jibase.iflexible.adapter.AbstractFlexibleAdapter.Companion.MULTI
-import com.jibase.iflexible.adapter.AbstractFlexibleAdapter.Companion.SINGLE
+import com.jibase.iflexible.adapter.FlexibleAdapter.Companion.IDLE
+import com.jibase.iflexible.adapter.FlexibleAdapter.Companion.MULTI
+import com.jibase.iflexible.adapter.FlexibleAdapter.Companion.SINGLE
 import com.jibase.iflexible.adapter.FlexibleAdapter
 import com.jibase.utils.Log
 

@@ -3,6 +3,8 @@ package com.jibase.iflexible.adapter
 import android.os.Bundle
 import androidx.recyclerview.widget.RecyclerView
 import com.jibase.extensions.changeElevation
+import com.jibase.iflexible.adapter.FlexibleAdapter.Companion.IDLE
+import com.jibase.iflexible.adapter.FlexibleAdapter.Companion.SINGLE
 import com.jibase.iflexible.common.FlexibleLayoutManager
 import com.jibase.iflexible.common.IFlexibleLayoutManager
 import com.jibase.iflexible.entities.Payload
@@ -15,10 +17,6 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
     FastScroller.BubbleTextCreator, FastScroller.OnScrollStateChangeListener,
     FastScroller.AdapterInterface {
     companion object {
-        const val IDLE = 0
-        const val SINGLE = 1
-        const val MULTI = 2
-
         private const val TAG = "FlexibleAdapter"
     }
 

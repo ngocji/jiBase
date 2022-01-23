@@ -5,20 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<!--    <fragment-->
-<!--        android:id="@+id/nav_host_fragment"-->
-<!--        android:name="androidx.navigation.fragment.NavHostFragment"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        app:defaultNavHost="true"-->
-<!--        app:navGraph="@navigation/main_nav" />-->
+    <fragment
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/main_nav" />
 
-    <com.jibase.view.ItemView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:itemText="@string/empty_recycler"
-        app:itemIcon="@drawable/ic_launcher_background"
-        app:itemTextColor="@color/colorPrimary"
-        app:itemTextSize="@dimen/_12sdp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

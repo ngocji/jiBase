@@ -2,13 +2,9 @@ package com.jibase.utils
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
-import android.provider.MediaStore
 import com.jibase.R
-import com.jibase.utils.ResourceUtils.getString
-import com.jibase.utils.ToastUtils.showText
+import com.jibase.extensions.showToast
 
 object IntentUtils {
 
@@ -58,7 +54,7 @@ object IntentUtils {
             context.startActivity(sendIntent)
         } catch (e: Exception) {
             Log.e("ERROR SHARE APPS: $e")
-            showText(context, "You don't have any matching application!")
+            context.showToast("You don't have any matching application!")
         }
     }
 
@@ -77,7 +73,7 @@ object IntentUtils {
             context.startActivity(launcherIntent)
         } catch (e: Exception) {
             goToStore(context, pkg)
-            showText(context, error)
+            context.showToast(error)
         }
 
     }
@@ -97,7 +93,7 @@ object IntentUtils {
         try {
             context.startActivity(intent)
         } catch (e: Exception) {
-            showText(context, "No apps to open!")
+            context.showToast("No apps to open!")
         }
     }
 
@@ -108,7 +104,7 @@ object IntentUtils {
      * @param subject: Subject title
      */
     @JvmStatic
-    fun shareText(context: Context, mess: String, subject: String = "", packageName: String = "") {
+    fun share(context: Context, mess: String, subject: String = "", packageName: String = "") {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
             putExtra(Intent.EXTRA_SUBJECT, subject)
@@ -118,46 +114,7 @@ object IntentUtils {
         try {
             context.startActivity(Intent.createChooser(intent, "Share use with: "))
         } catch (e: Exception) {
-            showText(context, getString(R.string.error_share))
-        }
-    }
-
-    /**
-     * Share image from intent
-     * @param context: Context
-     * @param bitmap: Bitmap src require not null
-     * @param error: Message when no intent share
-     */
-    @JvmStatic
-    fun shareImage(context: Context, bitmap: Bitmap, title: String = "", error: String = "", packageName: String = "") {
-        try {
-            val pathUri = Uri.parse(
-                MediaStore.Images.Media.insertImage(
-                    context.contentResolver,
-                    bitmap,
-                    title,
-                    null
-                )
-            )
-            shareImage(context, pathUri, error, packageName)
-        } catch (ex: Exception) {
-            showText(context, if (error.isNotEmpty()) error else getString(R.string.error_share))
-        }
-    }
-
-    /**
-     * Share image from intent
-     * @param context: Context
-     * @param path: path of image like explore
-     * @param error: Message when no intent share
-     */
-    @JvmStatic
-    fun shareImage(context: Context, path: String, error: String = "", packageName: String = "") {
-        try {
-            val bitmap = BitmapFactory.decodeFile(path)
-            shareImage(context, bitmap, error, packageName)
-        } catch (e: Exception) {
-            showText(context, if (error.isNotEmpty()) error else getString(R.string.error_share))
+            context.showToast(R.string.error_share)
         }
     }
 
@@ -165,19 +122,26 @@ object IntentUtils {
      * Share image from intent
      * @param ctx: Context
      * @param uri: URI of image require not null
+     * @param mimeType: mime type of uri
      * @param error: Message when no intent share
      */
     @JvmStatic
-    fun shareImage(context: Context, uri: Uri, error: String = "", packageName: String = "") {
+    fun share(
+        context: Context,
+        uri: Uri,
+        mimeType: String,
+        error: String = "",
+        packageName: String = ""
+    ) {
         try {
             val i = Intent(Intent.ACTION_SEND)
-            i.type = "image/*"
+            i.type = mimeType
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             i.putExtra(Intent.EXTRA_STREAM, uri)
             if (packageName.isNotEmpty()) i.setPackage(packageName)
             context.startActivity(Intent.createChooser(i, "Share use with: "))
         } catch (ex: Exception) {
-            showText(context, if (error.isNotEmpty()) error else getString(R.string.error_share))
+            context.showToast( if (error.isNotEmpty()) error else context.getString(R.string.error_share))
         }
     }
 
@@ -191,7 +155,8 @@ object IntentUtils {
      */
     @JvmStatic
     fun sentMail(
-        context: Context, subject: String, message: String, mailTo: String, error: String = "") {
+        context: Context, subject: String, message: String, mailTo: String, error: String = ""
+    ) {
         try {
             context.startActivity(Intent(Intent.ACTION_SENDTO).apply {
                 data = Uri.parse("mailto:$mailTo")
@@ -200,7 +165,7 @@ object IntentUtils {
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
             })
         } catch (e: Exception) {
-            showText(context, if (error.isNotEmpty()) error else getString(R.string.error_sent))
+            context.showToast( if (error.isNotEmpty()) error else context.getString(R.string.error_sent))
         }
     }
 }

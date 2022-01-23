@@ -15,10 +15,9 @@ class TestHolder(val item: String) : AbstractFlexibleItem<TestHolder.ViewHolder>
     }
 
     override fun createViewHolder(parent: ViewGroup, adapter: FlexibleAdapter<*>): ViewHolder {
-        return ViewHolder(parent.inflate(getLayoutRes()), adapter)
+        return ViewHolder(parent.inflate(R.layout.item), adapter)
     }
 
-    override fun getLayoutRes(): Int = R.layout.item_test
 
     class ViewHolder(preItemView: View, adapter: FlexibleAdapter<*>, isStickyHeader: Boolean = false) : FlexibleViewHolder(preItemView, adapter, isStickyHeader) {
 

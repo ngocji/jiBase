@@ -34,7 +34,7 @@
                 android:layout_marginBottom="15dp"
                 android:background="#80eeeeee" />
 
-            <com.jibase.view.ITextView
+            <TextView
                 android:id="@+id/tv_mess"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <com.jibase.view.ITextView
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <com.jibase.view.ITextView
+                    <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"

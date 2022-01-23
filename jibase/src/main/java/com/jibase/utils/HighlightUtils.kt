@@ -29,8 +29,8 @@ object HighlightUtils {
                       hasBold: Boolean = true,
                       originalText: String = view.text.toString(),
                       color: Int = fetchAccentColor(view.context)) {
-        val constraintFix = constraint.toLowerCase()
-        val start = originalText.toLowerCase().indexOf(constraintFix)
+        val constraintFix = constraint.lowercase()
+        val start = originalText.lowercase().indexOf(constraintFix)
         if (start != -1) {
             val spanText = Spannable.Factory.getInstance().newSpannable(originalText)
             spanText(originalText, constraintFix, color, start, spanText, hasBold)
@@ -54,8 +54,8 @@ object HighlightUtils {
                        hasBold: Boolean = true,
                        originalText: String = view.text.toString(),
                        color: Int = fetchAccentColor(view.context)) {
-        val constraintsNormalizer = constraint.toLowerCase()
-        val originalTextNormalizer = originalText.toLowerCase()
+        val constraintsNormalizer = constraint.lowercase()
+        val originalTextNormalizer = originalText.lowercase()
 
         var spanText: Spannable? = null
 
@@ -85,7 +85,7 @@ object HighlightUtils {
                          start: Int,
                          spanText: Spannable,
                          hasBold: Boolean) {
-        val originalTextFix = originalText.toLowerCase()
+        val originalTextFix = originalText.lowercase()
         var newStart = start
         do {
             val end = newStart + constraint.length

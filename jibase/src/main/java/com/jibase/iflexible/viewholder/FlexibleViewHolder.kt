@@ -1,6 +1,7 @@
 package com.jibase.iflexible.viewholder
 
 import android.animation.Animator
+import android.annotation.SuppressLint
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.CallSuper
@@ -9,7 +10,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.jibase.extensions.changeElevation
 import com.jibase.iflexible.helpers.ItemTouchHelperCallback
 import com.jibase.iflexible.adapter.FlexibleAdapter
-import com.jibase.iflexible.adapter.AbstractFlexibleAdapter.Companion.MULTI
+import com.jibase.iflexible.adapter.FlexibleAdapter.Companion.MULTI
 import com.jibase.iflexible.utils.LayoutUtils
 import com.jibase.utils.Log
 
@@ -89,9 +90,10 @@ abstract class FlexibleViewHolder(preItemView: View, adapter: FlexibleAdapter<*>
      * @param view handle preItemView
      * @see .onTouch
      */
+    @SuppressLint("ClickableViewAccessibility")
     @CallSuper
     open fun setDragHandleView(view: View) {
-        view.setOnTouchListener { v, event ->
+        view.setOnTouchListener { _, event ->
             val position = getFlexibleAdapterPosition()
             if (!adapter.isItemEnabled(position) || !isDraggable()) {
                 Log.d("Can't start drag: Item is not enabled or draggable!")

@@ -1,31 +1,23 @@
 package comx.y.z.kotlinbase.fragment.login
 
 import android.os.Bundle
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
+import android.view.View
 import com.jibase.anotation.ViewInflate
-import com.jibase.ui.base.SimpleBaseFragment
-import com.jibase.utils.ToastUtils
-import com.jibase.view.ISnackBar
+import com.jibase.extensions.findNavController
+import com.jibase.ui.base.BaseFragment
 import comx.y.z.kotlinbase.R
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_test_login_2.*
 
-@ViewInflate(layout = R.layout.fragment_test_login_2, enableBackPressed = true)
-class TestLogin2Fragment : SimpleBaseFragment(){
+@AndroidEntryPoint
+@ViewInflate(layout = R.layout.fragment_test_login_2)
+class TestLogin2Fragment : BaseFragment() {
     override fun onViewReady(savedInstanceState: Bundle?) {
         button.setOnClickListener {
-            ISnackBar()
-                    .of(replace)
-                    .withMessage("Snack bar view")
-                    .withActionName("LALALA")
-                    .create()
-                    .show()
+
+            requireActivity().findViewById<View>(R.id.nav_host_fragment)
+                .findNavController().popBackStack(R.id.testFragment, false)
 
         }
-    }
-
-    override fun onBackPressed() {
-        ToastUtils.showText(requireContext(), "OnBack login 2")
-        requireActivity().findNavController(R.id.nav_login).popBackStack()
     }
 }

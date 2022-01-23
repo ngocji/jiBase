@@ -11,7 +11,6 @@ import com.jibase.iflexible.listener.OnUndoActionListener
 import com.jibase.view.ISnackBar
 import com.google.android.material.snackbar.Snackbar
 import com.jibase.utils.Log
-import com.jibase.utils.ResourceUtils.getString
 
 class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionListener) : Snackbar.Callback(), OnDeleteCompleteListener {
     annotation class Action {
@@ -19,12 +18,12 @@ class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionList
             /**
              * Indicates that the Action Listener for confirmation will perform a deletion.
              */
-            val REMOVE = 0
+            const val REMOVE = 0
             /**
              * Indicates that the Action Listener for cancellation will perform an update (user responsibility)
              * without removing items.
              */
-            val UPDATE = 1
+            const val UPDATE = 1
         }
     }
 
@@ -172,7 +171,8 @@ class UndoHelper(val adapter: FlexibleAdapter<*>, val callback: OnUndoActionList
      * Second function with StringRes
      */
     fun start(positions: List<Int>, targetView: View, @StringRes messageRes: Int, @StringRes actionTextRes: Int, @IntRange(from = -1) duration: Int = -1): Snackbar? {
-        return start(positions, targetView, getString(messageRes), getString(actionTextRes), duration)
+        val context = targetView.context
+        return start(positions, targetView, context.getString(messageRes), context.getString(actionTextRes), duration)
     }
 
 

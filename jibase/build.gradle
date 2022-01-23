@@ -75,5 +75,6 @@ dependencies {
     api rootProject.deps.lifecycle_extension
     api rootProject.deps.lifecycle_viewmodel
     api rootProject.deps.lifecycle_common
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.0"
 }
 

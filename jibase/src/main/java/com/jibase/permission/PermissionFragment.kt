@@ -5,20 +5,12 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import com.jibase.anotation.ViewInflate
-import com.jibase.ui.base.SimpleBaseFragment
-import io.reactivex.subjects.PublishSubject
+import com.jibase.ui.base.BaseFragment
 
 @ViewInflate
-class RxPermissionFragment : SimpleBaseFragment() {
+class PermissionFragment : BaseFragment() {
     companion object {
-        const val REQ_PERMISSION = 42
-    }
-
-    private val subjects = mutableMapOf<String, PublishSubject<Permission>>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        retainInstance = true
+        const val REQ_PERMISSION = 1
     }
 
     override fun onViewReady(savedInstanceState: Bundle?) {
@@ -56,28 +48,16 @@ class RxPermissionFragment : SimpleBaseFragment() {
         }
     }
 
-    fun getSubjectByPermission(permission: String, action: () -> PublishSubject<Permission>): PublishSubject<Permission> {
-        return subjects.getOrPut(permission, action)
-    }
-
-    fun containsByPermission(permission: String): Boolean {
-        return subjects.containsKey(permission)
-    }
-
-    fun setSubjectForPermission(permission: String, subject: PublishSubject<Permission>) {
-        subjects[permission] = subject
-    }
-
     private fun doPermissionResult(permissions: Array<out String>, grantResults: IntArray) {
-        permissions.forEachIndexed { index, permission ->
-            subjects[permission]?.run {
-                val granted = grantResults[index] == PackageManager.PERMISSION_GRANTED
-                val shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale(permission)
-                onNext(Permission(permission, granted, shouldShowRequestPermissionRationale))
-                onComplete()
-            }
-
-            subjects.remove(permission)
-        }
+//        permissions.forEachIndexed { index, permission ->
+//            subjects[permission]?.run {
+//                val granted = grantResults[index] == PackageManager.PERMISSION_GRANTED
+//                val shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale(permission)
+//                onNext(Permission(permission, granted, shouldShowRequestPermissionRationale))
+//                onComplete()
+//            }
+//
+//            subjects.remove(permission)
+//        }
     }
 }

@@ -4,32 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.core.content.res.ResourcesCompat.ID_NULL
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.jibase.anotation.InflateHelper
 import com.jibase.anotation.ViewInflate
-import com.jibase.ui.BaseViewModel
-import io.reactivex.disposables.Disposable
+import dagger.hilt.android.AndroidEntryPoint
 
-@Suppress("LeakingThis", "UNCHECKED_CAST")
-abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
+@AndroidEntryPoint
+abstract class BaseFragment : Fragment() {
     open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
-    open val viewModel: VM by lazy {
-        ViewModelProvider(
-            this,
-            ViewModelProvider.NewInstanceFactory()
-        ).get(viewInflate.viewModel.java) as VM
-    }
-
-    private val backPressedCallback by lazy {
-        object : OnBackPressedCallback(viewInflate.enableBackPressed) {
-            override fun handleOnBackPressed() {
-                onBackPressed()
-            }
-        }
-    }
 
     final override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,7 +32,6 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        registerBackPressed()
         onViewListener()
         onViewReady(savedInstanceState)
     }
@@ -59,28 +41,4 @@ abstract class BaseFragment<VM : BaseViewModel> : Fragment() {
     open fun onViewListener() {
         // free implement
     }
-
-    open fun onBackPressed() {
-    }
-
-    fun registerBackPressed() {
-        requireActivity().onBackPressedDispatcher.addCallback(
-            viewLifecycleOwner,
-            backPressedCallback
-        )
-    }
-
-    fun removeBackPressed() {
-        backPressedCallback.remove()
-    }
-
-    fun enableBackPressed() {
-        registerBackPressed()
-    }
-
-    fun Disposable.putToComposite() {
-        viewModel.compositeDisposable.add(this)
-    }
 }
-
-typealias SimpleBaseFragment = BaseFragment<BaseViewModel>

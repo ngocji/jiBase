@@ -10,26 +10,23 @@ import android.view.Window
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.ViewModelProvider
 import com.jibase.R
 import com.jibase.anotation.InflateHelper
 import com.jibase.anotation.ViewInflate
-import com.jibase.ui.DialogStore
 
 abstract class BaseDialog : DialogFragment() {
     open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
-    lateinit var dialogStore: DialogStore
-
-    private val tempProperties = hashMapOf<String, Any>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, initStyle())
-        dialogStore = ViewModelProvider(this, ViewModelProvider.NewInstanceFactory()).get(DialogStore::class.java)
-        dialogStore.addAll(tempProperties)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return if (viewInflate.layout != ResourcesCompat.ID_NULL) {
             inflater.inflate(viewInflate.layout, container, false)
         } else {
@@ -58,21 +55,5 @@ abstract class BaseDialog : DialogFragment() {
     fun show(fragmentManager: FragmentManager) {
         if (fragmentManager.findFragmentByTag(javaClass.name) != null) return
         show(fragmentManager, javaClass.name)
-    }
-
-    fun <T> addProperty(key: String, data: T?) {
-        if (this::dialogStore.isInitialized) {
-            dialogStore.add(key, data)
-        } else {
-            if (data != null) {
-                tempProperties[key] = data
-            } else {
-                tempProperties.remove(key)
-            }
-        }
-    }
-
-    fun <T> getProperty(key: String): T? {
-        return dialogStore.get(key)
     }
 }

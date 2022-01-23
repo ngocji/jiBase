@@ -1,7 +1,9 @@
 package comx.y.z.kotlinbase;
 
-import com.jibase.BaseApp;
-import com.jibase.livedata.ILiveData;
+import android.app.Application;
 
-public class App extends BaseApp {
+import dagger.hilt.android.HiltAndroidApp;
+
+@HiltAndroidApp
+public class App extends Application {
 }

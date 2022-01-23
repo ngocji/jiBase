@@ -48,6 +48,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(
         private const val MSG_LOAD_MORE_COMPLETE = 8
         private const val ANIMATE_TO_LIMIT = 1000
         private const val AUTO_SCROLL_DELAY = 150L
+
+        const val IDLE = 0
+        const val SINGLE = 1
+        const val MULTI = 2
     }
 
     /* The main container for ALL items */
@@ -350,7 +354,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(
      * @return true if the position in preview data
      */
     fun hasPosition(position: Int): Boolean {
-        return listData has position
+        return listData hasPosition position
     }
 
     /*------------------------------*/
@@ -1004,7 +1008,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(
      * @return true if the item is an instance of [IHeader] interface, false otherwise
      */
     fun isHeader(@IntRange(from = 0) position: Int): Boolean {
-        if (listData has position) {
+        if (listData hasPosition  position) {
             return isHeader(listData[position])
         }
         return false
@@ -2272,7 +2276,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(
         // Iterate through subItems
         for (index in 0 until subPosition) {
             // Check whether item is also expandable and expanded
-            val item = if (subItems has index) subItems[index] as T else null
+            val item = if (subItems hasPosition  index) subItems[index] as T else null
             if (isExpanded(item)) {
                 val subExpandable = item as IExpandable<*, *>
                 count += getRecursiveSubItemCount(subExpandable, subExpandable.getSubItems().size)
@@ -3599,7 +3603,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(
      * @param filter the new filter entity for the items
      */
     fun setFilter(filter: String = "") {
-        mFilterEntity.newString(filter.trim { it <= ' ' }.toLowerCase())
+        mFilterEntity = StringBuilder(filter.trim { it <= ' ' }.lowercase())
     }
 
     /**
@@ -3655,7 +3659,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(
      */
     fun filterItems(@IntRange(from = 0) delay: Long = 0) {
         if (mOriginalList.isEmpty()) {
-            mOriginalList.addNeedClear(listData.toList())
+            mOriginalList.addAll(listData.toList(), clearAll = true)
         }
         filterItems(mOriginalList, delay)
     }
@@ -3707,7 +3711,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(
 
         // Animate search results only in case of new Filter
         if (hasNewFilter(keyFilter)) {
-            mOldFilterEntity.newString(keyFilter)
+            mOldFilterEntity = StringBuilder(keyFilter)
             toggleAnimate(filteredResultItems, Payload.FILTER)
         }
 
@@ -4754,7 +4758,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(
         this.childSelected = savedInstanceState.getBoolean(EXTRA_CHILD)
         this.mSelectedLevel = savedInstanceState.getInt(EXTRA_LEVEL)
         // Current filter (old filter must not be saved)
-        this.mFilterEntity.newString(savedInstanceState.getString(EXTRA_FILTER, ""))
+        this.mFilterEntity = StringBuilder(savedInstanceState.getString(EXTRA_FILTER, ""))
     }
 
 
