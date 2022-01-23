@@ -15,7 +15,7 @@ class Test2Fragment : BaseFragment(){
     override fun onViewReady(savedInstanceState: Bundle?) {
 
         button.setOnClickListener {
-            findNavController(this).safeNavigate(R.id.action_testLogin1Fragment_to_testLogin2Fragment)
+            findNavController(R.id.nav_login).safeNavigate(R.id.action_testLogin1Fragment_to_testLogin2Fragment)
         }
     }
 }

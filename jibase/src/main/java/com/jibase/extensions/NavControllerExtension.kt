@@ -4,11 +4,9 @@ package com.jibase.extensions
 
 import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.navigation.*
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.jibase.utils.Log
 
 fun NavController.safeNavigate(directions: NavDirections): Boolean =
@@ -73,14 +71,18 @@ fun NavController.isDestinationVisible(actionId: Int): Boolean {
     return actionId == this.currentDestination?.id
 }
 
-fun View.findNavController() = Navigation.findNavController(this)
+fun Fragment.findNavController(viewId: Int) = Navigation.findNavController(
+    requireActivity().findViewById(viewId) ?: throw NullPointerException("Fragment is null view")
+)
 
+fun Fragment.findParentNavController(step: Int): NavController? {
+    if (step == 0) throw IllegalStateException("Step must > 0")
+    var index = 0
+    var parentFragment:Fragment? = this
+    while (index < step) {
+        parentFragment = parentFragment?.parentFragment?.parentFragment
+        index++
+    }
 
-// region support for java
-
-fun findNavController(activity: FragmentActivity, viewId: Int) =
-    Navigation.findNavController(activity, viewId)
-
-fun findNavController(fragment: Fragment) = NavHostFragment.findNavController(fragment)
-
-// endregion
+    return parentFragment?.findNavController()
+}
