@@ -1,10 +1,9 @@
-rootProject.ext.java_source_version = JavaVersion.VERSION_11
-rootProject.ext.java_target_version = JavaVersion.VERSION_11
+rootProject.ext.java_source_version = JavaVersion.VERSION_1_8
+rootProject.ext.java_target_version = JavaVersion.VERSION_1_8
 
 rootProject.ext.target_sdk = 30
 rootProject.ext.compile_sdk = 30
 rootProject.ext.min_sdk = 21
-rootProject.ext.buildTools = "30.0.3"
 rootProject.ext.version_code = 10
 rootProject.ext.version_name = "0.0.10"
 
@@ -44,7 +43,8 @@ rootProject.ext.timber_log = '4.7.1'
 rootProject.ext.gson = '2.8.8'
 rootProject.ext.workManager = '2.7.0-alpha05'
 rootProject.ext.multidex = '2.0.1'
-
+rootProject.ext.multidex = '2.0.1'
+rootProject.ext.reflection = '1.5.31'
 
 rootProject.ext.deps = [
 
@@ -114,4 +114,7 @@ rootProject.ext.deps = [
 
         // Multidex
         "multidex" : "androidx.multidex:multidex:$multidex",
+
+        // Reflection
+        "reflection" : "org.jetbrains.kotlin:kotlin-reflect:$reflection",
 ]
