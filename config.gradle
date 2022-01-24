@@ -44,8 +44,6 @@ rootProject.ext.timber_log = '4.7.1'
 rootProject.ext.gson = '2.8.8'
 rootProject.ext.workManager = '2.7.0-alpha05'
 
-rootProject.ext.billing = '4.0.0'
-
 rootProject.ext.deps = [
 
         // AndroidX
@@ -108,9 +106,6 @@ rootProject.ext.deps = [
         // ExoPlayer
         exoPlayerCore          : "com.google.android.exoplayer:exoplayer-core:$exoPlayer",
         exoPlayerUI            : "com.google.android.exoplayer:exoplayer-ui:$exoPlayer",
-
-        // billing
-        billing                : "com.android.billingclient:billing:$billing",
 
         // work manager
         "workmanager" : "androidx.work:work-runtime-ktx:$workManager",
