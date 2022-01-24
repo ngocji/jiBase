@@ -1,9 +1,9 @@
-plugins {
-    id 'com.android.application'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
-}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+
 
 android {
     compileSdkVersion 30
@@ -28,7 +28,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = java_target_version
+        jvmTarget = kotlin_jvm_target
     }
 
     buildFeatures {
@@ -40,8 +40,8 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation project (':jibase')
 
-    api rootProject.deps.hilt
-    kapt rootProject.deps.hilt_compiler
+    api deps.hilt
+    kapt deps.hilt_compiler
 
 //    implementation 'com.github.ngocji:jibase:1.0.3'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
