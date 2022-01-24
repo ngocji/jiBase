@@ -7,9 +7,6 @@ plugins {
 }
 
 
-group = 'com.github.ngocji'
-version = '1.0'
-
 android {
     compileSdk compile_sdk
 
@@ -74,6 +71,10 @@ dependencies {
     api rootProject.deps.lifecycle_extension
     api rootProject.deps.lifecycle_viewmodel
     api rootProject.deps.lifecycle_common
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.0"
+
+    // Multidex
+    api rootProject.deps.multidex
+
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
 }
 

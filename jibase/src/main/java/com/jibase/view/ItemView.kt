@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.annotation.ColorInt
 import androidx.annotation.DimenRes
@@ -18,8 +19,11 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.view.updatePadding
 import androidx.core.widget.ImageViewCompat
 import com.jibase.R
-import com.jibase.extensions.*
-import kotlinx.android.synthetic.main.layout_item_view.view.*
+import com.jibase.databinding.LayoutItemViewBinding
+import com.jibase.extensions.getDimensionPixelOffset
+import com.jibase.extensions.gone
+import com.jibase.extensions.load
+import com.jibase.extensions.visible
 import kotlin.math.roundToInt
 
 open class ItemView @JvmOverloads constructor(
@@ -28,13 +32,15 @@ open class ItemView @JvmOverloads constructor(
     defStyle: Int = 0
 ) : LinearLayout(context, attributeSet, defStyle) {
     private var iconTint: ColorStateList? = null
+    private lateinit var binding: LayoutItemViewBinding
 
     init {
         initView(attributeSet)
     }
 
     open fun initView(attrs: AttributeSet?) {
-        inflate(R.layout.layout_item_view, true)
+        binding = LayoutItemViewBinding.inflate(LayoutInflater.from(context), this, true)
+
 
         attrs?.also {
             val a = context.resources.obtainAttributes(it, R.styleable.ItemView)
@@ -114,9 +120,9 @@ open class ItemView @JvmOverloads constructor(
     }
 
     override fun setOrientation(orientation: Int) {
-        if (orientation == HORIZONTAL && container != null) {
-            container.orientation = orientation
-            with(llText) {
+        if (orientation == HORIZONTAL) {
+            binding.container.orientation = orientation
+            with(binding.llText) {
                 gravity = GravityCompat.START
                 updateLayoutParams<LayoutParams> {
                     setMargins(getDimensionPixelOffset(R.dimen._5sdp), 0, 0, 0)
@@ -126,45 +132,45 @@ open class ItemView @JvmOverloads constructor(
     }
 
     fun setItemIcon(@DrawableRes icon: Int) {
-        imageIcon.setImageResource(icon)
+        binding.imageIcon.setImageResource(icon)
         setItemIconColor(iconTint)
     }
 
     fun setItemIcon(icon: Drawable?) {
-        if (icon != null) imageIcon.setImageDrawable(icon)
+        if (icon != null) binding.imageIcon.setImageDrawable(icon)
         setItemIconColor(iconTint)
     }
 
     fun setItemIcon(icon: String) {
-        imageIcon.load(icon)
+        binding.imageIcon.load(icon)
     }
 
     fun setItemIconColor(color: Int) {
         if (color == 0) {
-            imageIcon.clearColorFilter()
+            binding.imageIcon.clearColorFilter()
         } else {
-            ImageViewCompat.setImageTintList(imageIcon, ColorStateList.valueOf(color))
+            ImageViewCompat.setImageTintList(binding.imageIcon, ColorStateList.valueOf(color))
         }
     }
 
     fun setItemIconColor(colorStateList: ColorStateList?) {
         iconTint = colorStateList
-        ImageViewCompat.setImageTintList(imageIcon, iconTint)
+        ImageViewCompat.setImageTintList(binding.imageIcon, iconTint)
     }
 
     fun setItemIconSize(size: Float, padd: Int) {
         if (size > 0f) {
-            imageIcon.updateLayoutParams<LayoutParams> {
+            binding.imageIcon.updateLayoutParams<LayoutParams> {
                 height = size.roundToInt()
                 width = size.roundToInt()
             }
 
-            imageIcon.updatePadding(padd, padd, padd, padd)
+            binding.imageIcon.updatePadding(padd, padd, padd, padd)
         }
     }
 
     fun setItemIconRotation(rotation: Int) {
-        imageIcon.rotation = rotation.toFloat()
+        binding.imageIcon.rotation = rotation.toFloat()
     }
 
     fun setItemIconSize(@DimenRes sizeRes: Int) {
@@ -175,12 +181,12 @@ open class ItemView @JvmOverloads constructor(
 
     fun setItemIconBackground(@DrawableRes resourceId: Int) {
         if (resourceId == NO_ID) return
-        imageIcon.setBackgroundResource(resourceId)
+        binding.imageIcon.setBackgroundResource(resourceId)
     }
 
     fun setItemIconMargin(start: Int, top: Int, end: Int, bottom: Int, margin: Int) {
         if (start != 0 || top != 0 || end != 0 || bottom != 0 || margin != 0) {
-            imageIcon.updateLayoutParams<LayoutParams> {
+            binding.imageIcon.updateLayoutParams<LayoutParams> {
                 if (margin != 0) {
                     setMargins(margin, margin, margin, margin)
                 } else {
@@ -191,26 +197,26 @@ open class ItemView @JvmOverloads constructor(
     }
 
     fun setItemText(@StringRes text: Int) {
-        tvText.setText(text)
+        binding.tvText.setText(text)
     }
 
     fun setItemText(text: String?) {
-        tvText.text = text
+        binding.tvText.text = text
     }
 
     fun setItemTextColor(@ColorInt color: Int) {
         if (color != 0) {
-            tvText.setTextColor(color)
+            binding.tvText.setTextColor(color)
         }
     }
 
     fun setItemTextColor(colorStateList: ColorStateList?) {
-        tvText.setTextColor(colorStateList)
+        binding.tvText.setTextColor(colorStateList)
     }
 
     fun setItemTextSize(textSize: Float) {
         if (textSize != -1f) {
-            tvText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+            binding.tvText.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
         }
     }
 
@@ -221,51 +227,51 @@ open class ItemView @JvmOverloads constructor(
     }
 
     fun setItemTextGravity(gravity: Int) {
-        tvText.gravity = gravity
+        binding.tvText.gravity = gravity
     }
 
     fun setItemTextLines(lines: Int) {
         if (lines <= 0) return
-        tvText.setLines(lines)
+        binding.tvText.setLines(lines)
     }
 
     fun setItemTextMaxLines(lines: Int) {
         if (lines <= 0) return
-        tvText.maxLines = lines
+        binding.tvText.maxLines = lines
     }
 
     fun setItemTextFont(fontId: Int, style: Int) {
-        tvText.typeface =
+        binding.tvText.typeface =
             Typeface.create(
-                if (fontId != 0) getFont(context, fontId) else tvText.typeface,
+                if (fontId != 0) getFont(context, fontId) else binding.tvText.typeface,
                 style
             )
     }
 
     fun setItemDescription(@StringRes text: Int) {
-        tvText.setText(text)
+        binding.tvText.setText(text)
     }
 
     fun setItemDescription(text: String?) {
         if (text?.isNotBlank() == true) {
-            tvDescription.text = text
-            tvDescription.visible()
+            binding.tvDescription.text = text
+            binding.tvDescription.visible()
         }
     }
 
     fun setItemDescriptionColor(@ColorInt color: Int) {
         if (color != 0) {
-            tvDescription.setTextColor(color)
+            binding.tvDescription.setTextColor(color)
         }
     }
 
     fun setItemDescriptionColor(colorStateList: ColorStateList?) {
-        tvDescription.setTextColor(colorStateList)
+        binding.tvDescription.setTextColor(colorStateList)
     }
 
     fun setItemDescriptionSize(textSize: Float) {
         if (textSize != -1f) {
-            tvDescription.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
+            binding.tvDescription.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize)
         }
     }
 
@@ -276,36 +282,36 @@ open class ItemView @JvmOverloads constructor(
     }
 
     fun setItemDescriptionGravity(gravity: Int) {
-        tvDescription.gravity = gravity
+        binding.tvDescription.gravity = gravity
     }
 
     fun setItemDescriptionLines(lines: Int) {
         if (lines <= 0) return
-        tvDescription.setLines(lines)
+        binding.tvDescription.setLines(lines)
     }
 
     fun setItemDescriptionMaxLines(lines: Int) {
         if (lines <= 0) return
-        tvDescription.maxLines = lines
+        binding.tvDescription.maxLines = lines
     }
 
     fun setItemDescriptionFont(fontId: Int, style: Int) {
-        tvDescription.typeface =
+        binding.tvDescription.typeface =
             Typeface.create(
-                if (fontId != 0) getFont(context, fontId) else tvDescription.typeface,
+                if (fontId != 0) getFont(context, fontId) else binding.tvDescription.typeface,
                 style
             )
     }
 
     fun setIconOnly(isShow: Boolean) {
         if (isShow) {
-            llText.gone()
+            binding.llText.gone()
         }
     }
 
     fun setTextOnly(isShow: Boolean) {
         if (isShow) {
-            imageIcon.gone()
+            binding.imageIcon.gone()
         }
     }
 }
