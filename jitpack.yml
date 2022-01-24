@@ -1,5 +1,0 @@
-jdk:
-  - openjdk11
-install:
-  - ./gradlew :jibase:build :jibase:publishToMavenLocal -x :jibase:test
-  - find . -name "*.aar"

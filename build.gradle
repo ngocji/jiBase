@@ -1,21 +1,21 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.gradle_version = '7.0.0'
-    ext.gradle_kotin_version = '1.6.0'
+    ext.gradle_version = '4.0.2'
+    ext.gradle_kotin_version = '1.5.31'
     ext.gradle_hilt_version = '2.38.1'
 
     repositories {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
-        gradlePluginPortal()
     }
 
     dependencies {
         classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$gradle_kotin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$gradle_hilt_version"
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
 }
 
@@ -24,7 +24,6 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://jitpack.io' }
-        gradlePluginPortal()
     }
 }
 
@@ -32,6 +31,127 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
-subprojects { project ->
-    apply from: "$rootDir/config.gradle"
+ext {
+    // ver
+    java_source_version = 1.8
+    java_target_version = 1.8
+    kotlin_jvm_target = 1.8
+
+    target_sdk = 30
+    compile_sdk = 30
+    min_sdk = 21
+    version_code = 1
+    version_name = "0.0.1"
+
+    // Kotlin
+    coroutines = '1.5.2'
+
+    // AndroidX
+    material = '1.3.0'
+    core_ktx = '1.3.2'
+    appcompat = '1.2.0'
+    preference = '1.1.1'
+    constrain_layout = '2.1.0'
+
+
+    // Lifecycle
+    lifecycle_runtime = "2.3.1"
+    lifecycle_viewmodel = '2.3.1'
+    lifecycle_extension = '2.2.0'
+    lifecycle_common = '2.4.0'
+
+    // Android Jetpack
+    room = '2.4.0-alpha02'
+    navigation = '2.3.5'
+    hilt = '2.38.1'
+
+    // API integration
+    retrofit = '2.9.0'
+    ok_http_logging = '5.0.0-alpha.2'
+
+    // Firebase
+    firebaseBom = '29.0.0'
+
+    // Others
+    epoxy = '4.3.1'
+    glide = '4.12.0'
+    exoPlayer = "2.13.3"
+    timber_log = '4.7.1'
+    gson = '2.8.8'
+    workManager = '2.7.0-alpha05'
+    multidex = '2.0.1'
+    multidex = '2.0.1'
+    reflection = '1.5.31'
 }
+
+ext.deps = [
+        // AndroidX
+        core_ktx               : "androidx.core:core-ktx:$core_ktx",
+        appcompat              : "androidx.appcompat:appcompat:$appcompat",
+        material               : "com.google.android.material:material:$material",
+        preference             : "androidx.preference:preference:$preference",
+        constrainLayout        : "androidx.constraintlayout:constraintlayout:$constrain_layout",
+
+        // Lifecycle
+        lifecycle_viewmodel    : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_viewmodel",
+        lifecycle_extension    : "androidx.lifecycle:lifecycle-extensions:$lifecycle_extension",
+        lifecycle_runtime      : "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_runtime",
+        lifecycle_common       : "androidx.lifecycle:lifecycle-common-java8:$lifecycle_common",
+
+        // Coroutines
+        coroutine              : "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines",
+        coroutine_core         : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines",
+
+        // Hilt
+        hilt                   : "com.google.dagger:hilt-android:$hilt",
+        hilt_compiler          : "com.google.dagger:hilt-compiler:$hilt",
+
+        // Room
+        roomRuntime            : "androidx.room:room-runtime:$room",
+        annotationProcessorRoom: "androidx.room:room-compiler:$room",
+        kaptRoom               : "androidx.room:room-compiler:$room",
+        roomKtx                : "androidx.room:room-ktx:$room",
+
+        // Retrofit
+        okHttpLogging          : "com.squareup.okhttp3:logging-interceptor:$ok_http_logging",
+        retrofitGson           : "com.squareup.retrofit2:converter-gson:$retrofit",
+        retrofit               : "com.squareup.retrofit2:retrofit:$retrofit",
+        gson                   : "com.google.code.gson:gson:$gson",
+
+        // Epoxy
+        epoxy                  : "com.airbnb.android:epoxy:$epoxy",
+        kaptEpoxy              : "com.airbnb.android:epoxy-processor:$epoxy",
+
+        // Glide
+        glide                  : "com.github.bumptech.glide:glide:$glide",
+        kaptGlide              : "com.github.bumptech.glide:compiler:$glide",
+
+        // Navigation
+        navFragment            : "androidx.navigation:navigation-fragment-ktx:$navigation",
+        navUi                  : "androidx.navigation:navigation-ui-ktx:$navigation",
+        navDynamicFeature      : "androidx.navigation:navigation-dynamic-features-fragment:$navigation",
+
+        // Firebase
+        firebaseBom            : "com.google.firebase:firebase-bom:$firebaseBom",
+        firebaseCrasylytics    : "com.google.firebase:firebase-crashlytics",
+        firebaseAnalytics      : "com.google.firebase:firebase-analytics",
+        firebaseAuth           : 'com.google.firebase:firebase-auth-ktx',
+        firebaseAuthGoogle     : 'com.google.android.gms:play-services-auth:19.2.0',
+        firebaseAuthFacebook   : 'com.facebook.android:facebook-android-sdk:9.1.1',
+        firebaseDynamicLink    : 'com.google.firebase:firebase-dynamic-links-ktx',
+        firebaseMessage        : 'com.google.firebase:firebase-messaging',
+
+
+        // ExoPlayer
+        exoPlayerCore          : "com.google.android.exoplayer:exoplayer-core:$exoPlayer",
+        exoPlayerUI            : "com.google.android.exoplayer:exoplayer-ui:$exoPlayer",
+
+        // work manager
+        "workmanager" : "androidx.work:work-runtime-ktx:$workManager",
+
+        // Multidex
+        "multidex" : "androidx.multidex:multidex:$multidex",
+
+        // Reflection
+        "reflection" : "org.jetbrains.kotlin:kotlin-reflect:$reflection",
+]

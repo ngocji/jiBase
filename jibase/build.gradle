@@ -1,26 +1,36 @@
-plugins {
-    id 'com.android.library'
-    id 'kotlin-android'
-    id 'kotlin-kapt'
-    id 'dagger.hilt.android.plugin'
-    id 'maven-publish'
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'signing'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'dagger.hilt.android.plugin'
+
+
+repositories {
+    mavenCentral()
+    google()
+    maven { url "https://jitpack.io" }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+    }
 }
 
 android {
-    compileSdk compile_sdk
+    compileSdkVersion compile_sdk
 
     defaultConfig {
-        minSdk min_sdk
-        targetSdk target_sdk
-
+        minSdkVersion min_sdk
+        targetSdkVersion target_sdk
         multiDexEnabled true
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
-    }
-
-    buildFeatures {
-        viewBinding true
     }
 
     buildTypes {
@@ -30,13 +40,17 @@ android {
         }
     }
 
+    buildFeatures {
+        viewBinding true
+    }
+
     compileOptions {
         sourceCompatibility java_source_version
         targetCompatibility java_target_version
     }
 
     kotlinOptions {
-        jvmTarget = java_target_version
+        jvmTarget = kotlin
     }
 
     lintOptions {
@@ -45,49 +59,43 @@ android {
 }
 
 dependencies {
+    testImplementation 'junit:junit:4.+'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+
+
     // Kotlin
-    api rootProject.deps.coroutine
-    api rootProject.deps.coroutine_core
+    api deps.coroutine
+    api deps.coroutine_core
 
     // AndroidX
-    api rootProject.deps.core_ktx
-    api rootProject.deps.material
-    api rootProject.deps.appcompat
+    api deps.core_ktx
+    api deps.material
+    api deps.appcompat
 
     // Navigation Components
-    api rootProject.deps.navFragment
-    api rootProject.deps.navUi
+    api deps.navFragment
+    api deps.navUi
 
     // Hilt
-    api rootProject.deps.hilt
-    kapt rootProject.deps.hilt_compiler
+    api deps.hilt
+    kapt deps.hilt_compiler
 
     // Glide
-    api rootProject.deps.glide
-    kapt rootProject.deps.kaptGlide
+    api deps.glide
+    kapt deps.kaptGlide
 
     // gson
-    api rootProject.deps.gson
+    api deps.gson
 
     // Lifecycle
-    api rootProject.deps.lifecycle_runtime
-    api rootProject.deps.lifecycle_extension
-    api rootProject.deps.lifecycle_viewmodel
-    api rootProject.deps.lifecycle_common
+    api deps.lifecycle_runtime
+    api deps.lifecycle_extension
+    api deps.lifecycle_viewmodel
+    api deps.lifecycle_common
 
     // Multidex
-    api rootProject.deps.multidex
+    api deps.multidex
 
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
-}
-
-
-project.afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
-            }
-        }
-    }
+    api deps.reflection
 }
