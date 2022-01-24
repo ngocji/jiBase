@@ -75,10 +75,10 @@ fun Fragment.findNavController(viewId: Int) = Navigation.findNavController(
     requireActivity().findViewById(viewId) ?: throw NullPointerException("Fragment is null view")
 )
 
-fun Fragment.findParentNavController(step: Int): NavController? {
+fun Fragment.findParentNavController(step: Int = 1): NavController? {
     if (step == 0) throw IllegalStateException("Step must > 0")
     var index = 0
-    var parentFragment:Fragment? = this
+    var parentFragment: Fragment? = this
     while (index < step) {
         parentFragment = parentFragment?.parentFragment?.parentFragment
         index++
