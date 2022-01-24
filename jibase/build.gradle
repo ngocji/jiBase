@@ -3,9 +3,8 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
-    id 'signing'
+    id 'maven-publish'
 }
-
 
 android {
     compileSdk compile_sdk
@@ -38,6 +37,10 @@ android {
 
     kotlinOptions {
         jvmTarget = java_target_version
+    }
+
+    lintOptions {
+        abortOnError false
     }
 }
 
@@ -78,3 +81,13 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
 }
 
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+            }
+        }
+    }
+}
