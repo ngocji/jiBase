@@ -7,12 +7,9 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 @ViewInflate(layout = R.layout.activity_main)
-class TestActivity : BaseActivity() {
+class MainActivity : BaseActivity() {
 
-  override  fun onViewReady(savedInstanceState: Bundle?) {
+    override fun onViewReady(savedInstanceState: Bundle?) {
 
     }
-
-
-    class Text(val data: String)
 }

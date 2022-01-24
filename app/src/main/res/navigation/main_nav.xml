@@ -2,20 +2,19 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_nav"
-    app:startDestination="@id/testFragment">
+    app:startDestination="@id/mainFragment">
+
 
     <fragment
-        android:id="@+id/testFragment"
-        android:name="comx.y.z.kotlinbase.fragment.TestFragment"
-        android:label="TestFragment">
+        android:id="@+id/mainFragment"
+        android:name="comx.y.z.kotlinbase.fragment.MainFragment"
+        android:label="MainFragment" >
         <action
-            android:id="@+id/action_testFragment_to_test2Fragment"
-            app:destination="@id/test2Fragment" />
+            android:id="@+id/action_mainFragment_to_requestPermissionFragment"
+            app:destination="@id/requestPermissionFragment" />
     </fragment>
-
     <fragment
-        android:id="@+id/test2Fragment"
-        android:name="comx.y.z.kotlinbase.fragment.Test2Fragment"
-        android:label="Test2Fragment" />
-
+        android:id="@+id/requestPermissionFragment"
+        android:name="comx.y.z.kotlinbase.fragment.requestpermission.RequestPermissionFragment"
+        android:label="RequestPermissionFragment" />
 </navigation>

@@ -1,6 +1,8 @@
 package com.jibase.permission
 
+import android.content.pm.PackageManager
 import android.os.Build
+import androidx.core.app.ActivityCompat.shouldShowRequestPermissionRationale
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 
@@ -19,30 +21,99 @@ class PermissionsHelper<T> private constructor(val target: T) {
     }
 
     private var permissionFragment: PermissionFragment? = null
+    private val permissionsRequests = mutableListOf<String>()
+
+    private var onGrant: (() -> Unit)? = null
+    private var onDeny: ((List<Permission>) -> Unit)? = null
+    private var onRevoke: ((List<Permission>) -> Unit)? = null
 
     init {
         getLazyPermissionFragment(target)
     }
 
     // region main
-//    fun request(vararg permissions: String): Boolean {
-//        invalidRequestPermission(permissions)
-//        return requestImplementation(permissions.toList())
-//                .buffer(permissions.size)
-//                .flatMap { resultPermissions ->
-//                    if (resultPermissions.isEmpty()) {
-//                        // Occurs during orientation change, when the subject receives onComplete.
-//                        // In that case we don't want to propagate that empty list to the
-//                        // subscriber, only the onComplete.
-//                        return@flatMap Observable.empty<Boolean>()
-//                    }
-//
-//                    return@flatMap Observable.just(resultPermissions.all { it.granted })
-//                }
-//    }
+    fun request(vararg permissions: String): PermissionsHelper<T> {
+        invalidRequestPermission(permissions)
+        permissionsRequests.addAll(permissions)
+        return this
+    }
 
-    private fun invalidRequestPermission(permissions: Array<out String>) {
-        if (permissions.isEmpty()) throw IllegalArgumentException("RxPermissions.request/requestEach requires at least one input permission")
+    fun onGrant(onGrant: () -> Unit): PermissionsHelper<T> {
+        this.onGrant = onGrant
+        return this
+    }
+
+
+    fun onDeny(onDeny: (List<Permission>) -> Unit): PermissionsHelper<T> {
+        this.onDeny = onDeny
+        return this
+    }
+
+    fun onRevoke(onRevoke: (List<Permission>) -> Unit): PermissionsHelper<T> {
+        this.onRevoke = onRevoke
+        return this
+    }
+
+    fun execute() {
+        val allPermission = mutableListOf<Permission>()
+        val denyPermission = mutableListOf<Permission>()
+        val revokePermission = mutableListOf<Permission>()
+        val unRequestPermission = mutableListOf<String>()
+
+        permissionsRequests.forEach { per ->
+            when {
+                isGranted(per) -> {
+                    allPermission.add(
+                        Permission(
+                            per,
+                            granted = true,
+                            shouldShowRequestPermissionRationale = true
+                        )
+                    )
+                }
+                isRevoked(per) -> {
+                    val permission = Permission(
+                        per, granted = false,
+                        shouldShowRequestPermissionRationale = false
+                    )
+
+                    revokePermission.add(permission)
+                    allPermission.add(permission)
+                }
+
+                else -> unRequestPermission.add(per)
+            }
+        }
+
+        getPermissionFragment().requests(unRequestPermission) { permissions, grants ->
+            permissions.forEachIndexed { index, per ->
+                val granted = grants[index] == PackageManager.PERMISSION_GRANTED
+                val shouldShowRequestPermissionRationale =
+                    shouldShowRequestPermissionRationale(
+                        getPermissionFragment().requireActivity(),
+                        per
+                    )
+
+                val permission = Permission(
+                    per,
+                    granted = granted,
+                    shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale
+                )
+                allPermission.add(permission)
+
+                when {
+                    isRevoked(per) -> revokePermission.add(permission)
+                    !isGranted(per) -> denyPermission.add(permission)
+                }
+            }
+
+
+            when {
+                allPermission.all { it.granted } -> onGrant?.invoke()
+                denyPermission.isNotEmpty() -> onDeny?.invoke(denyPermission)
+                revokePermission.isNotEmpty() -> onRevoke?.invoke(revokePermission)
+            }
+        }
     }
 
     /**
@@ -80,55 +151,24 @@ class PermissionsHelper<T> private constructor(val target: T) {
             else -> throw NullPointerException("Target must not be null")
         }
         permissionFragment = fragmentManager.findFragmentByTag(tag) as? PermissionFragment
-                ?: // create newInstance
-                        PermissionFragment().apply {
-                            // add to manager
-                            fragmentManager.beginTransaction()
-                                    .add(this, tag)
-                                    .commitNow()
-                        }
+            ?: // create newInstance
+                    PermissionFragment().apply {
+                        // add to manager
+                        fragmentManager.beginTransaction()
+                            .add(this, tag)
+                            .commitNow()
+                    }
     }
     // endregion
 
     // region private method
-//    private fun requestImplementation(permissions: List<String>): Permission {
-//        val list = mutableListOf<Observable<Permission>>()
-//        val unrequestedPermissions = mutableListOf<String>()
-//
-//        // In case of multiple permissions, we create an Observable for each of them.
-//        // At the end, the observables are combined to have a unique response.
-//
-//        // In case of multiple permissions, we create an Observable for each of them.
-//        // At the end, the observables are combined to have a unique response.
-//        permissions.forEach { permission ->
-//            if (isGranted(permission)) {
-//                list.add(Observable.just(Permission(permission, true, false)))
-//                return@forEach
-//            }
-//
-//            if (isRevoked(permission)) {
-//                list.add(Observable.just(Permission(permission, false, false)))
-//                return@forEach
-//            }
-//
-//            val subject = getPermissionFragment().getSubjectByPermission(permission) {
-//                unrequestedPermissions.add(permission)
-//                PublishSubject.create()
-//            }
-//
-//            list.add(subject)
-//        }
-//
-//        if (unrequestedPermissions.isNotEmpty()) {
-//            getPermissionFragment().requests(*unrequestedPermissions.toTypedArray())
-//        }
-//
-//        return Observable.concat(Observable.fromIterable(list))
-//    }
+    private fun invalidRequestPermission(permissions: Array<out String>) {
+        if (permissions.isEmpty()) throw IllegalArgumentException("RxPermissions.request/requestEach requires at least one input permission")
+    }
 
     private fun getPermissionFragment(): PermissionFragment {
         return permissionFragment
-                ?: throw IllegalStateException("Permission is not implementation or not attach a context")
+            ?: throw IllegalStateException("Permission is not implementation or not attach a context")
     }
     // endregion
 }
