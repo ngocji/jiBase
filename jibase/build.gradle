@@ -78,16 +78,5 @@ dependencies {
     // Multidex
     api rootProject.deps.multidex
 
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
-}
-
-
-project.afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-                from components.release
-            }
-        }
-    }
+    api rootProject.deps.reflection
 }

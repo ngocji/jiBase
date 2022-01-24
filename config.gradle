@@ -44,7 +44,8 @@ rootProject.ext.timber_log = '4.7.1'
 rootProject.ext.gson = '2.8.8'
 rootProject.ext.workManager = '2.7.0-alpha05'
 rootProject.ext.multidex = '2.0.1'
-
+rootProject.ext.multidex = '2.0.1'
+rootProject.ext.reflection = '1.6.0'
 
 rootProject.ext.deps = [
 
@@ -114,4 +115,7 @@ rootProject.ext.deps = [
 
         // Multidex
         "multidex" : "androidx.multidex:multidex:$multidex",
+
+        // Reflection
+        "reflection" : "org.jetbrains.kotlin:kotlin-reflect:$reflection",
 ]
