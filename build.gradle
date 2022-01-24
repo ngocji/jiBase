@@ -16,7 +16,12 @@ buildscript {
         classpath "com.android.tools.build:gradle:$gradle_version"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$gradle_kotin_version"
         classpath "com.google.dagger:hilt-android-gradle-plugin:$gradle_hilt_version"
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
     }
+}
+
+plugins {
+    id 'maven-publish'
 }
 
 allprojects {
