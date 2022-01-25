@@ -12,9 +12,16 @@
         <action
             android:id="@+id/action_mainFragment_to_requestPermissionFragment"
             app:destination="@id/requestPermissionFragment" />
+        <action
+            android:id="@+id/action_mainFragment_to_listFragment"
+            app:destination="@id/listFragment" />
     </fragment>
     <fragment
         android:id="@+id/requestPermissionFragment"
         android:name="comx.y.z.kotlinbase.fragment.requestpermission.RequestPermissionFragment"
         android:label="RequestPermissionFragment" />
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="comx.y.z.kotlinbase.fragment.list.ListFragment"
+        android:label="ListFragment" />
 </navigation>
