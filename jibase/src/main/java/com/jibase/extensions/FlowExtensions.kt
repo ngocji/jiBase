@@ -1,34 +1,34 @@
+@file:JvmName("FlowExtensions")
+
 package com.jibase.extensions
 
 import androidx.lifecycle.*
+import com.jibase.api.OnResultWrapperListener
 import com.jibase.api.ResultWrapper
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
-typealias ErrorHandler = (exception: Throwable?) -> Unit
 typealias SuccessHandler<T> = (value: T) -> Unit
+typealias ErrorHandler = (error: Throwable?) -> Unit
 typealias LoadingHandler = () -> Unit
-typealias HttpErrorHandler<T> = (error: T?) -> Unit
-typealias EmptyHandler = () -> Unit
+typealias EmptyPageHandler = () -> Unit
+
 
 fun <T> LifecycleCoroutineScope.collect(
     flow: StateFlow<ResultWrapper<T>>,
-    errorHandler: ErrorHandler? = null,
-    httpErrorHandler: HttpErrorHandler<T>? = null,
     successHandler: SuccessHandler<T>? = null,
+    errorHandler: ErrorHandler? = null,
     loadingHandler: LoadingHandler? = null
 ) {
     launch {
         flow.collect {
             when (it) {
                 is ResultWrapper.Success<*> -> {
-                    successHandler?.invoke(it.takeValueOrThrow())
+                    successHandler?.invoke(it.takeOrThrow())
                 }
-                is ResultWrapper.GenericError -> {
+
+                is ResultWrapper.Error -> {
                     errorHandler?.invoke(it.throwable)
-                }
-                is ResultWrapper.HttpError -> {
-                    httpErrorHandler?.invoke(it.errorBody)
                 }
                 is ResultWrapper.Loading -> {
                     loadingHandler?.invoke()
@@ -42,24 +42,25 @@ fun <T> LifecycleCoroutineScope.collect(
 
 fun <T> LifecycleOwner.pagingCollect(
     flow: StateFlow<ResultWrapper<T>>,
-    errorHandler: ErrorHandler?,
-    successHandler: SuccessHandler<T>?,
-    loadingHandler: LoadingHandler?,
-    emptyHandler: EmptyHandler?
+    successHandler: SuccessHandler<T>? = null,
+    errorHandler: ErrorHandler? = null,
+    loadingHandler: LoadingHandler? = null,
+    emptyHandler: EmptyPageHandler? = null
 ) {
     lifecycleScope.launchWhenStarted {
         flow.collect {
             when (it) {
                 is ResultWrapper.Success<*> -> {
-                    successHandler?.invoke(it.takeValueOrThrow())
+                    successHandler?.invoke(it.takeOrThrow())
                 }
-                is ResultWrapper.GenericError -> {
+
+                is ResultWrapper.Error -> {
                     errorHandler?.invoke(it.throwable)
                 }
                 is ResultWrapper.Loading -> {
                     loadingHandler?.invoke()
                 }
-                is ResultWrapper.Empty -> {
+                is ResultWrapper.EmptyPage -> {
                     emptyHandler?.invoke()
                 }
                 else -> {
@@ -83,19 +84,17 @@ fun <T> ViewModel.resultFlow(
 
 fun <T> ViewModel.pagingFlow(
     firstValue: ResultWrapper<List<T>> = ResultWrapper.None,
-    isFistPage: () -> Boolean,
     nextPage: () -> Unit,
     callback: suspend () -> ResultWrapper<List<T>>
 ): MutableStateFlow<ResultWrapper<List<T>>> = MutableStateFlow(firstValue).apply {
     viewModelScope.launch {
         with(this@pagingFlow) {
-            if (isFistPage.invoke()) {
-                tryEmit(ResultWrapper.Loading)
-            }
+            tryEmit(ResultWrapper.Loading)
+
             when (val result = callback.invoke()) {
                 is ResultWrapper.Success -> {
-                    if (isFistPage.invoke() && result.takeValueOrThrow().isEmpty()) {
-                        tryEmit(ResultWrapper.Empty)
+                    if (result.takeOrThrow().isEmpty()) {
+                        tryEmit(ResultWrapper.EmptyPage)
                     } else {
                         nextPage.invoke()
                         tryEmit(result)
@@ -108,3 +107,53 @@ fun <T> ViewModel.pagingFlow(
         }
     }
 }
+
+
+// support java
+
+fun <T> LifecycleCoroutineScope.collect(
+    flow: StateFlow<ResultWrapper<T>>,
+    listener: OnResultWrapperListener<T>? = null
+) {
+    this.collect(flow,
+        successHandler = {
+            listener?.onSuccess(it)
+        },
+        errorHandler = { listener?.onError(it) },
+        loadingHandler = {
+            listener?.onLoading()
+        })
+}
+
+
+fun <T> LifecycleOwner.pagingCollect(
+    flow: StateFlow<ResultWrapper<T>>,
+    listener: OnResultWrapperListener<T>? = null
+) {
+    this.pagingCollect(flow,
+        successHandler = {
+            listener?.onSuccess(it)
+        },
+        errorHandler = { listener?.onError(it) },
+        loadingHandler = {
+            listener?.onLoading()
+        },
+        emptyHandler = {
+            listener?.onEmptyPageData()
+        })
+}
+
+
+fun <T> ViewModel.resultFlow(
+    callback: suspend () -> ResultWrapper<T>
+) = resultFlow(ResultWrapper.None, callback)
+
+fun <T> ViewModel.pagingFlow(
+    nextPage: Runnable,
+    callback: suspend () -> ResultWrapper<List<T>>
+) = pagingFlow(
+    ResultWrapper.None,
+    {
+        nextPage.run()
+    }, callback
+)
