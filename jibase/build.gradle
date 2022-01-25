@@ -98,4 +98,10 @@ dependencies {
     api deps.multidex
 
     api deps.reflection
+
+    // retrofit
+    api deps.okHttpLogging
+    api deps.retrofitGson
+    api deps.okHttpLogging
+    api deps.gson
 }
