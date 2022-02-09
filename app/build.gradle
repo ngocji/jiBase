@@ -38,12 +38,12 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-//    implementation project (':jibase')
+    implementation project (':jibase')
 
     api deps.hilt
     kapt deps.hilt_compiler
 
-    implementation 'com.github.ngocji:jibase:3.0.0-r10'
+//    implementation 'com.github.ngocji:jibase:3.0.0-r10'
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

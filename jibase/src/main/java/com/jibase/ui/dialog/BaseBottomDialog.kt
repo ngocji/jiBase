@@ -16,7 +16,7 @@ import com.jibase.anotation.InflateHelper
 import com.jibase.anotation.ViewInflate
 
 abstract class BaseBottomDialog : BottomSheetDialogFragment() {
-    open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
+    open val viewInflate: ViewInflate by lazy { InflateHelper.getViewInflate(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -7,18 +7,20 @@ import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat.ID_NULL
 import androidx.fragment.app.Fragment
 import com.jibase.anotation.InflateHelper
+import com.jibase.anotation.InflateViewModelHelper
 import com.jibase.anotation.ViewInflate
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 abstract class BaseFragment : Fragment() {
-    open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
+    open val viewInflate: ViewInflate by lazy { InflateHelper.getViewInflate(this) }
 
     final override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        InflateViewModelHelper.inflate(this)
         return initView(inflater, container)
     }
 

@@ -4,15 +4,17 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat.ID_NULL
 import com.jibase.anotation.InflateHelper
+import com.jibase.anotation.InflateViewModelHelper
 import com.jibase.anotation.ViewInflate
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 abstract class BaseActivity : AppCompatActivity() {
-    open val viewInflate: ViewInflate by lazy { InflateHelper.getAnnotation(this) }
+    open val viewInflate: ViewInflate by lazy { InflateHelper.getViewInflate(this) }
 
     final override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        InflateViewModelHelper.inflate(this)
         initView(savedInstanceState)
     }
 
