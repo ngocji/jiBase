@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import java.util.*
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.full.declaredMemberProperties
+import kotlin.reflect.jvm.isAccessible
 import kotlin.reflect.jvm.javaField
 
 object InflateViewModelHelper {
@@ -14,6 +15,8 @@ object InflateViewModelHelper {
         if (target !is AppCompatActivity && target !is Fragment) throw IllformedLocaleException("Target must be fragment or activity")
 
         target::class.declaredMemberProperties.forEach { kProperty ->
+            // return access filed
+            kProperty.isAccessible = true
             if (kProperty is KMutableProperty<*>) {
                 val javaField = kProperty.javaField ?: return@forEach
                 val instanceViewModel = when {

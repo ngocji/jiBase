@@ -7,7 +7,6 @@ import com.jibase.anotation.ViewInflate
 import com.jibase.extensions.safeNavigate
 import com.jibase.extensions.viewBinding
 import com.jibase.ui.base.BaseFragment
-import com.jibase.utils.Log
 import comx.y.z.kotlinbase.R
 import comx.y.z.kotlinbase.databinding.FragmentMainBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,7 +17,7 @@ class MainFragment : BaseFragment() {
     private val binding by viewBinding(FragmentMainBinding::bind)
 
     @InflateActivityViewModel
-    lateinit var mainViewModel: MainViewModel
+    private lateinit var mainViewModel: MainViewModel
 
     override fun onViewReady(savedInstanceState: Bundle?) {
         mainViewModel.count += 1
