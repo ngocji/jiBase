@@ -4,10 +4,8 @@ import android.annotation.TargetApi
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import com.jibase.anotation.ViewInflate
 import com.jibase.ui.base.BaseFragment
 
-@ViewInflate
 class PermissionFragment : BaseFragment() {
     companion object {
         const val REQ_PERMISSION = 1
@@ -16,9 +14,6 @@ class PermissionFragment : BaseFragment() {
     private var resultAction: ((Array<out String>, IntArray) -> Unit)? = null
 
     override fun onViewReady(savedInstanceState: Bundle?) {
-    }
-
-    override fun onViewListener() {
     }
 
     override fun onRequestPermissionsResult(
