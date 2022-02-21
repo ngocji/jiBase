@@ -6,10 +6,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.observe
+import androidx.lifecycle.*
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 
@@ -161,4 +158,25 @@ fun Fragment.observeOnResume(runnable: Runnable) {
 
 fun Fragment.observeOnPause(runnable: Runnable) {
     observeOnPause { runnable.run() }
+}
+
+fun <T> Fragment.observeNavigationResultOnce(key: String, observe: Observer<T>) {
+    observe(getNavigationResult<T>(key)) {
+        removeNavigationResult<T>(key)
+        observe.onChanged(it)
+    }
+}
+
+fun <T> Fragment.observeDialogNavigationResultOnce(
+    key: String,
+    destinationId: Int,
+    observe: Observer<T>
+) {
+    observe(getNavigationResult<T>(key, destinationId)) {
+        removeNavigationResult<T>(
+            key,
+            destinationId
+        );
+        observe.onChanged(it)
+    }
 }
