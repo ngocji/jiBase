@@ -192,6 +192,7 @@ class ActionModeHelper(
         }
         Log.d("ActionMode is active!", TAG)
         adapter.setMode(MULTI)
+        updateActionModeState(true)
         disableSwipeDragCapabilities()
         return callback == null || callback.onCreateActionMode(mode, menu)
     }
@@ -216,6 +217,7 @@ class ActionModeHelper(
         // Change mode and deselect everything
         adapter.setMode(defaultMode)
         adapter.clearSelection()
+        updateActionModeState(false)
         mActionMode = null
         // Re-enable Swipe and Drag capabilities if they were disabled by this helper
         enableSwipeDragCapabilities()
@@ -257,6 +259,9 @@ class ActionModeHelper(
         }
     }
 
+    private fun updateActionModeState(enable: Boolean) {
+        adapter.isActionModeStateEnable = enable
+    }
 
     interface ActionModeListener : ActionMode.Callback {
         fun onUpdateSelectionTitle(mode: ActionMode?, count: Int) {

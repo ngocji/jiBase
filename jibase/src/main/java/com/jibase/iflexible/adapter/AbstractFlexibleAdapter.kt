@@ -53,6 +53,11 @@ abstract class AbstractFlexibleAdapter : RecyclerView.Adapter<RecyclerView.ViewH
      */
     open var lastItemInActionMode = false
 
+    /**
+     * Action mode flag start selection
+     */
+    open var isActionModeStateEnable = false
+
     /*--------------*/
     /* CHECK INITIALIZED */
     /*--------------*/
