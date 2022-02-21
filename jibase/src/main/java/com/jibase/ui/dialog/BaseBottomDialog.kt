@@ -17,6 +17,7 @@ abstract class BaseBottomDialog : BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NO_TITLE, initStyle())
+        InflateFactory.run(this)
     }
 
     override fun onCreateView(
