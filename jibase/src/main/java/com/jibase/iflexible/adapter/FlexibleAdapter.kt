@@ -426,6 +426,11 @@ open class FlexibleAdapter<T : IFlexible<*>>(
     }
 
 
+    fun getSelectedItems(): List<T> {
+        return getSelectedPositionsAsSet().mapNotNull { getItem(it) }
+    }
+
+
     @CallSuper
     override fun clearSelection() {
         childSelected = false
