@@ -20,8 +20,6 @@ class MainFragment : BaseFragment() {
     private lateinit var binding: FragmentMainBinding
 
     override fun onViewReady(savedInstanceState: Bundle?) {
-        mainViewModel.count += 1
-
         binding.buttonRequestPermission.setOnClickListener {
             findNavController().safeNavigate(R.id.action_mainFragment_to_requestPermissionFragment)
         }

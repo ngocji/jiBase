@@ -18,6 +18,5 @@ public class TestJavaActivity extends BaseActivity {
     ActivityMainBinding binding;
     @Override
     public void onViewReady(@Nullable Bundle savedInstanceState) {
-
     }
 }

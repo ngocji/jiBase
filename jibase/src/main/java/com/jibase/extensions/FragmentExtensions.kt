@@ -101,7 +101,13 @@ fun FragmentActivity.onBackPressedOverride(func: () -> Unit) {
 }
 
 fun Fragment.onBackPressedOverride(func: () -> Unit) {
-    activity?.onBackPressedOverride(func)
+    requireActivity().onBackPressedDispatcher.addCallback(
+        viewLifecycleOwner,
+        object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                func.invoke()
+            }
+        })
 }
 
 fun Fragment.observeOnDestroy(action: () -> Unit) {

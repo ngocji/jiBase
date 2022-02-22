@@ -54,6 +54,21 @@ class PermissionsHelper<T> private constructor(val target: T) {
         return this
     }
 
+    fun onGrant(runnable: Runnable): PermissionsHelper<T> {
+        return onGrant {
+            runnable.run()
+        }
+    }
+
+    fun onDeny(onDenyPermissionListener: OnDenyPermissionListener?): PermissionsHelper<T> {
+        return onDeny { onDenyPermissionListener?.onDeny(it) }
+    }
+
+
+    fun onRevoke(onRevokePermissionListener: OnRevokePermissionListener?): PermissionsHelper<T> {
+        return onRevoke { onRevokePermissionListener?.onRevoke(it) }
+    }
+
     fun execute() {
         val allPermission = mutableListOf<Permission>()
         val denyPermission = mutableListOf<Permission>()

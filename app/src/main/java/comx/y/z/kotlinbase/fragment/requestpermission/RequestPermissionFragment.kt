@@ -2,8 +2,12 @@ package comx.y.z.kotlinbase.fragment.requestpermission
 
 import android.Manifest
 import android.os.Bundle
+import androidx.navigation.fragment.findNavController
 import com.jibase.anotation.Inflate
 import com.jibase.anotation.InflateActivityViewModel
+import com.jibase.extensions.onBackPressedOverride
+import com.jibase.permission.OnDenyPermissionListener
+import com.jibase.permission.Permission
 import com.jibase.permission.PermissionsHelper
 import com.jibase.ui.base.BaseFragment
 import com.jibase.utils.Log
@@ -19,6 +23,8 @@ class RequestPermissionFragment : BaseFragment() {
     @Inflate
     lateinit var binding: FragmentRequestPermissionBinding
 
+    var isBack = false
+
     override fun onViewReady(savedInstanceState: Bundle?) {
         PermissionsHelper.with(this)
             .request(
@@ -27,17 +33,19 @@ class RequestPermissionFragment : BaseFragment() {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.CAMERA
             )
-            .onGrant {
-                Log.e("Granted")
-            }
-            .onDeny {
-                Log.e("Deny: " + it.map { it.name }.joinToString(", "))
-            }
-            .onRevoke {
-                Log.e("Revoke: " + it.map { it.name }.joinToString(", "))
-            }
+            .onDeny(object : OnDenyPermissionListener {
+                override fun onDeny(permissions: List<Permission>) {
+                    Log.e("Run deny")
+                }
+            })
             .execute()
 
-        Log.e("OnCount: ${mainViewModel.count}")
+        onBackPressedOverride {
+            if (isBack) {
+                findNavController().popBackStack()
+            } else {
+                isBack = true
+            }
+        }
     }
 }
