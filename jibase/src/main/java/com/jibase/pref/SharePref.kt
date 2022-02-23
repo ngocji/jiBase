@@ -16,12 +16,12 @@ class SharePref(context: Context, prefName: String) {
     fun <T> get(key: String, defaultValue: T?, clazz: Class<out T>): T? {
         val value = pref.getString(key, defaultValue.toString()) ?: return defaultValue
         return when (clazz) {
-            Boolean::class -> value.toBoolean() as T
-            Float::class -> value.toFloat() as T
-            Int::class -> value.toInt() as T
-            Long::class -> value.toLong() as T
-            String::class -> value as T
-            Double::class -> value.toDouble() as T
+            Boolean::class.java -> value.toBoolean() as T
+            Float::class.java -> value.toFloat() as T
+            Int::class.java -> value.toInt() as T
+            Long::class.java -> value.toLong() as T
+            String::class.java -> value as T
+            Double::class.java -> value.toDouble() as T
             else -> {
                 try {
                     GsonManager.fromJson(value)
@@ -34,12 +34,12 @@ class SharePref(context: Context, prefName: String) {
 
     // region get for java
 
-    fun getBoolean(key: String, defaultValue: Boolean) = get(key, defaultValue)
-    fun getLong(key: String, defaultValue: Long) = get(key, defaultValue)
-    fun getFloat(key: String, defaultValue: Float) = get(key, defaultValue)
-    fun getDouble(key: String, defaultValue: Double) = get(key, defaultValue)
-    fun getString(key: String, defaultValue: String) = get(key, defaultValue)
-    fun getInt(key: String, defaultValue: Int) = get(key, defaultValue)
+    fun getBoolean(key: String, defaultValue: Boolean) = get(key, defaultValue, Boolean::class.java)
+    fun getLong(key: String, defaultValue: Long) = get(key, defaultValue, Long::class.java)
+    fun getFloat(key: String, defaultValue: Float) = get(key, defaultValue, Float::class.java)
+    fun getDouble(key: String, defaultValue: Double) = get(key, defaultValue, Double::class.java)
+    fun getString(key: String, defaultValue: String) = get(key, defaultValue, String::class.java)
+    fun getInt(key: String, defaultValue: Int) = get(key, defaultValue, Int::class.java)
     fun <T> getObject(key: String, defaultValue: T?, clazz: Class<T>) =
         get(key, defaultValue, clazz)
 

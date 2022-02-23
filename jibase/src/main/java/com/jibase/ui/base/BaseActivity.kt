@@ -14,8 +14,10 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     open fun initView(savedInstanceState: Bundle?) {
-        val binding = InflateFactory.getViewBinding(this)
-        setContentView(binding?.root)
+        InflateFactory.getViewBinding(this)?.also {
+            setContentView(it.root)
+        }
+
         onViewReady(savedInstanceState)
     }
 
