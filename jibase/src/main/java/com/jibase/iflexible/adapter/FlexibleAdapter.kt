@@ -4476,12 +4476,10 @@ open class FlexibleAdapter<T : IFlexible<*>>(
     /*-----------------------------------*/
 
     override fun onActionStateChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
-        viewHolder?.also {
-            if (onItemMoveListener != null)
-                onItemMoveListener?.onActionStateChanged(this, viewHolder, actionState)
-            else if (onItemSwipeListener != null) {
-                onItemSwipeListener?.onActionStateChanged(this, viewHolder, actionState)
-            }
+        if (onItemMoveListener != null)
+            onItemMoveListener?.onActionStateChanged(this, viewHolder, actionState)
+        else if (onItemSwipeListener != null) {
+            onItemSwipeListener?.onActionStateChanged(this, viewHolder, actionState)
         }
     }
 
