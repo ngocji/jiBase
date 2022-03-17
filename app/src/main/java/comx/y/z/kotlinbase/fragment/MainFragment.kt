@@ -1,23 +1,20 @@
 package comx.y.z.kotlinbase.fragment
 
 import android.os.Bundle
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.jibase.anotation.Inflate
-import com.jibase.anotation.InflateActivityViewModel
 import com.jibase.extensions.safeNavigate
+import com.jibase.extensions.viewBinding
 import com.jibase.ui.base.BaseFragment
 import comx.y.z.kotlinbase.R
 import comx.y.z.kotlinbase.databinding.FragmentMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class MainFragment : BaseFragment() {
+class MainFragment : BaseFragment(R.layout.fragment_main) {
 
-    @InflateActivityViewModel
-    private lateinit var mainViewModel: MainViewModel
+    private val mainViewModel by viewModels<MainViewModel>()
 
-    @Inflate
-    private lateinit var binding: FragmentMainBinding
+    private val binding by viewBinding(FragmentMainBinding::bind)
 
     override fun onViewReady(savedInstanceState: Bundle?) {
         binding.buttonRequestPermission.setOnClickListener {

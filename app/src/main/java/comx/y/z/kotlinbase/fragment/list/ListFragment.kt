@@ -4,7 +4,6 @@ import android.os.Bundle
 import com.jibase.ui.base.BaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class ListFragment : BaseFragment() {
     override fun onViewReady(savedInstanceState: Bundle?) {
 

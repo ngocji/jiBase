@@ -25,6 +25,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".TestJavaActivity"
+            android:exported="true"
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

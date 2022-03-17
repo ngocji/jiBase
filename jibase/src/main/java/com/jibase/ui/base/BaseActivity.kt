@@ -1,23 +1,14 @@
 package com.jibase.ui.base
 
 import android.os.Bundle
+import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import com.jibase.anotation.InflateFactory
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-abstract class BaseActivity : AppCompatActivity() {
-    final override fun onCreate(savedInstanceState: Bundle?) {
+abstract class BaseActivity(@LayoutRes layoutId: Int = 0) : AppCompatActivity(layoutId) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        InflateFactory.run(this)
-        initView(savedInstanceState)
-    }
-
-    open fun initView(savedInstanceState: Bundle?) {
-        InflateFactory.getViewBinding(this)?.also {
-            setContentView(it.root)
-        }
-
         onViewReady(savedInstanceState)
     }
 

@@ -2,25 +2,28 @@ package comx.y.z.kotlinbase;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
-import com.jibase.anotation.Inflate;
-import com.jibase.pref.SharePref;
+import com.jibase.helper.ViewModelHelper;
 import com.jibase.ui.base.BaseActivity;
 
-import javax.inject.Inject;
-
 import comx.y.z.kotlinbase.databinding.ActivityMainBinding;
+import comx.y.z.kotlinbase.fragment.MainViewModel;
 import dagger.hilt.android.AndroidEntryPoint;
 
-@AndroidEntryPoint
 public class TestJavaActivity extends BaseActivity {
-    @Inflate
-    ActivityMainBinding binding;
+
+    MainViewModel mainViewModel;
+
+    public TestJavaActivity() {
+        super(R.layout.activity_main);
+    }
 
     @Override
     public void onViewReady(@Nullable Bundle savedInstanceState) {
+
+        mainViewModel = ViewModelHelper.INSTANCE.newViewModel(this, MainViewModel.class);
+        mainViewModel.getCount();
     }
 }
