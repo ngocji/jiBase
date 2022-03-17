@@ -1,11 +1,7 @@
 package comx.y.z.kotlinbase.fragment.list
 
-import android.os.Bundle
-import com.jibase.ui.base.BaseFragment
-import dagger.hilt.android.AndroidEntryPoint
+import androidx.fragment.app.Fragment
 
-class ListFragment : BaseFragment() {
-    override fun onViewReady(savedInstanceState: Bundle?) {
+class ListFragment : Fragment() {
 
-    }
 }

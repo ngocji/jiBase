@@ -1,29 +1,42 @@
 package comx.y.z.kotlinbase;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
-import com.jibase.helper.ViewModelHelper;
-import com.jibase.ui.base.BaseActivity;
+import com.jibase.pref.SharePref;
 
-import comx.y.z.kotlinbase.databinding.ActivityMainBinding;
+import javax.inject.Inject;
+
 import comx.y.z.kotlinbase.fragment.MainViewModel;
 import dagger.hilt.android.AndroidEntryPoint;
 
-public class TestJavaActivity extends BaseActivity {
+@AndroidEntryPoint
+public class TestJavaActivity extends AppCompatActivity {
+    @Inject
+    public SharePref pref;
 
     MainViewModel mainViewModel;
 
     public TestJavaActivity() {
-        super(R.layout.activity_main);
+//        super(R.layout.activity_main);
     }
 
     @Override
-    public void onViewReady(@Nullable Bundle savedInstanceState) {
-
-        mainViewModel = ViewModelHelper.INSTANCE.newViewModel(this, MainViewModel.class);
-        mainViewModel.getCount();
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        pref.put("x", 1);
     }
+
+//    @Override
+//    public void onViewReady(@Nullable Bundle savedInstanceState) {
+//        setContentView(R.layout.activity_main);
+//        pref.put("x", 1);
+////        mainViewModel = ViewModelHelper.newViewModel(this, MainViewModel.class);
+////
+////        mainViewModel.setCount(1);
+//
+//    }
 }

@@ -1,7 +1,7 @@
 package com.jibase.utils
 
-import android.util.Log
 import com.jibase.BuildConfig
+import kotlin.math.max
 
 object Log {
     var prefix = "MY_LOG"
@@ -18,14 +18,18 @@ object Log {
     @JvmStatic
     fun e(message: String, prefix: String = this.prefix) {
         if (isEnable) {
-            Log.e(prefix, createMessage(message))
+            createMessage(message).forEach {
+                android.util.Log.e(prefix, it)
+            }
         }
     }
 
     @JvmStatic
     fun d(message: String, prefix: String = this.prefix) {
         if (isEnable) {
-            Log.d(prefix, createMessage(message))
+            createMessage(message).forEach {
+                android.util.Log.d(prefix, it)
+            }
         }
     }
 
@@ -39,16 +43,22 @@ object Log {
         d(message, prefix)
     }
 
-    private fun createMessage(string: String): String {
-        return "*\n*********************************\n" +
-                " Class: ${getClassName()} (${getMethodName()} : ${getLineNumber()})\n" +
-                " Message: $string" +
-                "\n*********************************"
+    private fun createMessage(string: String): List<String> {
+        return listOf(
+            "********************************",
+            "Class: ${getClassName()} (${getMethodName()} : ${getLineNumber()})",
+            "$string",
+            "********************************"
+        )
     }
 
     private fun getClassName(): String {
         val fileName = Thread.currentThread().stackTrace[STACK_TRACE_LEVELS_UP].fileName
-        return fileName.substring(0, fileName.lastIndexOf("."))
+        val index = fileName.lastIndexOf(".")
+        return if (fileName.isNotBlank()) fileName.substring(
+            0,
+            max(index, fileName.length - 1)
+        ) else ""
     }
 
     private fun getMethodName(): String {

@@ -14,4 +14,8 @@ class ScanModule {
     @Provides
     @Singleton
     fun providePreferenceName() = BuildConfig.APPLICATION_ID
+
+    @Provides
+    @Singleton
+    fun providerTestShare() = TestShare()
 }
