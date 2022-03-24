@@ -8,8 +8,10 @@ import com.jibase.utils.Log
 class SharePref(context: Context, prefName: String) {
     val pref: SharedPreferences = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
 
-    inline fun <reified T> get(key: String, defaultValue: T? = null): T? =
-        get(key, defaultValue, T::class.java)
+    inline fun <reified T> get(key: String) = get(key, null, T::class.java)
+
+    inline fun <reified T> get(key: String, defaultValue: T) =
+        get(key, defaultValue, T::class.java) ?: defaultValue
 
     fun <T> get(key: String, clazz: Class<T>): T? = get(key, null, clazz)
 
