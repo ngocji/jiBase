@@ -91,6 +91,10 @@ fun Fragment.popBackTo(destinationId: Int, inclusive: Boolean = false): Boolean 
     return NavHostFragment.findNavController(this).popBackStack(destinationId, inclusive)
 }
 
+fun Fragment.popBack(): Boolean {
+    return NavHostFragment.findNavController(this).popBackStack()
+}
+
 fun FragmentActivity.onBackPressedOverride(func: () -> Unit) {
     this.onBackPressedDispatcher.addCallback(
         this, object : OnBackPressedCallback(true) {
