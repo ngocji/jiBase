@@ -45,6 +45,39 @@ class SharePref(context: Context, prefName: String) {
     fun <T> getObject(key: String, defaultValue: T?, clazz: Class<T>) =
         get(key, defaultValue, clazz)
 
+
+    fun putBoolean(key: String, value: Boolean) {
+        pref.edit().putString(key, value.toString()).apply()
+    }
+
+    fun putLong(key: String, value: Long) {
+        pref.edit().putString(key, value.toString()).apply()
+    }
+
+    fun putFloat(key: String, value: Float) {
+        pref.edit().putString(key, value.toString()).apply()
+    }
+
+    fun putDouble(key: String, value: Double) {
+        pref.edit().putString(key, value.toString()).apply()
+    }
+
+    fun putString(key: String, value: String) {
+        pref.edit().putString(key, value).apply()
+    }
+
+    fun putInt(key: String, value: Int) {
+        pref.edit().putString(key, value.toString()).apply()
+    }
+
+    fun <T> putObject(key: String, value: T?) {
+        if (value == null) {
+            pref.edit().remove(key).apply()
+        } else {
+            putString(key, GsonManager.toJson(value))
+        }
+    }
+
     // end region
 
 
