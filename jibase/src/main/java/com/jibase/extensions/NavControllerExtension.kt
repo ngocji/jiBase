@@ -48,6 +48,18 @@ fun NavController.safeNavigate(uri: Uri): Boolean =
         false
     }
 
+fun NavController.safeNavigate(uri: Uri, navOptions: NavOptions): Boolean =
+    try {
+        val request = NavDeepLinkRequest.Builder
+            .fromUri(uri)
+            .build()
+        navigate(request, navOptions)
+        true
+    } catch (e: IllegalArgumentException) {
+        Log.e("Error safeNavigate to $uri")
+        false
+    }
+
 fun NavController.safeNavigate(directions: Int, bundle: Bundle, navOptions: NavOptions): Boolean =
     try {
         navigate(directions, bundle, navOptions)
