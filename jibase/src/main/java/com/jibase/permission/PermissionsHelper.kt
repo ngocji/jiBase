@@ -168,10 +168,14 @@ class PermissionsHelper<T> private constructor(val target: T) {
         permissionFragment = fragmentManager.findFragmentByTag(tag) as? PermissionFragment
             ?: // create newInstance
                     PermissionFragment().apply {
-                        // add to manager
-                        fragmentManager.beginTransaction()
-                            .add(this, tag)
-                            .commitNow()
+                        try {
+                            // add to manager
+                            fragmentManager.beginTransaction()
+                                .add(this, tag)
+                                .commitNowAllowingStateLoss()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
                     }
     }
     // endregion
