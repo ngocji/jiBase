@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.jibase.helper.GsonManager
 import com.jibase.utils.Log
+import java.lang.reflect.Type
 
 class SharePref(context: Context, prefName: String) {
     val pref: SharedPreferences = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
@@ -24,13 +25,7 @@ class SharePref(context: Context, prefName: String) {
             Long::class.java.canonicalName -> value.toLong() as T
             String::class.java.canonicalName -> value as T
             Double::class.java.canonicalName -> value.toDouble() as T
-            else -> {
-                try {
-                    GsonManager.fromJson(value)
-                } catch (e: Exception) {
-                    defaultValue
-                }
-            }
+            else -> defaultValue
         }
     }
 
@@ -42,8 +37,19 @@ class SharePref(context: Context, prefName: String) {
     fun getDouble(key: String, defaultValue: Double) = get(key, defaultValue, Double::class.java)
     fun getString(key: String, defaultValue: String) = get(key, defaultValue, String::class.java)
     fun getInt(key: String, defaultValue: Int) = get(key, defaultValue, Int::class.java)
-    fun <T> getObject(key: String, defaultValue: T?, clazz: Class<T>) =
-        get(key, defaultValue, clazz)
+
+    fun <T> getObject(key: String, defaultValue: T?, type: Type): T? {
+        val content = get(key, "", String::class.java)
+        return try {
+            if (content.isNullOrBlank()) {
+                defaultValue
+            } else {
+                GsonManager.fromJson(content, type)
+            }
+        } catch (e: Exception) {
+            defaultValue
+        }
+    }
 
 
     fun putBoolean(key: String, value: Boolean) {

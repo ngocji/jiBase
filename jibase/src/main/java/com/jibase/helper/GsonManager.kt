@@ -27,6 +27,14 @@ object GsonManager {
     fun <T> fromJson(data: String): T? = fromJson(data, object : TypeToken<T>() {}.type)
 
     @JvmStatic
+    fun <T> fromJson(data: String, classOfType: Class<T>) = try {
+        gsonMap[SIMPLE]?.fromJson(data, classOfType)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+
+    @JvmStatic
     fun <T> fromJson(data: String, gsonType: String): T? =
         fromJson(data, object : TypeToken<T>() {}.type, gsonType)
 
