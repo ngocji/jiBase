@@ -46,3 +46,10 @@ fun ImageView.load(path: Any, listener: RequestListener<Drawable>) {
         .listener(listener)
         .into(this)
 }
+
+fun ImageView.load(path: Any?, requestOptions: RequestOptions) {
+    Glide.with(this.context.applicationContext)
+        .load(path)
+        .apply(requestOptions)
+        .into(this)
+}

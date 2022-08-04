@@ -18,5 +18,8 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         sharePref.put("xcz", 100)
+
+        val x = sharePref.getLong("abc", 0L)
+
     }
 }

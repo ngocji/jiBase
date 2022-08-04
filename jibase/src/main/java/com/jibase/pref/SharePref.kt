@@ -7,41 +7,32 @@ import com.jibase.utils.Log
 import java.lang.reflect.Type
 
 class SharePref(context: Context, prefName: String) {
-    val pref: SharedPreferences = context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
-
-    inline fun <reified T> get(key: String) = get(key, null, T::class.java)
-
-    inline fun <reified T> get(key: String, defaultValue: T) =
-        get(key, defaultValue, T::class.java) ?: defaultValue
-
-    fun <T> get(key: String, clazz: Class<T>): T? = get(key, null, clazz)
-
-    fun <T> get(key: String, defaultValue: T?, clazz: Class<out T>): T? {
-        val value = pref.getString(key, defaultValue.toString()) ?: return defaultValue
-        return when (clazz.canonicalName) {
-            Boolean::class.java.canonicalName -> value.toBoolean() as T
-            Float::class.java.canonicalName -> value.toFloat() as T
-            Int::class.java.canonicalName -> value.toInt() as T
-            Long::class.java.canonicalName -> value.toLong() as T
-            String::class.java.canonicalName -> value as T
-            Double::class.java.canonicalName -> value.toDouble() as T
-            else -> defaultValue
-        }
+    private val pref: SharedPreferences by lazy {
+        context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
     }
 
-    // region get for java
+    fun getBoolean(key: String, defaultValue: Boolean) =
+        pref.getString(key, defaultValue.toString())?.toBooleanStrictOrNull() ?: defaultValue
 
-    fun getBoolean(key: String, defaultValue: Boolean) = get(key, defaultValue, Boolean::class.java)
-    fun getLong(key: String, defaultValue: Long) = get(key, defaultValue, Long::class.java)
-    fun getFloat(key: String, defaultValue: Float) = get(key, defaultValue, Float::class.java)
-    fun getDouble(key: String, defaultValue: Double) = get(key, defaultValue, Double::class.java)
-    fun getString(key: String, defaultValue: String) = get(key, defaultValue, String::class.java)
-    fun getInt(key: String, defaultValue: Int) = get(key, defaultValue, Int::class.java)
+    fun getLong(key: String, defaultValue: Long) =
+        pref.getString(key, defaultValue.toString())?.toLongOrNull() ?: defaultValue
 
-    fun <T> getObject(key: String, defaultValue: T?, type: Type): T? {
-        val content = get(key, "", String::class.java)
+    fun getFloat(key: String, defaultValue: Float) =
+        pref.getString(key, defaultValue.toString())?.toFloatOrNull() ?: defaultValue
+
+    fun getDouble(key: String, defaultValue: Double) =
+        pref.getString(key, defaultValue.toString())?.toDoubleOrNull() ?: defaultValue
+
+    fun getString(key: String, defaultValue: String) =
+        pref.getString(key, defaultValue) ?: defaultValue
+
+    fun getInt(key: String, defaultValue: Int) =
+        pref.getString(key, defaultValue.toString())?.toIntOrNull() ?: defaultValue
+
+    fun <T> getObject(key: String, type: Type, defaultValue: T?): T? {
+        val content = getString(key, "")
         return try {
-            if (content.isNullOrBlank()) {
+            if (content.isBlank()) {
                 defaultValue
             } else {
                 GsonManager.fromJson(content, type)
@@ -51,6 +42,7 @@ class SharePref(context: Context, prefName: String) {
         }
     }
 
+    fun getObject(key: String, type: Type) = getObject(key, type, null)
 
     fun putBoolean(key: String, value: Boolean) {
         pref.edit().putString(key, value.toString()).apply()
