@@ -7,6 +7,7 @@ import com.jibase.pref.SharePref
 import com.jibase.utils.Log
 import comx.y.z.kotlinbase.fragment.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -17,9 +18,12 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        sharePref.put("xcz", 100)
 
-        val x = sharePref.getLong("abc", 0L)
+
+        im.setImageResource(R.drawable.ic_selector_password)
+        im.setOnClickListener {
+            im.isActivated = !im.isActivated
+        }
 
     }
 }

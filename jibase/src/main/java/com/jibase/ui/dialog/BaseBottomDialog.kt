@@ -49,8 +49,13 @@ abstract class BaseBottomDialog(@LayoutRes private val layoutId: Int = 0) :
 
     abstract fun onViewReady(savedInstanceState: Bundle?)
 
-    fun show(fragmentManager: FragmentManager) {
-        if (fragmentManager.findFragmentByTag(javaClass.name) != null) return
-        show(fragmentManager, javaClass.name)
+    fun show(fragmentManager: FragmentManager): Boolean {
+        try {
+            if (fragmentManager.findFragmentByTag(javaClass.name) != null) return false
+            show(fragmentManager, javaClass.name)
+            return true
+        } catch (e: Exception) {
+            return false
+        }
     }
 }
