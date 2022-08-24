@@ -3664,7 +3664,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(
      */
     fun filterItems(@IntRange(from = 0) delay: Long = 0) {
         if (mOriginalList.isEmpty()) {
-            mOriginalList.addAll(listData.toList(), clearAll = true)
+            mOriginalList = listData.toMutableList()
         }
         filterItems(mOriginalList, delay)
     }
