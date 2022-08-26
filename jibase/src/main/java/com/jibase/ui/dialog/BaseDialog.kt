@@ -11,7 +11,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.jibase.R
 
-abstract class BaseDialog(@LayoutRes layoutId: Int = 0) : DialogFragment(layoutId) {
+abstract class BaseDialog(@LayoutRes layoutId: Int) : DialogFragment(layoutId) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NO_TITLE, initStyle())

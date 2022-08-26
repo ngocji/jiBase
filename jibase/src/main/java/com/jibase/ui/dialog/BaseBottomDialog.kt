@@ -14,7 +14,7 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.jibase.R
 
-abstract class BaseBottomDialog(@LayoutRes private val layoutId: Int = 0) :
+abstract class BaseBottomDialog(@LayoutRes private val layoutId: Int) :
     BottomSheetDialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
