@@ -1013,7 +1013,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(
      * @return true if the item is an instance of [IHeader] interface, false otherwise
      */
     fun isHeader(@IntRange(from = 0) position: Int): Boolean {
-        if (listData hasPosition  position) {
+        if (listData hasPosition position) {
             return isHeader(listData[position])
         }
         return false
@@ -1935,6 +1935,16 @@ open class FlexibleAdapter<T : IFlexible<*>>(
         val totalItemCount = newItemsSize + getMainItemCount()
         val progressPosition = getGlobalPositionOf(mProgressItem)
         // Check if features are enabled and the limits have been reached
+
+        // Remove the progressItem if needed.
+        // Don't remove progressItem if delay is negative (-1) to keep it visible.
+        if (delay > 0 && (newItemsSize == 0)) {
+            Log.d("onLoadMore     enqueued removing progressItem ($delay ms)", TAG)
+            mHandler.sendEmptyMessageDelayed(MSG_LOAD_MORE_COMPLETE, delay)
+        } else if (delay >= 0) {
+            hideProgressItem()
+        }
+
         if (mEndlessPageSize > 0 && newItemsSize < mEndlessPageSize || // Is feature enabled and Not enough items?
             mEndlessTargetCount in 1..totalItemCount
         ) { // Is feature enabled and Max limit has been reached?
@@ -1942,14 +1952,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(
             Log.d("onLoadMore     disable endless", TAG)
             setEndlessProgressItem(null)
         }
-        // Remove the progressItem if needed.
-        // Don't remove progressItem if delay is negative (-1) to keep it visible.
-        if (delay > 0 && (newItemsSize == 0 || !isEndlessScrollEnabled())) {
-            Log.d("onLoadMore     enqueued removing progressItem ($delay ms)", TAG)
-            mHandler.sendEmptyMessageDelayed(MSG_LOAD_MORE_COMPLETE, delay)
-        } else if (delay >= 0) {
-            hideProgressItem()
-        }
+
         // Add any new items
         if (newItemsSize > 0) {
             Log.d(
@@ -2281,7 +2284,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(
         // Iterate through subItems
         for (index in 0 until subPosition) {
             // Check whether item is also expandable and expanded
-            val item = if (subItems hasPosition  index) subItems[index] as T else null
+            val item = if (subItems hasPosition index) subItems[index] as T else null
             if (isExpanded(item)) {
                 val subExpandable = item as IExpandable<*, *>
                 count += getRecursiveSubItemCount(subExpandable, subExpandable.getSubItems().size)
