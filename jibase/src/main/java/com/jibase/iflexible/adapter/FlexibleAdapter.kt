@@ -1825,10 +1825,14 @@ open class FlexibleAdapter<T : IFlexible<*>>(
      */
     fun setEndlessProgressItem(progressItem: T?): FlexibleAdapter<T> {
         endlessScrollEnabled = progressItem != null
-        progressItem?.also {
+
+        if (progressItem!=null) {
             setEndlessScrollThreshold(mEndlessScrollThreshold)
-            mProgressItem = it
+            mProgressItem = progressItem
             Log.d("Enabled EndlessScrolling Item=$progressItem  enable=$endlessScrollEnabled", TAG)
+        } else {
+            hideProgressItem()
+            mProgressItem = null
         }
         return this
     }
@@ -1935,7 +1939,13 @@ open class FlexibleAdapter<T : IFlexible<*>>(
         val totalItemCount = newItemsSize + getMainItemCount()
         val progressPosition = getGlobalPositionOf(mProgressItem)
         // Check if features are enabled and the limits have been reached
-
+        if (mEndlessPageSize > 0 && newItemsSize < mEndlessPageSize || // Is feature enabled and Not enough items?
+            mEndlessTargetCount in 1..totalItemCount
+        ) { // Is feature enabled and Max limit has been reached?
+            // Disable the EndlessScroll feature
+            Log.d("onLoadMore     disable endless", TAG)
+            setEndlessProgressItem(null)
+        }
         // Remove the progressItem if needed.
         // Don't remove progressItem if delay is negative (-1) to keep it visible.
         if (delay > 0 && (newItemsSize == 0)) {
@@ -1945,13 +1955,7 @@ open class FlexibleAdapter<T : IFlexible<*>>(
             hideProgressItem()
         }
 
-        if (mEndlessPageSize > 0 && newItemsSize < mEndlessPageSize || // Is feature enabled and Not enough items?
-            mEndlessTargetCount in 1..totalItemCount
-        ) { // Is feature enabled and Max limit has been reached?
-            // Disable the EndlessScroll feature
-            Log.d("onLoadMore     disable endless", TAG)
-            setEndlessProgressItem(null)
-        }
+
 
         // Add any new items
         if (newItemsSize > 0) {
