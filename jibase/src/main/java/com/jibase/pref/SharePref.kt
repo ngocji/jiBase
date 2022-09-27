@@ -11,6 +11,14 @@ class SharePref(context: Context, prefName: String) {
         context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
     }
 
+    fun registerChange(sharedPreferences: SharedPreferences.OnSharedPreferenceChangeListener) {
+        pref.registerOnSharedPreferenceChangeListener(sharedPreferences)
+    }
+
+    fun unregisterChange(sharedPreferences: SharedPreferences.OnSharedPreferenceChangeListener) {
+        pref.unregisterOnSharedPreferenceChangeListener(sharedPreferences)
+    }
+
     fun getBoolean(key: String, defaultValue: Boolean) =
         pref.getString(key, defaultValue.toString())?.toBooleanStrictOrNull() ?: defaultValue
 

@@ -17,7 +17,7 @@
         android:id="@+id/llText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginTop="5dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -33,7 +33,7 @@
             android:id="@+id/tvDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_3sdp"
+            android:layout_marginTop="3dp"
             android:gravity="center"
             android:includeFontPadding="false"
             android:visibility="gone"

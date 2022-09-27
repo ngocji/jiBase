@@ -57,3 +57,20 @@ fun View.getDimen(@DimenRes dimen: Int) = context.resources.getDimension(dimen)
 
 fun View.getDimensionPixelOffset(@DimenRes dimen: Int) =
     context.resources.getDimensionPixelOffset(dimen)
+
+fun View.setLayoutParams(width: Int = Int.MAX_VALUE, height: Int = Int.MAX_VALUE) {
+    var shouldRequestLayout = false
+    layoutParams?.apply {
+        if (width != Int.MAX_VALUE && this.width != width) {
+            this.width = width
+            shouldRequestLayout = true
+        }
+        if (height != Int.MAX_VALUE && this.height != height) {
+            this.height = height
+            shouldRequestLayout = true
+        }
+    }
+    if (shouldRequestLayout) {
+        requestLayout()
+    }
+}

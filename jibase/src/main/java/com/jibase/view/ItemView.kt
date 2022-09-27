@@ -125,7 +125,7 @@ open class ItemView @JvmOverloads constructor(
             with(binding.llText) {
                 gravity = GravityCompat.START
                 updateLayoutParams<LayoutParams> {
-                    setMargins(getDimensionPixelOffset(R.dimen._5sdp), 0, 0, 0)
+                    setMargins(getDimensionPixelOffset(R.dimen.dp5), 0, 0, 0)
                 }
             }
         }

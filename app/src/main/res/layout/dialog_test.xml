@@ -5,7 +5,7 @@
 
     <TextView
         android:id="@+id/tv"
-        android:padding="@dimen/_12sdp"
+        android:padding="12dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/app_name" />

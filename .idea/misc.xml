@@ -5,6 +5,10 @@
       <map>
         <entry key="app/src/main/res/drawable/ic_eye_gone.xml" value="0.1635" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25462962962962965" />
+        <entry key="app/src/main/res/layout/dialog_test.xml" value="0.1109375" />
+        <entry key="app/src/main/res/layout/fragment_main.xml" value="0.1109375" />
+        <entry key="jibase/src/main/res/layout/layout_item_view.xml" value="0.22777777777777777" />
+        <entry key="jibase/src/main/res/layout/library_fast_scroller_layout.xml" value="0.22777777777777777" />
       </map>
     </option>
   </component>
