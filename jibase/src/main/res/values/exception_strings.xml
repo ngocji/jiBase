@@ -4,7 +4,7 @@
     <string name="st_no_network_connection">Network disconnected. Please check again</string>
     <string name="st_fail_refresh_token">Your session has expired. Please log in again</string>
     <string name="err_http_timeout">Processing time is too slow. Please try again later</string>
-    <string name="err_http_server_500"> Device encounted unknown error. Please try again later</string>
+    <string name="err_http_server_500"> Device uncounted unknown error. Please try again later</string>
     <string name="err_http_wrong_request_400">Request is refused</string>
     <string name="err_http_unauthorized_operation_401">Unauthorized operation. Please sign-in and try again</string>
     <string name="err_http_not_found_404">Not found.</string>

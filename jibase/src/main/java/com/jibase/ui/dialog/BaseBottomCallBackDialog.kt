@@ -2,6 +2,7 @@ package com.jibase.ui.dialog
 
 import androidx.annotation.LayoutRes
 
+@Deprecated("Use BaseBottomDialog")
 abstract class BaseBottomCallBackDialog<CallBack : Any>(@LayoutRes layoutId: Int) :
     BaseBottomDialog(layoutId) {
     private var internalCallBack: CallBack? = null

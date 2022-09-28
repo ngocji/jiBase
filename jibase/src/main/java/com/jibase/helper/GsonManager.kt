@@ -3,15 +3,17 @@ package com.jibase.helper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import com.jibase.helper.GsonManager.SIMPLE
+import com.jibase.helper.GsonManager.SimpleGsonType
 import java.lang.reflect.Type
 
 object GsonManager {
-    const val SIMPLE = "simple"
+    const val SimpleGsonType = "SimpleGsonType"
     private val gsonMap by lazy { mutableMapOf<String, Gson>() }
 
     init {
-        gsonMap[SIMPLE] = GsonBuilder().serializeSpecialFloatingPointValues().create()
+        gsonMap[SimpleGsonType] = GsonBuilder()
+            .serializeSpecialFloatingPointValues()
+            .create()
     }
 
     @JvmStatic
@@ -19,40 +21,43 @@ object GsonManager {
         gsonMap[key] = gson
     }
 
+    @JvmStatic
+    fun <T> fromJson(data: String): T? = fromJson(data, getTypeToken<T>())
 
     @JvmStatic
-    fun <T> fromJson(data: String, type: Type): T? = fromJson(data, type, SIMPLE)
+    fun <T> fromJson(data: String, type: Type): T? = fromJson(data, type, SimpleGsonType)
 
     @JvmStatic
-    fun <T> fromJson(data: String): T? = fromJson(data, object : TypeToken<T>() {}.type)
+    fun <T> fromJson(data: String, type: Type, gsonType: String = SimpleGsonType) =
+        try {
+            gsonMap[gsonType]?.fromJson<T>(data, type)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
 
     @JvmStatic
-    fun <T> fromJson(data: String, classOfType: Class<T>) = try {
-        gsonMap[SIMPLE]?.fromJson(data, classOfType)
+    fun <T> fromJson(data: String, gsonType: String): T? =
+        fromJson(data, getTypeToken<T>(), gsonType)
+
+
+    @JvmStatic
+    fun <T> fromJson(data: String, classOfType: Class<T>) =
+        fromJson(data, classOfType, SimpleGsonType)
+
+    @JvmStatic
+    fun <T> fromJson(data: String, classOfType: Class<T>, gsonType: String) = try {
+        gsonMap[gsonType]?.fromJson(data, classOfType)
     } catch (e: Exception) {
         e.printStackTrace()
         null
     }
 
     @JvmStatic
-    fun <T> fromJson(data: String, gsonType: String): T? =
-        fromJson(data, object : TypeToken<T>() {}.type, gsonType)
+    fun <T> toJson(data: T): String = toJson(data, SimpleGsonType)
 
     @JvmStatic
-    fun <T> fromJson(data: String, type: Type, gsonType: String = SIMPLE): T? {
-        return try {
-            gsonMap[gsonType]?.fromJson<T>(data, type)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
-    }
-
-    @JvmStatic
-    fun <T> toJson(data: T): String = toJson(data, SIMPLE)
-
-    @JvmStatic
-    fun <T> toJson(data: T, gsonType: String = SIMPLE): String {
+    fun <T> toJson(data: T, gsonType: String = SimpleGsonType): String {
         return try {
             gsonMap[gsonType]?.toJson(data) ?: ""
         } catch (e: Exception) {
@@ -62,9 +67,17 @@ object GsonManager {
     }
 }
 
-inline fun <reified T> fromJson(data: String, gsonType: String = SIMPLE): T? {
-    return GsonManager.fromJson<T>(data, getTypeToken<T>(), gsonType)
+inline fun <reified T> fromJson(
+    data: String,
+    type: Type = getTypeToken<T>(),
+    gsonType: String = SimpleGsonType
+): T? {
+    return GsonManager.fromJson<T>(data, type, gsonType)
+}
+
+inline fun <reified T> fromJson(data: String, gsonType: String = SimpleGsonType): T? {
+    return GsonManager.fromJson(data, T::class.java)
 }
 
 // get type token from list
-inline fun <reified T> getTypeToken(): Type = object : TypeToken<T>() {}.type
+fun <T> getTypeToken(): Type = object : TypeToken<T>() {}.type
