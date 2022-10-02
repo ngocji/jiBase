@@ -7,13 +7,13 @@ ext {
     gradle_version = '7.2.2'
     gradle_kotin_version = '1.7.10'
     hilt_version = '2.42'
-    target_sdk = 33
-    compile_sdk = 33
+    target_sdk = 32
+    compile_sdk = 32
     min_sdk = 21
 
 
     KotlinDependencies = configureDep([
-            "core_ktx": dep("androidx.core:core-ktx:1.9.0"),
+            "core_ktx": dep("androidx.core:core-ktx:1.8.0"),
     ])
 
     AndroidXDependencies = configureDep([
