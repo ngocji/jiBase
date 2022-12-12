@@ -4,6 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.jibase.helper.GsonManager.SimpleGsonType
+import com.jibase.utils.Log
 import java.lang.reflect.Type
 
 object GsonManager {
@@ -22,7 +23,7 @@ object GsonManager {
     }
 
     @JvmStatic
-    fun <T> fromJson(data: String): T? = fromJson(data, getTypeToken<T>())
+    inline fun <reified T> fromJson(data: String): T? = fromJson(data, getTypeToken<T>())
 
     @JvmStatic
     fun <T> fromJson(data: String, type: Type): T? = fromJson(data, type, SimpleGsonType)
@@ -32,12 +33,12 @@ object GsonManager {
         try {
             gsonMap[gsonType]?.fromJson<T>(data, type)
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("Error fromJson: $e")
             null
         }
 
     @JvmStatic
-    fun <T> fromJson(data: String, gsonType: String): T? =
+    inline fun <reified T> fromJson(data: String, gsonType: String): T? =
         fromJson(data, getTypeToken<T>(), gsonType)
 
 
@@ -49,7 +50,7 @@ object GsonManager {
     fun <T> fromJson(data: String, classOfType: Class<T>, gsonType: String) = try {
         gsonMap[gsonType]?.fromJson(data, classOfType)
     } catch (e: Exception) {
-        e.printStackTrace()
+        Log.e("Error fromJson: $e")
         null
     }
 
@@ -61,7 +62,7 @@ object GsonManager {
         return try {
             gsonMap[gsonType]?.toJson(data) ?: ""
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("Error toJson: $e")
             ""
         }
     }
@@ -76,8 +77,8 @@ inline fun <reified T> fromJson(
 }
 
 inline fun <reified T> fromJson(data: String, gsonType: String = SimpleGsonType): T? {
-    return GsonManager.fromJson(data, T::class.java)
+    return GsonManager.fromJson(data, T::class.java, gsonType = gsonType)
 }
 
 // get type token from list
-fun <T> getTypeToken(): Type = object : TypeToken<T>() {}.type
+inline fun <reified T> getTypeToken(): Type = object : TypeToken<T>() {}.type
