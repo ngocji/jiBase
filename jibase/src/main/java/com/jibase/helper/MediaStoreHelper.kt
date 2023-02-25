@@ -36,17 +36,16 @@ object MediaStoreHelper {
             resultUri = if (isUserRelativePath()) {
                 values.put(MediaStore.MediaColumns.RELATIVE_PATH, data.relativeSaveFolder)
                 data.context.contentResolver.insert(
-                    MediaStore.Files.getContentUri("external"),
+                    getContentUri(data.file, data.mimeType),
                     values
                 )
             } else {
-                if (!data.copyToNewPath && data.saveFile != null) {
-                    values.put(MediaStore.MediaColumns.DATA, data.saveFile?.absolutePath)
-                    copyFile(data.file, data.saveFile ?: return null)
+                if (!data.copyToNewPath && data.fileToExportBeforeAndroidQ != null) {
+                    values.put(MediaStore.MediaColumns.DATA, data.fileToExportBeforeAndroidQ?.absolutePath)
+                    copyFile(data.file, data.fileToExportBeforeAndroidQ ?: return null)
                 }
                 data.context.contentResolver.insert(
-                    if (data.mimeType.contains("video", ignoreCase = true)) MediaStore.Video.Media.EXTERNAL_CONTENT_URI
-                    else MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    getContentUri(data.file, data.mimeType),
                     values
                 )
             }
@@ -71,6 +70,15 @@ object MediaStoreHelper {
 
     fun isUserRelativePath() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
+    private fun getContentUri(file: File, mimeType: String): Uri {
+        val typeCheck = mimeType.takeIf { it.isNotBlank() } ?: getMimeType(file).orEmpty()
+        return when {
+            typeCheck.startsWith("video") -> MediaStore.Video.Media.EXTERNAL_CONTENT_URI
+            typeCheck.startsWith("image") -> MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            typeCheck.startsWith("audio") -> MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+            else -> MediaStore.Files.getContentUri("external")
+        }
+    }
 
     data class Data(
         var context: Context,
@@ -80,7 +88,8 @@ object MediaStoreHelper {
         var relativeSaveFolder: String = "",
         var copyToNewPath: Boolean = true,
         var deleteFileAfterCopy: Boolean = false,
-        var saveFile: File? = null
+
+        var fileToExportBeforeAndroidQ: File? = null // use when !relativeSaveFolder and !copyToNewPath
     )
 
 
