@@ -1,5 +1,6 @@
 package com.jibase.utils
 
+import android.util.Log
 import com.jibase.BuildConfig
 import kotlin.math.max
 
@@ -19,7 +20,7 @@ object Log {
     fun e(message: String, prefix: String = this.prefix) {
         if (isEnable) {
             createMessage(message).forEach {
-                android.util.Log.e(prefix, it)
+                Log.println(Log.ERROR, prefix, it)
             }
         }
     }
@@ -28,7 +29,8 @@ object Log {
     fun d(message: String, prefix: String = this.prefix) {
         if (isEnable) {
             createMessage(message).forEach {
-                android.util.Log.d(prefix, it)
+                Log.println(Log.DEBUG, prefix, it)
+
             }
         }
     }
@@ -53,7 +55,7 @@ object Log {
     }
 
     private fun getClassName(): String {
-        val fileName = Thread.currentThread().stackTrace[STACK_TRACE_LEVELS_UP].fileName
+        val fileName = Thread.currentThread().stackTrace.getOrNull(STACK_TRACE_LEVELS_UP)?.fileName.orEmpty()
         val index = fileName.lastIndexOf(".")
         return if (fileName.isNotBlank()) fileName.substring(
             0,
@@ -62,10 +64,10 @@ object Log {
     }
 
     private fun getMethodName(): String {
-        return Thread.currentThread().stackTrace[STACK_TRACE_LEVELS_UP].methodName
+        return Thread.currentThread().stackTrace.getOrNull(STACK_TRACE_LEVELS_UP)?.methodName.orEmpty()
     }
 
     private fun getLineNumber(): String {
-        return Thread.currentThread().stackTrace[STACK_TRACE_LEVELS_UP].lineNumber.toString()
+        return Thread.currentThread().stackTrace.getOrNull(STACK_TRACE_LEVELS_UP)?.lineNumber.toString()
     }
 }
