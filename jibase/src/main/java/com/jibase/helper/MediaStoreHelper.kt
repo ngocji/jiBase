@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
+import android.os.Environment
 import android.os.Environment.getExternalStorageDirectory
 import android.provider.MediaStore
 import androidx.activity.result.ActivityResultLauncher
@@ -41,7 +42,10 @@ object MediaStoreHelper {
                 )
             } else {
                 if (!data.copyToNewPath && data.fileToExportBeforeAndroidQ != null) {
-                    values.put(MediaStore.MediaColumns.DATA, data.fileToExportBeforeAndroidQ?.absolutePath)
+                    values.put(
+                        MediaStore.MediaColumns.DATA,
+                        data.fileToExportBeforeAndroidQ?.absolutePath
+                    )
                     copyFile(data.file, data.fileToExportBeforeAndroidQ ?: return null)
                 }
                 data.context.contentResolver.insert(
@@ -183,6 +187,52 @@ object MediaStoreHelper {
             val chooser = Intent.createChooser(intent, "Select file")
             target.startActivityForResult(chooser, requestCode)
         }, onDeny)
+    }
+
+    fun pickCamera(
+        target: Fragment,
+        requestCode: Int,
+        uri: Uri? = null,
+        onDeny: (List<Permission>) -> Unit = {}
+    ): Uri? {
+        var targetUri = uri
+        requestStoragePermission(target, onGrant = {
+            if (targetUri == null) targetUri = newCameraUri(target.requireContext())
+
+            targetUri?.also {
+                target.startActivityForResult(
+                    Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, it)
+                    },
+                    requestCode
+                )
+            }
+        }, onDeny = {
+            onDeny(it)
+        })
+
+        return targetUri
+    }
+
+    private fun newCameraUri(context: Context): Uri? {
+        val file = File(
+            context.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+            "Cam_${System.currentTimeMillis()}.png"
+        )
+
+        file.parentFile?.mkdirs()
+        file.createNewFile()
+
+        return insert(
+            Data(
+                context = context,
+                name = file.name,
+                file = file,
+                mimeType = "image/png",
+                relativeSaveFolder = Environment.DIRECTORY_PICTURES,
+                deleteFileAfterCopy = true
+            )
+        )
     }
 
     private fun requestStoragePermission(
