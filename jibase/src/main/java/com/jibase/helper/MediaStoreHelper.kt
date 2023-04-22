@@ -193,11 +193,11 @@ object MediaStoreHelper {
         target: Fragment,
         requestCode: Int,
         uri: Uri? = null,
+        onCreatedUri: (Uri?)-> Unit = {},
         onDeny: (List<Permission>) -> Unit = {}
-    ): Uri? {
-        var targetUri = uri
+    ) {
         requestStoragePermission(target, onGrant = {
-            if (targetUri == null) targetUri = newCameraUri(target.requireContext())
+           val targetUri = uri ?: newCameraUri(target.requireContext())
 
             targetUri?.also {
                 target.startActivityForResult(
@@ -207,11 +207,11 @@ object MediaStoreHelper {
                     requestCode
                 )
             }
+
+            onCreatedUri(targetUri)
         }, onDeny = {
             onDeny(it)
         })
-
-        return targetUri
     }
 
     private fun newCameraUri(context: Context): Uri? {
