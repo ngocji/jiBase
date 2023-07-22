@@ -23,6 +23,8 @@ import java.io.File
 
 
 object MediaStoreHelper {
+    fun needRequestStoragePermission() = Build.VERSION.SDK_INT < Build.VERSION_CODES.S
+
     fun insert(data: Data): Uri? {
         return try {
             val resultUri: Uri?
@@ -68,6 +70,7 @@ object MediaStoreHelper {
             }
             resultUri
         } catch (e: Exception) {
+            e.printStackTrace()
             null
         }
     }
@@ -240,14 +243,18 @@ object MediaStoreHelper {
         onGrant: () -> Unit,
         onDeny: (List<Permission>) -> Unit
     ) {
-        PermissionsHelper.with(target)
-            .request(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            .onGrant(onGrant)
-            .onDeny(onDeny)
-            .execute()
+        if (needRequestStoragePermission()) {
+            PermissionsHelper.with(target)
+                .request(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+                .onGrant(onGrant)
+                .onDeny(onDeny)
+                .execute()
+        } else {
+            onGrant()
+        }
     }
 
     private fun requestStoragePermission(
@@ -255,14 +262,18 @@ object MediaStoreHelper {
         onGrant: () -> Unit,
         onDeny: (List<Permission>) -> Unit
     ) {
-        PermissionsHelper.with(target)
-            .request(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            .onGrant(onGrant)
-            .onDeny(onDeny)
-            .execute()
+        if (needRequestStoragePermission()) {
+            PermissionsHelper.with(target)
+                .request(
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                )
+                .onGrant(onGrant)
+                .onDeny(onDeny)
+                .execute()
+        } else {
+            onGrant()
+        }
     }
 
     private fun obtainImageIntent(): Intent = Intent.createChooser(

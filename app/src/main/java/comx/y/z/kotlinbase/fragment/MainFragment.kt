@@ -5,13 +5,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
-import com.jibase.extensions.safeNavigate
 import com.jibase.extensions.viewBinding
+import com.jibase.helper.MediaStoreHelper
 import com.jibase.permission.PermissionsHelper
 import com.jibase.utils.Log
 import comx.y.z.kotlinbase.R
 import comx.y.z.kotlinbase.databinding.FragmentMainBinding
+import java.io.File
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
@@ -25,7 +25,17 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             PermissionsHelper.with(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 .onGrant {
-                    Log.e("Grant")
+                    val uro = MediaStoreHelper.insert(
+                        MediaStoreHelper.Data(
+                            context = requireContext(),
+                            name = "text.txt",
+                            file = File(requireContext().cacheDir, "text.txt"),
+                            mimeType = "text/plain",
+                            copyToNewPath = false,
+                            deleteFileAfterCopy = true,
+                            fileToExportBeforeAndroidQ = File()
+                        )
+                    )
                 }
                 .onDeny {
                     Log.e("Deny")
