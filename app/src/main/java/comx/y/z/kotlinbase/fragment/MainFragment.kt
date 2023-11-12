@@ -11,6 +11,7 @@ import com.jibase.permission.PermissionsHelper
 import com.jibase.utils.Log
 import comx.y.z.kotlinbase.R
 import comx.y.z.kotlinbase.databinding.FragmentMainBinding
+import comx.y.z.kotlinbase.fragment.dialog.TestDialog
 import java.io.File
 
 class MainFragment : Fragment(R.layout.fragment_main) {
@@ -22,25 +23,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.buttonRequestPermission.setOnClickListener {
-            PermissionsHelper.with(this)
-                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                .onGrant {
-                    val uro = MediaStoreHelper.insert(
-                        MediaStoreHelper.Data(
-                            context = requireContext(),
-                            name = "text.txt",
-                            file = File(requireContext().cacheDir, "text.txt"),
-                            mimeType = "text/plain",
-                            copyToNewPath = false,
-                            deleteFileAfterCopy = true,
-                            fileToExportBeforeAndroidQ = File()
-                        )
-                    )
-                }
-                .onDeny {
-                    Log.e("Deny")
-                }
-                .execute()
+            TestDialog().show(childFragmentManager)
         }
     }
 }

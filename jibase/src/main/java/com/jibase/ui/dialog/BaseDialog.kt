@@ -4,17 +4,39 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import androidx.annotation.LayoutRes
+import androidx.annotation.StyleRes
+import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.jibase.R
 
-abstract class BaseDialog(@LayoutRes layoutId: Int) : DialogFragment(layoutId) {
+abstract class BaseDialog(
+    @LayoutRes
+    private val layoutId: Int,
+    @StyleRes
+    private val theme: Int = 0
+) : DialogFragment() {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return if (layoutId > 0) {
+            val contextThemeWrapper = ContextThemeWrapper(context, theme)
+            inflater.cloneInContext(contextThemeWrapper).inflate(layoutId, container, false)
+        } else {
+            null
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setStyle(STYLE_NO_TITLE, initStyle())
+        setStyle()
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -22,8 +44,21 @@ abstract class BaseDialog(@LayoutRes layoutId: Int) : DialogFragment(layoutId) {
         dialog.run {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            if (isShowFullDialog()) {
+
+            }
         }
         return dialog
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val dialog = dialog
+        if (dialog != null) {
+            val width = ViewGroup.LayoutParams.MATCH_PARENT
+            val height = ViewGroup.LayoutParams.MATCH_PARENT
+            dialog.window?.setLayout(width, height)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,9 +66,15 @@ abstract class BaseDialog(@LayoutRes layoutId: Int) : DialogFragment(layoutId) {
         onViewReady(savedInstanceState)
     }
 
+    open fun setStyle() {
+        setStyle(STYLE_NO_TITLE, initStyle())
+    }
+
     open fun initStyle(): Int {
         return R.style.style_dialog_90
     }
+
+    open fun isShowFullDialog() = false
 
     abstract fun onViewReady(savedInstanceState: Bundle?)
 
