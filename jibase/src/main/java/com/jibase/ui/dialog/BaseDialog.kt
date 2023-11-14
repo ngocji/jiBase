@@ -44,9 +44,6 @@ abstract class BaseDialog(
         dialog.run {
             requestWindowFeature(Window.FEATURE_NO_TITLE)
             window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            if (isShowFullDialog()) {
-
-            }
         }
         return dialog
     }
@@ -55,9 +52,11 @@ abstract class BaseDialog(
         super.onStart()
         val dialog = dialog
         if (dialog != null) {
-            val width = ViewGroup.LayoutParams.MATCH_PARENT
-            val height = ViewGroup.LayoutParams.MATCH_PARENT
-            dialog.window?.setLayout(width, height)
+            if (isShowFullDialog()) {
+                val width = ViewGroup.LayoutParams.MATCH_PARENT
+                val height = ViewGroup.LayoutParams.MATCH_PARENT
+                dialog.window?.setLayout(width, height)
+            }
         }
     }
 
