@@ -10,16 +10,21 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        FragmentUtils.replace(
+        FragmentUtils.add(
             FragmentUtils.ReplaceOption<MainActivity>()
                 .with(this)
                 .setContainerId(R.id.flReplace)
                 .setFragment(MainFragment())
                 .addToBackStack(true)
         )
-    }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
+        FragmentUtils.handleBackPress(this) {stackCount->
+            if (stackCount == 0) {
+
+                true
+            }else {
+                false
+            }
+        }
     }
 }

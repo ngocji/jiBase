@@ -8,11 +8,19 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE
 import com.jibase.R
 import com.jibase.extensions.getTagName
+import com.jibase.extensions.onBackPressedOverride
 
 
 object FragmentUtils {
+    fun <T : Any> add(option: ReplaceOption<T>?) {
+        run(option = option ?: return, isAddFragment = true)
+    }
+
     fun <T : Any> replace(option: ReplaceOption<T>?) {
-        option ?: return
+        run(option = option ?: return, isAddFragment = false)
+    }
+
+    private fun <T : Any> run(option: ReplaceOption<T>, isAddFragment: Boolean) {
         val transaction = getFragmentManager(option.target)
             .beginTransaction()
 
@@ -30,9 +38,17 @@ object FragmentUtils {
         transaction.setCustomAnimations(option.enter, option.exit, option.popEnter, option.popExit)
 
         //set fragment
-        transaction.replace(option.containerId, option.fragment, tagName)
+        if (isAddFragment) {
+            getPreviousFragment(option.target)?.run {
+                transaction.hide(this)
+            }
 
-        //commit replace
+            transaction.add(option.containerId, option.fragment, tagName)
+        } else {
+            transaction.replace(option.containerId, option.fragment, tagName)
+        }
+
+        //commit
         when {
             option.commitNow -> transaction.commitNowAllowingStateLoss()
             else -> transaction.commitAllowingStateLoss()
@@ -42,6 +58,28 @@ object FragmentUtils {
 
     fun <T : Any> getCurrentFragment(target: T): Fragment? {
         return getFragmentManager(target).fragments.lastOrNull()
+    }
+
+
+    fun <T : Any> handleBackPress(target: T, onBack: (stackCount: Int) -> Boolean = { false }) {
+        val stackCount = getCountOfBackStack(target)
+        when (target) {
+            is Fragment -> target.onBackPressedOverride {
+                if (!onBack(stackCount)) {
+                    popBack(target)
+                }
+            }
+
+            is FragmentActivity -> target.onBackPressedOverride {
+                if (!onBack(stackCount)) {
+                    if (!isFirstFragment(target) && getPreviousFragment(target) != null) {
+                        popBack(target)
+                    } else {
+                        target.finish()
+                    }
+                }
+            }
+        }
     }
 
 
@@ -55,7 +93,7 @@ object FragmentUtils {
 
     fun <T : Any> getPreviousFragment(target: T): Fragment? {
         val manager = getFragmentManager(target)
-        val index = manager.backStackEntryCount - 2
+        val index = manager.backStackEntryCount - 1
         return if (index >= 0) {
             getFragmentByTag(target, manager.getBackStackEntryAt(index).name ?: "")
         } else {
@@ -106,6 +144,14 @@ object FragmentUtils {
         var popExit: Int = R.anim.idle
         var commitNow: Boolean = false
         var popWhenExists: Boolean = false
+
+        companion object {
+            fun <T : Any> with(target: T): ReplaceOption<T> {
+                return ReplaceOption<T>().apply {
+                    this.target = target
+                }
+            }
+        }
 
         fun with(target: T): ReplaceOption<T> {
             this.target = target
