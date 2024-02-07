@@ -12,6 +12,7 @@ import android.os.Environment.getExternalStorageDirectory
 import android.provider.MediaStore
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
+import androidx.annotation.ChecksSdkIntAtLeast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.jibase.permission.Permission
@@ -75,6 +76,7 @@ object MediaStoreHelper {
         }
     }
 
+    @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.Q)
     fun isUserRelativePath() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 
     private fun getContentUri(file: File, mimeType: String): Uri {
@@ -103,7 +105,7 @@ object MediaStoreHelper {
     fun deleteMedia(context: Context, uri: Uri): Boolean {
         return try {
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
-                @Suppress("DEPRECATION") val projection = arrayOf(MediaStore.MediaColumns.DATA)
+                val projection = arrayOf(MediaStore.MediaColumns.DATA)
                 context.contentResolver.query(uri, projection, null, null, null)?.use { cursor ->
                     if (cursor.moveToFirst()) {
                         val filePath = cursor.getString(0)
@@ -120,7 +122,7 @@ object MediaStoreHelper {
     }
 
     private fun createDesiredFileBeforeQ(toRelativePath: String): File {
-        @Suppress("DEPRECATION") var desiredFile =
+        var desiredFile =
             File(getExternalStorageDirectory(), toRelativePath)
         val dir = desiredFile.parentFile
         val extensionWithDot =
@@ -138,17 +140,20 @@ object MediaStoreHelper {
     }
 
 
+    @Deprecated("")
     fun pickGallery(target: Fragment, requestCode: Int, onDeny: (List<Permission>) -> Unit) {
         requestStoragePermission(target, {
             try {
                 val intent = obtainImageIntent()
                 target.startActivityForResult(intent, requestCode)
-            } catch (exception: ActivityNotFoundException) {
+            } catch (_: ActivityNotFoundException) {
 
             }
         }, onDeny)
     }
 
+
+    @Deprecated("")
     fun pickGallery(
         target: FragmentActivity,
         requestCode: Int,
@@ -158,12 +163,14 @@ object MediaStoreHelper {
             try {
                 val intent = obtainImageIntent()
                 target.startActivityForResult(intent, requestCode)
-            } catch (exception: ActivityNotFoundException) {
+            } catch (_: ActivityNotFoundException) {
 
             }
         }, onDeny)
     }
 
+
+    @Deprecated("")
     fun pickFile(
         target: Fragment,
         requestCode: Int,
@@ -178,6 +185,7 @@ object MediaStoreHelper {
         }, onDeny)
     }
 
+    @Deprecated("")
     fun pickFile(
         target: FragmentActivity,
         requestCode: Int,
@@ -192,22 +200,49 @@ object MediaStoreHelper {
         }, onDeny)
     }
 
+    fun pickImage(
+        target: FragmentActivity,
+        launcher: ActivityResultLauncher<String>,
+        onDeny: (List<Permission>) -> Unit
+    ) {
+        requestStoragePermission(target, {
+            try {
+                launcher.launch("image/*")
+            } catch (_: ActivityNotFoundException) {
+
+            }
+        }, onDeny)
+    }
+
+    fun pickFile(
+        target: FragmentActivity,
+        launcher: ActivityResultLauncher<String>,
+        mimeType: String,
+        onDeny: (List<Permission>) -> Unit
+    ) {
+        requestStoragePermission(target, {
+            try {
+                launcher.launch(mimeType)
+            } catch (_: Exception) {
+            }
+        }, onDeny)
+    }
+
     fun pickCamera(
-        target: Fragment,
-        requestCode: Int,
+        target: FragmentActivity,
+        launcher: ActivityResultLauncher<Intent>,
         uri: Uri? = null,
-        onCreatedUri: (Uri?)-> Unit = {},
+        onCreatedUri: (Uri?) -> Unit = {},
         onDeny: (List<Permission>) -> Unit = {}
     ) {
         requestStoragePermission(target, onGrant = {
-           val targetUri = uri ?: newCameraUri(target.requireContext())
+            val targetUri = uri ?: newCameraUri(target)
 
             targetUri?.also {
-                target.startActivityForResult(
+                launcher.launch(
                     Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
                         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, it)
-                    },
-                    requestCode
+                    }
                 )
             }
 
