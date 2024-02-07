@@ -112,3 +112,5 @@ fun isAssetFilePath(path: String): Boolean {
 }
 
 fun getMimeType(f: File) = MimeTypeMap.getSingleton().getMimeTypeFromExtension(f.extension)
+
+fun File.isValidData() = exists() && canRead() && length() > 0
