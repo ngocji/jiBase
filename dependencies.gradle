@@ -79,7 +79,6 @@ ext {
     NavigationDependencies = configureDep([
             "navFragment"      : dep("androidx.navigation:navigation-fragment-ktx:$navigation"),
             "navUi"            : dep("androidx.navigation:navigation-ui-ktx:$navigation"),
-            "navDynamicFeature": dep("androidx.navigation:navigation-dynamic-features-fragment:$navigation"),
     ])
 
 
