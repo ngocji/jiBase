@@ -16,7 +16,7 @@ android {
         targetSdk = 35
         minSdk = 21
         versionCode = 1
-        versionName = "4.2.9-pre"
+        versionName = "4.2.9-pre3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         kapt {
