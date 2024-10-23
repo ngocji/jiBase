@@ -3,12 +3,12 @@ package com.jibase.view
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.jibase.R
-import java.lang.NullPointerException
 
 class ISnackBar {
-    private val noneColor by lazy { context.getColor(R.color.trans)}
+    private val noneColor by lazy { ContextCompat.getColor(context, R.color.trans) }
 
     private lateinit var rootView: View
     private var message: String = ""

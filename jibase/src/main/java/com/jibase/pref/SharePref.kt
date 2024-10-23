@@ -6,6 +6,7 @@ import com.jibase.helper.GsonManager
 import com.jibase.utils.Log
 import java.lang.reflect.Type
 
+@Suppress("SpellCheckingInspection")
 class SharePref(context: Context, prefName: String) {
     private val pref: SharedPreferences by lazy {
         context.getSharedPreferences(prefName, Context.MODE_PRIVATE)
@@ -37,20 +38,31 @@ class SharePref(context: Context, prefName: String) {
     fun getInt(key: String, defaultValue: Int) =
         pref.getString(key, defaultValue.toString())?.toIntOrNull() ?: defaultValue
 
-    fun <T> getObject(key: String, type: Type, defaultValue: T?): T? {
+    fun <T> getObject(key: String, type: Type): T? {
         val content = getString(key, "")
         return try {
             if (content.isBlank()) {
-                defaultValue
+                null
             } else {
-                GsonManager.fromJson(content, type)
+                GsonManager.fromJson<T>(content, type)
             }
         } catch (e: Exception) {
-            defaultValue
+            null
         }
     }
 
-    fun getObject(key: String, type: Type) = getObject(key, type, null)
+    fun <T> getObject(key: String, clzz: Class<T>): T? {
+        val content = getString(key, "")
+        return try {
+            if (content.isBlank()) {
+                null
+            } else {
+                GsonManager.fromJson(content, clzz)
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
 
     fun putBoolean(key: String, value: Boolean) {
         pref.edit().putString(key, value.toString()).apply()
@@ -86,6 +98,15 @@ class SharePref(context: Context, prefName: String) {
 
     // end region
 
+    fun contains(key: String): Boolean {
+       return pref.contains(key)
+    }
+
+    fun remove(vararg keys: String) {
+        pref.edit().apply {
+            keys.forEach { remove(it) }
+        }.apply()
+    }
 
     fun <T> put(key: String, value: T?) {
         with(pref.edit()) {
@@ -94,6 +115,7 @@ class SharePref(context: Context, prefName: String) {
                     Log.d("share: push normal data")
                     putString(key, value.toString())
                 }
+
                 else -> {
                     Log.d("share: push object data")
                     if (value == null) {
