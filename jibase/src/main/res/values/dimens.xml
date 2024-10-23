@@ -3,4 +3,14 @@
     <dimen name="icon_size">120dp</dimen>
     <dimen name="state_item_margin_bottom">16dp</dimen>
     <dimen name="dp5">5dp</dimen>
+
+    <dimen name="dialog_radius">10dp</dimen>
+    <dimen name="dialog_padding">10dp</dimen>
+    <dimen name="dialog_icon_size">34dp</dimen>
+    <dimen name="dialog_title_text_size">16sp</dimen>
+    <dimen name="dialog_sub_text_size">11sp</dimen>
+    <dimen name="dialog_margin_subtitle">3dp</dimen>
+    <dimen name="dialog_margin_content">12dp</dimen>
+    <dimen name="dialog_margin_action">24dp</dimen>
+    <dimen name="dialog_radius_button">20dp</dimen>
 </resources>

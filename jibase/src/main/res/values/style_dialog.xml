@@ -20,4 +20,12 @@
         <item name="android:windowMinWidthMajor">80%</item>
         <item name="android:windowMinWidthMinor">80%</item>
     </style>
+
+    <style name="style_transparent_bottom_sheet" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/style_bottom_sheet_background</item>
+    </style>
+
+    <style name="style_bottom_sheet_background" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 </resources>

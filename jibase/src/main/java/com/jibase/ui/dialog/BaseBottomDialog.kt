@@ -66,11 +66,11 @@ abstract class BaseBottomDialog(
     }
 
     open fun setStyle() {
-        setStyle(STYLE_NO_TITLE, initStyle())
+        setStyle(STYLE_NORMAL, initStyle())
     }
 
     open fun initStyle(): Int {
-        return R.style.style_dialog_100
+        return R.style.style_transparent_bottom_sheet
     }
 
     open fun isShowFullDialog(): Boolean = false

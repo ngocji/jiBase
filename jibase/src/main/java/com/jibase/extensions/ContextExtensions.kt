@@ -9,7 +9,11 @@ import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
+import com.jibase.utils.Utils
 
+fun Context.getColorByAttr(attrId: Int): Int {
+    return Utils.getColorByAttr(this, attrId)
+}
 
 fun Context.showToast(@StringRes text: Int) {
     showToast(getString(text))
