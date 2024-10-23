@@ -13,4 +13,10 @@
     <dimen name="dialog_margin_content">12dp</dimen>
     <dimen name="dialog_margin_action">24dp</dimen>
     <dimen name="dialog_radius_button">20dp</dimen>
+    <dimen name="min_height_option">60dp</dimen>
+
+    <dimen name="state_padding_horizontal">12dp</dimen>
+    <dimen name="state_padding_vertical">8dp</dimen>
+    <dimen name="state_radius_refresh_button">18dp</dimen>
+    <dimen name="progress_size">40dp</dimen>
 </resources>

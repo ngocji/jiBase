@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="StateNetworkView">
+        <attr name="state_enable_pull_to_refresh" format="boolean" />
+        <attr name="state_progress_layout" format="reference" />
+        <attr name="state_error_layout" format="reference" />
+        <attr name="state_empty_layout" format="reference" />
+
+        <attr name="state_empty_text" format="string" />
+        <attr name="state_empty_icon" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="OptionItemView">
+        <attr name="ot_icon" format="reference" />
+        <attr name="ot_icon_size" format="dimension" />
+        <attr name="ot_icon_tint" format="color" />
+
+        <attr name="ot_title" format="string" />
+        <attr name="ot_title_color" format="color" />
+
+        <attr name="ot_desc" format="string" />
+        <attr name="ot_desc_color" format="color" />
+
+        <attr name="ot_type" format="enum">
+            <enum name="switchData" value="0" />
+            <enum name="textData" value="1" />
+            <enum name="imageData" value="2" />
+        </attr>
+
+        <attr name="ot_show_line" format="boolean" />
+
+        <attr name="ot_end_icon" format="reference" />
+        <attr name="ot_end_icon_size" format="dimension" />
+        <attr name="ot_end_icon_tint" format="color" />
+
+        <attr name="ot_switch_button" format="reference" />
+    </declare-styleable>
+</resources>

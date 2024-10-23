@@ -2,6 +2,8 @@ package com.jibase.extensions
 
 import com.jibase.utils.Log
 
+infix fun <T> List<T>.hasPosition(position: Int): Boolean = position in this.indices
+
 fun Long.formatMinSecDuration(): String {
     val totalSeconds = (this + 500) / 1000
     val seconds = totalSeconds % 60

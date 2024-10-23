@@ -28,4 +28,11 @@
     <style name="style_bottom_sheet_background" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <style name="progressStyle">
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateTint">?colorPrimary</item>
+        <item name="android:layout_width">@dimen/progress_size</item>
+        <item name="android:layout_height">@dimen/progress_size</item>
+    </style>
 </resources>
